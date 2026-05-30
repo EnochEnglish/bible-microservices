@@ -1,0 +1,63 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: bible-gateway
+
+  # Spring Cloud Gateway 路由配置
+  cloud:
+    gateway:
+      routes:
+        # 经文查询服务路由
+        - id: bible-text-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/bible/**
+
+        # 注释/笔记/书签服务路由
+        - id: bible-annotations
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/annotations/**
+
+        # 搜索服务路由
+        - id: bible-search-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/search/**
+
+        # Strong's 词典路由
+        - id: bible-strongs
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/strongs/**
+
+        # 模块管理服务路由
+        - id: bible-module-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/modules/**
+
+      # 全局跨域配置
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+
+# Actuator 端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.bible.gateway: DEBUG
+    org.springframework.cloud.gateway: INFO

@@ -1,0 +1,80 @@
+# Bible Microservices - 圣经微服务体系
+#
+# 启动所有服务：docker-compose up -d
+# 仅启动核心服务：docker-compose up -d bible-text-service bible-module-service
+
+version: '3.8'
+
+services:
+  # API 网关
+  bible-gateway:
+    build:
+      context: .
+      dockerfile: bible-gateway/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_URI=http://bible-text-service:8081
+      - SPRING_CLOUD_GATEWAY_ROUTES_1_URI=http://bible-search-service:8082
+      - SPRING_CLOUD_GATEWAY_ROUTES_2_URI=http://bible-module-service:8083
+    depends_on:
+      - bible-text-service
+      - bible-search-service
+      - bible-module-service
+
+  # 经文查询服务
+  bible-text-service:
+    build:
+      context: .
+      dockerfile: bible-text-service/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bible_text
+      - SPRING_DATASOURCE_USERNAME=bible
+      - SPRING_DATASOURCE_PASSWORD=bible123
+    depends_on:
+      - postgres
+
+  # 全文检索服务
+  bible-search-service:
+    build:
+      context: .
+      dockerfile: bible-search-service/Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - BIBLE_TEXT_SERVICE_URL=http://bible-text-service:8081
+    volumes:
+      - search-index:/app/data/search-index
+
+  # 模块管理服务
+  bible-module-service:
+    build:
+      context: .
+      dockerfile: bible-module-service/Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bible_module
+      - SPRING_DATASOURCE_USERNAME=bible
+      - SPRING_DATASOURCE_PASSWORD=bible123
+      - BIBLE_TEXT_SERVICE_URL=http://bible-text-service:8081
+    depends_on:
+      - postgres
+
+  # PostgreSQL 数据库
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=bible
+      - POSTGRES_PASSWORD=bible123
+      - POSTGRES_DB=bible
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+  search-index:

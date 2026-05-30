@@ -1,0 +1,10 @@
+G1: word=ἄλφα trans= def=of Hebrew origin; the first letter of the alphabet; figurati
+G2: word=Ἀαρών trans= def=of Hebrew origin (175); Aaron, the brother of Moses:--Aaron.
+G3: word=Ἀβαδδών trans= def=of Hebrew origin (11); a destroying angel:--Abaddon. see HEB
+G4: word=ἀβαρής trans= def=from 1 (as a negative particle) and 922; weightless, i.e. (f
+G5: word=αββα trans= def=of Chaldee origin (2); father as a vocative:--Abba. see HEBR
+G6: word=Ἅβελ trans= def=of Hebrew origin (1893); Abel, the son of Adam:--Abel. see H
+G7: word=Ἀβιά trans= def=of Hebrew origin (29); Abijah, the name of two Israelites:--
+G8: word=Ἀβιαθάρ trans= def=of Hebrew origin (54); Abiathar, an Israelite:--Abiathar. se
+G9: word=Ἀβιληνή trans= def=of foreign origin (compare 58); Abilene, a region of Syria:-
+G10: word=Ἀβιούδ trans= def=of Hebrew origin (31); Abihud, an Israelite:--Abiud. see HEB

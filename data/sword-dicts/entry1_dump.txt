@@ -1,0 +1,14 @@
+
+<orth>ἄλφα</orth><lb/>
+<orth type="writing">a[lfa</orth> <orth rend="bold" type="trans">a</orth> <pron rend="italic">{al'-fah}</pron>
+<def>
+
+ of Hebrew origin; the first letter of the alphabet; figuratively, only
+ (from its use as a numeral) the first: --Alpha. Often used (usually
+ an, before a vowel) also in composition (as a contraction from 427) in
+ the sense of privation; so, in many words, beginning with this letter;
+ occasionally in the sense of union (as a contraction of 260).
+<lb/> see GREEK for 427
+<lb/> see GREEK for 260
+</def>
+

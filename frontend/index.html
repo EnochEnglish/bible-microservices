@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bible Reader / 圣经阅读器</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="logo">📖 Bible / 圣经</div>
+      <select id="translationSelect"></select>
+      <select id="langToggle">
+        <option value="bilingual">🌐 双语</option>
+        <option value="zh">🇨🇳 中文</option>
+        <option value="en">🇺🇸 English</option>
+      </select>
+      <select id="compareSelect">
+        <option value="">📐 对照模式</option>
+      </select>
+      <div class="search-box"><input type="text" id="searchBox" placeholder="搜索经文..."></div>
+      <div class="strongs-box"><input type="text" id="strongsInput" placeholder="Strong's..."></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div id="bookList"></div>
+      <div id="chapterGrid" class="chapters"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <div id="readerView">
+        <div class="chapter-header" id="chapterHeader"></div>
+        <!-- Compare bar shows when bilingual comparison is active -->
+        <div id="compareBar" class="compare-bar" style="display:none">
+          <label>📐 对照:</label>
+          <select id="compareTrans2"></select>
+          <div class="close-btn" id="compareClose" title="关闭对照">✕</div>
+        </div>
+        <div id="verseContent" class="loading">加载中...</div>
+        <div class="chapter-nav" id="chapterNav"></div>
+      </div>
+      <div id="searchResults" style="display:none"></div>
+    </div>
+
+    <!-- Commentary Panel -->
+    <div class="tsk-panel" id="tskContent">
+      <div class="commentary-tabs" id="commentaryTabs"></div>
+      <div id="commentaryBody">
+        <div class="loading">加载中...</div>
+      </div>
+    </div>
+
+    <!-- Strong's Dictionary Popup -->
+    <div class="strongs-overlay" id="strongsOverlay" style="display:none" onclick="closeStrongsPopup()">
+      <div class="strongs-popup" id="strongsPopup" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="strongsPopupTitle">📖 Strong's Dictionary</span>
+          <span class="strongs-popup-close" onclick="closeStrongsPopup()">✕</span>
+        </div>
+        <div id="strongsPopupBody"></div>
+      </div>
+    </div>
+  </div>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

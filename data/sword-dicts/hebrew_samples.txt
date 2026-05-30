@@ -1,0 +1,75 @@
+H1: word='ab' trans='awb' pron=''
+  def=a primitive word; father, in a literal and immediate, or figurative and remote application):--chief, (fore-)father(-less), X patrimony, principal. Com
+
+H2: word='ab' trans='ab' pron=''
+  def=(Aramaic) corresponding to 1:--father. see HEBREW for 01
+
+H3: word='eb' trans='abe' pron=''
+  def=from the same as 24; a green plant:--greenness, fruit. see HEBREW for 024
+
+H4: word='eb' trans='abe' pron=''
+  def=(Aramaic) corresponding to 3:--fruit. see HEBREW for 03
+
+H5: word='Abagtha' trans='' pron=''
+  def=of foreign origin; Abagtha, a eunuch of Xerxes:--Abagtha.
+
+H6: word='abad' trans='aw-bad' pron=''
+  def=a primitive root; properly, to wander away, i.e. lose oneself; by implication to perish (causative, destroy):--break, destroy(- uction), + not escape,
+
+H7: word='abad' trans='ab-ad' pron=''
+  def=(Aramaic) corresponding to 6:--destroy, perish. see HEBREW for 06
+
+H8: word='obed' trans='o-bade' pron=''
+  def=active of participle of 6; (concrete) wretched or (abstract) destructin:--perish. see HEBREW for 06
+
+H9: word='abedah' trans='ab-ay-daw' pron=''
+  def=from 6; concrete, something lost; abstract, destruction, i.e. Hades:--lost. Compare 10. see HEBREW for 06 see HEBREW for 010
+
+H10: word='abaddoh' trans='ab-ad-do' pron=''
+  def=the same as 9, miswritten for 11; a perishing:-- destruction. see HEBREW for 09 see HEBREW for 011
+
+H11: word='abaddown' trans='ab-ad-done' pron=''
+  def=intensive from 6; abstract, a perishing; concrete, Hades:--destruction. see HEBREW for 06
+
+H12: word='abdan' trans='ab-dawn' pron=''
+  def=from 6; a perishing:--destruction. see HEBREW for 06
+
+H13: word='obdan' trans='ob-dawn' pron=''
+  def=from 6; a perishing:--destruction. see HEBREW for 06
+
+H14: word='abah' trans='aw-baw' pron=''
+  def=a primitive root; to breathe after, i.e. (figuratively) to be acquiescent:--consent, rest content will, be willing.
+
+H15: word='abeh' trans='aw-beh' pron=''
+  def=from 14; longing:--desire. see HEBREW for 014
+
+H16: word='ebeh' trans='ay-beh' pron=''
+  def=from 14 (in the sense of bending toward); the papyrus:--swift. see HEBREW for 014
+
+H17: word='abowy' trans='ab-o' pron=''
+  def=from 14 (in the sense of desiring); want:--sorrow. see HEBREW for 014
+
+H18: word='ebuwc' trans='ay-booce' pron=''
+  def=from 75; a manger or stall:--crib. see HEBREW for 075
+
+H19: word='ibchah' trans='ib-khaw' pron=''
+  def=from an unused root (apparently meaning to turn); brandishing of a sword:--point.
+
+H20: word='abattiyach' trans='ab-at-tee' pron=''
+  def=of uncertain derivation; a melon (only plural):--melon.
+
+H21: word='Abiy' trans='ab-ee' pron=''
+  def=from 1; fatherly; Abi, Hezekiah's mother:--Abi. see HEBREW for 01
+
+H22: word='Abiy' trans='' pron=''
+  def=from 1 and 410; father (i.e. possessor) of God; Abiel, the name of two Israelites:--Abiel. see HEBREW for 01 see HEBREW for 0410
+
+H23: word='Abiy' trans='' pron=''
+  def=from 1 and 622; father of gathering (i.e. gatherer); Abiasaph, an Israelite:--Abiasaph. see HEBREW for 01 see HEBREW for 0622
+
+H24: word='abiyb' trans='aw-beeb' pron=''
+  def=from an unused root (meaning to be tender); green, i.e. a young ear of grain; hence, the name of the month Abib or Nisan:--Abib, ear, green ears of co
+
+H25: word='Abiy' trans='Gib`own  ab-ee' pron=''
+  def=from 1 and 1391; father (i.e. founder) of Gibon; Abi-Gibon, perhaps an Israelite:--father of Gibeon. see HEBREW for 01 see HEBREW for 01391
+
