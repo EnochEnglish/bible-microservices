@@ -17,12 +17,64 @@ var state = {
 
 // ── Translation Names (Chinese) ──
 var TRANSLATION_NAMES = {
-  kjv: "英王钦定本", web: "世界英文圣经", asv: "美国标准版",
-  bbe: "基础英文圣经", dby: "达秘译本", wbt: "韦氏译本",
-  ylt: "杨氏直译本", cuv_gb: "和合本 (简体)", cuv_tw: "和合本 (繁体)",
+  kjv: "KJV 英王钦定本", web: "WEB 英文世界版", asv: "ASV 美国标准版",
+  bbe: "BBE 基础英文", dby: "Darby 达秘译本", wbt: "Webster 韦氏译本",
+  ylt: "YLT 杨氏直译本", cuv_gb: "和合本 (简体)", cuv_tw: "和合本 (繁体)",
   lxx: "七十士译本", byz: "拜占庭希腊文新约", vulgate: "武加大译本",
-  oshb: "希伯来文圣经"
+  oshb: "希伯来原文圣经",
+  tr: "TR 公认经文", sblgnt: "SBL 希腊文新约", morphgnt: "MorphGNT 词形分析",
+  sp: "撒玛利亚五经", bsb: "BSB 庇哩亚标准", geneva1599: "日内瓦圣经",
+  drc: "杜埃-兰斯译本", chincvs: "中文新译本", russynodal: "俄文译本"
 };
+
+// ── Commentary Names (language-aware) ──
+var COMMENTARY_NAMES_ZH = {
+  TSK: "TSK 交叉引用",
+  JFB: "JFB 注释",
+  MHCC: "Matthew Henry 简注",
+  MHC: "Matthew Henry 全注",
+  Clarke: "Adam Clarke 注释",
+  Calvin: "加尔文注释",
+  Barnes: "Barnes NT 注释",
+  RWP: "Robertson 词图",
+  Catena: "教父集注"
+};
+
+var COMMENTARY_NAMES_EN = {
+  TSK: "TSK Cross-Refs",
+  JFB: "JFB Commentary",
+  MHCC: "M.H. Concise",
+  MHC: "M.H. Complete",
+  Clarke: "Clarke's Commentary",
+  Calvin: "Calvin's Commentary",
+  Barnes: "Barnes NT Notes",
+  RWP: "Robertson Word Pix",
+  Catena: "Catena Aurea"
+};
+
+function cmtName(id) {
+  if (state.lang === "en") return COMMENTARY_NAMES_EN[id] || id;
+  if (state.lang === "zh") return COMMENTARY_NAMES_ZH[id] || id;
+  return (COMMENTARY_NAMES_ZH[id] || id) + " / " + (COMMENTARY_NAMES_EN[id] || id);
+}
+
+var DICT_NAMES_ZH = {
+  easton: "Easton 圣经词典",
+  isbe: "ISBE 国际圣经百科",
+  nave: "Nave 主题索引"
+};
+
+var DICT_NAMES_EN = {
+  easton: "Easton's Bible Dictionary",
+  isbe: "ISBE Encyclopedia",
+  nave: "Nave's Topical Bible"
+};
+
+function dictName(id) {
+  if (state.lang === "en") return DICT_NAMES_EN[id] || id;
+  if (state.lang === "zh") return DICT_NAMES_ZH[id] || id;
+  return DICT_NAMES_ZH[id] || DICT_NAMES_EN[id] || id;
+}
 
 // ── I18N ──
 var I18N = {
@@ -34,23 +86,27 @@ var I18N = {
     noResults: "No results found",
     searchFailed: "Search failed",
     results: "results",
-    commentary: "注释",
+    commentary: "Commentary",
     noCommentary: "No commentary for this chapter",
     oldTestament: "Old Testament",
     newTestament: "New Testament",
     previous: "← Prev",
     next: "Next →",
-    compareMode: "多版本对照",
-    compareOff: "关闭对照",
-    selectVersions: "选择对照版本...",
+    compareMode: "Compare",
+    compareOff: "Close Compare",
+    selectVersions: "Select versions...",
     strongsPlaceholder: "Strong's...",
     strongsTitle: "Strong's Dictionary",
     strongsSearching: "Searching...",
     strongsNoResult: "No Strong's entry found",
-    strongsHebrew: "希伯来文",
-    strongsGreek: "希腊文",
-    chapterNum: "Chapter",
-    searchEmpty: "输入关键词搜索经文"
+    strongsHebrew: "Hebrew",
+    strongsGreek: "Greek",
+    chapterNum: "Ch.",
+    searchEmpty: "Enter a keyword to search",
+    dictTitle: "Bible Dictionary",
+    dictSearch: "Select a dictionary and search for a term",
+    dictSelect: "Select",
+    commentarySection: "Commentary"
   },
   zh: {
     search: "搜索经文...",
@@ -76,7 +132,11 @@ var I18N = {
     strongsHebrew: "希伯来文",
     strongsGreek: "希腊文",
     chapterNum: "第",
-    searchEmpty: "输入关键词搜索经文"
+    searchEmpty: "输入关键词搜索经文",
+    dictTitle: "圣经词典",
+    dictSearch: "选择词典并搜索词条",
+    dictSelect: "选择词典",
+    commentarySection: "注释"
   }
 };
 
@@ -236,6 +296,11 @@ function setupLanguage() {
       renderSearchResults(state._lastQuery || "");
     }
     refreshLabels();
+    // Refresh dictionary popup if open
+    if (document.getElementById("dictOverlay").style.display === "flex") {
+      document.getElementById("dictPopupTitle").textContent = "📚 " + t("dictTitle");
+      loadDictSources();
+    }
   };
 }
 
@@ -243,6 +308,8 @@ function refreshLabels() {
   document.getElementById("searchBox").placeholder = t("search");
   var si = document.getElementById("strongsInput");
   if (si) si.placeholder = t("strongsPlaceholder");
+  var di = document.getElementById("dictSearchInput");
+  if (di) di.placeholder = t("dictSearch");
 }
 
 // ═══════════════════════════════════════════
@@ -445,19 +512,20 @@ function renderChapterHeader() {
 }
 
 function renderChapterNav() {
-  var el = document.getElementById("chapterNav");
-  var hasPrev = state.currentChapter > 1;
-  var hasNext = state.currentChapter < state.currentBook.chapters;
-
-  el.innerHTML =
-    (hasPrev ? '<button id="btnPrev">' + t("previous") + '</button>' : '<span></span>') +
-    '<span class="nav-info">' + state.currentChapter + ' / ' + state.currentBook.chapters + '</span>' +
-    (hasNext ? '<button id="btnNext">' + t("next") + '</button>' : '<span></span>');
-
-  var prev = document.getElementById("btnPrev");
-  var next = document.getElementById("btnNext");
-  if (prev) prev.addEventListener("click", function() { state.currentChapter--; renderChapterGrid(); loadChapter(); });
-  if (next) next.addEventListener("click", function() { state.currentChapter++; renderChapterGrid(); loadChapter(); });
+  function _render(el, suffix) {
+    var hasPrev = state.currentChapter > 1;
+    var hasNext = state.currentChapter < state.currentBook.chapters;
+    el.innerHTML =
+      (hasPrev ? '<button id="btnPrev' + suffix + '">' + t("previous") + '</button>' : '<span></span>') +
+      '<span class="nav-info">' + state.currentChapter + ' / ' + state.currentBook.chapters + '</span>' +
+      (hasNext ? '<button id="btnNext' + suffix + '">' + t("next") + '</button>' : '<span></span>');
+    var prev = document.getElementById("btnPrev" + suffix);
+    var next = document.getElementById("btnNext" + suffix);
+    if (prev) prev.addEventListener("click", function() { state.currentChapter--; renderChapterGrid(); loadChapter(); });
+    if (next) next.addEventListener("click", function() { state.currentChapter++; renderChapterGrid(); loadChapter(); });
+  }
+  _render(document.getElementById("chapterNavTop"), "Top");
+  _render(document.getElementById("chapterNav"), "");
 }
 
 // ═══════════════════════════════════════════
@@ -552,8 +620,6 @@ function renderCompareBar() {
 // ═══════════════════════════════════════════
 //  COMMENTARIES
 // ═══════════════════════════════════════════
-var COMMENTARY_NAMES = { TSK: "TSK 交叉引用", JFB: "JFB 注释", MHCC: "Matthew Henry 注释" };
-
 function loadCommentaries() {
   var body = document.getElementById("commentaryBody");
   body.innerHTML = '<div class="loading">' + t("loading") + '</div>';
@@ -578,23 +644,23 @@ function renderCommentaryTabs() {
     state.commentaries.commentaries.forEach(function(c) {
       if (!seen[c.source]) {
         seen[c.source] = true;
-        sources.push({ id: c.source, name: COMMENTARY_NAMES[c.source] || c.sourceName || c.source });
+        sources.push({ id: c.source, name: cmtName(c.source) || c.sourceName || c.source });
       }
     });
   }
 
   if (!sources.length) {
     sources = [
-      { id: "TSK", name: "TSK 交叉引用" },
-      { id: "JFB", name: "JFB 注释" },
-      { id: "MHCC", name: "Matthew Henry 注释" }
+      { id: "TSK", name: cmtName("TSK") },
+      { id: "JFB", name: cmtName("JFB") },
+      { id: "MHCC", name: cmtName("MHCC") }
     ];
   }
 
   var html = "";
   sources.forEach(function(s) {
     html += '<div class="cmt-tab' + (state.activeCommentary === s.id ? " active" : "") +
-      '" data-source="' + s.id + '">' + (COMMENTARY_NAMES[s.id] || s.name) + '</div>';
+      '" data-source="' + s.id + '">' + (cmtName(s.id) || s.name) + '</div>';
   });
   tabsEl.innerHTML = html;
 
@@ -635,7 +701,7 @@ function renderCommentaryBody() {
     var html = "";
     filtered.forEach(function(c) {
       var text = (c.text || "").replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>');
-      html += '<div class="commentary-item"><div class="cmt-source">' + (COMMENTARY_NAMES[c.source] || c.source) + '</div><div class="cmt-text"><p>' + text + '</p></div></div>';
+      html += '<div class="commentary-item"><div class="cmt-source">' + (cmtName(c.source) || c.source) + '</div><div class="cmt-text"><p>' + text + '</p></div></div>';
     });
     body.innerHTML = html;
   }
@@ -833,6 +899,103 @@ function renderStrongsEntry(id, entry) {
 
 function closeStrongsPopup() {
   document.getElementById("strongsOverlay").style.display = "none";
+}
+
+// ==================== Dictionary Popup ====================
+var dictSources = [];
+var dictResults = [];
+
+function openDictPopup() {
+  document.getElementById("dictOverlay").style.display = "flex";
+  document.getElementById("dictPopupTitle").textContent = "📚 " + t("dictTitle");
+  loadDictSources();
+  document.getElementById("dictSearchInput").placeholder = t("dictSearch");
+  var body = document.getElementById("dictPopupBody");
+  body.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text2)">' + t("dictSearch") + '</div>';
+  document.getElementById("dictSearchInput").focus();
+}
+
+function closeDictPopup() {
+  document.getElementById("dictOverlay").style.display = "none";
+}
+
+function loadDictSources() {
+  var sel = document.getElementById("dictSourceSelect");
+  if (sel.options.length > 1) return; // Already loaded
+
+  fetch(API_BASE + "/annotations/dictionary-sources")
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      dictSources = d.sources || [];
+      sel.innerHTML = '<option value="">-- ' + t("dictSelect") + ' --</option>';
+      dictSources.forEach(function(s) {
+        sel.innerHTML += '<option value="' + escHtml(s.id) + '">' + escHtml(dictName(s.id) || s.name) + '</option>';
+      });
+    })
+    .catch(function(e) {
+      console.error("Dict sources:", e);
+    });
+}
+
+function searchDictionary() {
+  var source = document.getElementById("dictSourceSelect").value;
+  var query = document.getElementById("dictSearchInput").value.trim();
+  if (!source || !query) return;
+
+  var body = document.getElementById("dictPopupBody");
+  body.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text2)">' + t("searching") + '</div>';
+
+  var url = API_BASE + "/annotations/dictionaries/" + source + "?search=" + encodeURIComponent(query);
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      dictResults = d.entries || [];
+      renderDictResults(query);
+    })
+    .catch(function(e) {
+      body.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--error)">Error: ' + escHtml(String(e)) + '</div>';
+    });
+}
+
+function renderDictResults(query) {
+  var body = document.getElementById("dictPopupBody");
+  if (dictResults.length === 0) {
+    body.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text2)">No results for "' + escHtml(query) + '"</div>';
+    return;
+  }
+  var html = '<div class="dict-results-count">' + dictResults.length + ' result(s) for "' + escHtml(query) + '"</div>';
+  for (var i = 0; i < dictResults.length; i++) {
+    var e = dictResults[i];
+    var preview = e.definition ? e.definition.replace(/<[^>]+>/g, '').substring(0, 150) : '';
+    if (preview.length === 150) preview += '...';
+    html += '<div class="dict-entry-row" onclick="showDictEntry(' + i + ')">';
+    html += '<div class="key">' + escHtml(e.entryId) + '</div>';
+    html += '<div class="preview">' + escHtml(preview) + '</div>';
+    html += '</div>';
+  }
+  body.innerHTML = html;
+}
+
+function showDictEntry(idx) {
+  var e = dictResults[idx];
+  var body = document.getElementById("dictPopupBody");
+  var html = '<div class="dict-detail-header">';
+  html += '<button onclick="renderDictResultsBack()">← Back</button>';
+  html += '<span class="key">' + escHtml(e.entryId || '') + '</span>';
+  html += '</div>';
+  html += '<div class="dict-detail-content">';
+  // Preserve line breaks and basic formatting
+  var def = (e.definition || '')
+    .replace(/\n/g, '<br>')
+    .replace(/→/g, '<br>→ ');
+  html += def;
+  html += '</div>';
+  body.innerHTML = html;
+  body.scrollTop = 0;
+}
+
+function renderDictResultsBack() {
+  renderDictResults(document.getElementById("dictSearchInput").value);
 }
 
 function handleWordClick(e) {

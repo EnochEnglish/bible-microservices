@@ -66,7 +66,13 @@ body {
    ═══════════════════════════════════════════ */
 .sidebar {
   background:var(--bg2); border-right:1px solid var(--border);
-  overflow-y:auto; padding:6px 0;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  scrollbar-width:thin; scrollbar-color:var(--border) transparent;
+}
+#chapterGrid { flex-shrink:0; padding-top:8px; }
+#bookList {
+  flex:1; overflow-y:auto; padding:6px 0;
   scrollbar-width:thin; scrollbar-color:var(--border) transparent;
 }
 .sidebar .section-title {
@@ -237,14 +243,19 @@ body {
   margin-top:28px; padding-top:16px;
   border-top:1px solid var(--border);
 }
-.chapter-nav button {
-  background:var(--bg3); color:var(--text);
+.chapter-nav-top {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:20px; padding:8px 12px;
+  background:var(--bg3); border-radius:8px;
+}
+.chapter-nav button, .chapter-nav-top button {
+  background:var(--bg2); color:var(--text);
   border:1px solid var(--border); border-radius:6px;
-  padding:6px 18px; cursor:pointer; font-size:13px;
+  padding:5px 14px; cursor:pointer; font-size:12px;
   transition:all 0.15s;
 }
-.chapter-nav button:hover { border-color:var(--accent); color:var(--accent); }
-.chapter-nav .nav-info { color:var(--text2); font-size:13px; }
+.chapter-nav button:hover, .chapter-nav-top button:hover { border-color:var(--accent); color:var(--accent); }
+.chapter-nav .nav-info, .chapter-nav-top .nav-info { color:var(--text2); font-size:12px; }
 
 /* ═══════════════════════════════════════════
    COMMENTARY PANEL (Right)
@@ -252,7 +263,12 @@ body {
 .tsk-panel {
   background:var(--bg2); border-left:1px solid var(--border);
   overflow-y:auto; padding:14px;
+  max-height:calc(100vh - 48px);
   scrollbar-width:thin; scrollbar-color:var(--border) transparent;
+}
+#commentaryBody {
+  overflow-y:auto;
+  max-height:calc(100vh - 140px);
 }
 
 /* Commentary Source Tabs */
@@ -487,3 +503,53 @@ body {
 .verse-text .verse-word:hover {
   background:rgba(212,165,116,0.2); color:var(--accent2);
 }
+/* ===== Dictionary Popup Styles ===== */
+#dictBtn {
+  background:var(--bg3); color:var(--accent); border:1px solid var(--border);
+  border-radius:8px; padding:8px 12px; cursor:pointer; font-size:15px; transition:background 0.15s;
+}
+#dictBtn:hover { background:var(--highlight); }
+
+.dict-search-area {
+  display:flex; gap:8px; padding:12px 20px; border-bottom:1px solid var(--border); align-items:center; flex-wrap:wrap;
+}
+.dict-search-area select {
+  background:var(--bg3); color:var(--text); border:1px solid var(--border);
+  border-radius:6px; padding:7px 10px; font-size:13px;
+}
+.dict-search-area input {
+  flex:1 1 120px; min-width:100px; background:var(--bg3); color:var(--text); border:1px solid var(--border);
+  border-radius:6px; padding:7px 12px; font-size:13px;
+}
+.dict-search-area button {
+  background:var(--accent); color:var(--bg); border:none; border-radius:6px;
+  padding:7px 14px; cursor:pointer; font-size:14px;
+}
+.dict-search-area button:hover { opacity:0.85; }
+
+#dictPopupBody {
+  overflow-y:auto; padding:0; scrollbar-width:thin; scrollbar-color:var(--border) transparent;
+  max-height:60vh;
+}
+.dict-results-count { font-size:12px; color:var(--text2); padding:10px 20px; }
+.dict-entry-row {
+  padding:10px 20px; cursor:pointer; border-bottom:1px solid var(--border);
+  transition:background 0.12s;
+}
+.dict-entry-row:hover { background:var(--highlight); }
+.dict-entry-row .key { font-weight:600; color:var(--text); font-size:14px; }
+.dict-entry-row .preview { font-size:12px; color:var(--text2); margin-top:3px; line-height:1.4; }
+
+.dict-detail-header {
+  padding:10px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
+}
+.dict-detail-header button {
+  background:var(--bg3); color:var(--accent); border:1px solid var(--border);
+  border-radius:6px; padding:5px 10px; cursor:pointer; font-size:12px;
+}
+.dict-detail-header .key { font-weight:700; font-size:15px; color:var(--accent); }
+.dict-detail-content {
+  padding:14px 20px; font-size:13px; line-height:1.7; color:var(--text);
+}
+.dict-detail-content p { margin:0 0 8px; }

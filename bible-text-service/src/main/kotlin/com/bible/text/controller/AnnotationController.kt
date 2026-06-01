@@ -76,6 +76,56 @@ class AnnotationController(
         return ResponseEntity.ok(result)
     }
 
+    // ==================== 字典 ====================
+
+    @GetMapping("/dictionary-sources")
+    fun getDictionarySources(): ResponseEntity<Map<String, Any>> {
+        val sources = annotationService.getDictionarySources()
+        return ResponseEntity.ok(mapOf(
+            "sources" to sources.map { (s, n) -> mapOf("id" to s, "name" to n) }
+        ))
+    }
+
+    @GetMapping("/dictionaries/{source}")
+    fun getDictionaryEntries(
+        @PathVariable source: String,
+        @RequestParam(required = false) search: String?,
+        @RequestParam(required = false) entryId: String?
+    ): ResponseEntity<Map<String, Any>> {
+        val result = when {
+            entryId != null -> {
+                val entry = annotationService.getDictionaryEntry(source, entryId)
+                if (entry != null) listOf(entry) else emptyList()
+            }
+            search != null -> annotationService.searchDictionary(source, search)
+            else -> annotationService.getDictionaryEntries(source)
+        }
+
+        val sources = annotationService.getDictionarySources()
+        return ResponseEntity.ok(mapOf(
+            "entries" to result.map { e ->
+                mapOf(
+                    "id" to (e.id ?: 0L),
+                    "source" to e.source,
+                    "sourceName" to e.sourceName,
+                    "entryId" to e.entryId,
+                    "definition" to e.definition
+                )
+            },
+            "sources" to sources.map { (s, n) -> mapOf("id" to s, "name" to n) }
+        ))
+    }
+
+    @PostMapping("/import-dictionary")
+    fun importDictionary(@RequestBody request: ImportDictionaryRequest): ResponseEntity<Map<String, Any>> {
+        val result = annotationService.importDictionaryEntries(
+            source = request.source,
+            sourceName = request.sourceName,
+            entries = request.entries
+        )
+        return ResponseEntity.ok(result)
+    }
+
     // ==================== 笔记 ====================
 
     @GetMapping("/notes/{verseRef}")
@@ -212,4 +262,10 @@ data class CreateBookmarkRequest(
     val verseRef: String,
     val color: String?,
     val note: String?
+)
+
+data class ImportDictionaryRequest(
+    val source: String,
+    val sourceName: String,
+    val entries: List<Map<String, Any>>
 )

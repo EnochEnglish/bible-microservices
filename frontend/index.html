@@ -22,12 +22,13 @@
       </select>
       <div class="search-box"><input type="text" id="searchBox" placeholder="搜索经文..."></div>
       <div class="strongs-box"><input type="text" id="strongsInput" placeholder="Strong's..."></div>
+      <button id="dictBtn" title="Bible Dictionary" onclick="openDictPopup()">📚</button>
     </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
-      <div id="bookList"></div>
       <div id="chapterGrid" class="chapters"></div>
+      <div id="bookList"></div>
     </div>
 
     <!-- Main Content -->
@@ -40,6 +41,7 @@
           <select id="compareTrans2"></select>
           <div class="close-btn" id="compareClose" title="关闭对照">✕</div>
         </div>
+        <div class="chapter-nav-top" id="chapterNavTop"></div>
         <div id="verseContent" class="loading">加载中...</div>
         <div class="chapter-nav" id="chapterNav"></div>
       </div>
@@ -51,6 +53,24 @@
       <div class="commentary-tabs" id="commentaryTabs"></div>
       <div id="commentaryBody">
         <div class="loading">加载中...</div>
+      </div>
+    </div>
+
+    <!-- Dictionary Panel (Easton/ISBE/Nave) -->
+    <div class="strongs-overlay" id="dictOverlay" style="display:none" onclick="closeDictPopup()">
+      <div class="strongs-popup" id="dictPopup" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="dictPopupTitle">📚 Bible Dictionary</span>
+          <span class="strongs-popup-close" onclick="closeDictPopup()">✕</span>
+        </div>
+        <div class="dict-search-area">
+          <select id="dictSourceSelect"></select>
+          <input type="text" id="dictSearchInput" placeholder="Search dictionary..." onkeyup="if(event.key==='Enter')searchDictionary()">
+          <button onclick="searchDictionary()">🔍</button>
+        </div>
+        <div id="dictPopupBody">
+          <div style="padding:2rem;text-align:center;color:var(--muted)">Select a dictionary and search for a term</div>
+        </div>
       </div>
     </div>
 

@@ -2,9 +2,11 @@ package com.bible.text.service
 
 import com.bible.text.entity.Bookmark
 import com.bible.text.entity.Commentary
+import com.bible.text.entity.DictionaryEntry
 import com.bible.text.entity.Note
 import com.bible.text.repository.BookmarkRepository
 import com.bible.text.repository.CommentaryRepository
+import com.bible.text.repository.DictionaryRepository
 import com.bible.text.repository.NoteRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,7 +16,8 @@ import java.time.Instant
 class AnnotationService(
     private val noteRepository: NoteRepository,
     private val bookmarkRepository: BookmarkRepository,
-    private val commentaryRepository: CommentaryRepository
+    private val commentaryRepository: CommentaryRepository,
+    private val dictionaryRepository: DictionaryRepository
 ) {
 
     // ==================== 笔记 ====================
@@ -92,6 +95,66 @@ class AnnotationService(
         bookmarkRepository.deleteByVerseRef(verseRef)
     }
 
+    // ==================== 字典 ====================
+
+    fun getDictionarySources(): List<Pair<String, String>> {
+        return dictionaryRepository.findDistinctSources().map { row ->
+            Pair(row[0] as String, row[1] as String)
+        }
+    }
+
+    fun getDictionaryEntries(source: String): List<DictionaryEntry> {
+        return dictionaryRepository.findBySourceOrderByEntryId(source)
+    }
+
+    fun getDictionaryEntry(source: String, entryId: String): DictionaryEntry? {
+        return dictionaryRepository.findBySourceAndEntryId(source, entryId)
+    }
+
+    fun searchDictionary(source: String, query: String): List<DictionaryEntry> {
+        val entries = dictionaryRepository.searchBySourceAndEntryId(source, query)
+        return if (entries.isNotEmpty()) entries
+        else dictionaryRepository.searchBySourceAndText(source, query)
+    }
+
+    /**
+     * 批量导入字典词条
+     */
+    @Transactional
+    fun importDictionaryEntries(
+        source: String,
+        sourceName: String,
+        entries: List<Map<String, Any>>
+    ): Map<String, Any> {
+        var imported = 0
+        var skipped = 0
+
+        for (e in entries) {
+            val entryId = e["entryId"] as? String ?: continue
+            val definition = e["definition"] as? String ?: continue
+
+            if (dictionaryRepository.existsBySourceAndEntryId(source, entryId)) {
+                skipped++
+                continue
+            }
+
+            dictionaryRepository.save(DictionaryEntry(
+                source = source,
+                sourceName = sourceName,
+                entryId = entryId,
+                definition = definition
+            ))
+            imported++
+        }
+
+        return mapOf(
+            "status" to "ok",
+            "imported" to imported,
+            "skipped" to skipped,
+            "total" to (imported + skipped)
+        )
+    }
+
     // ==================== 注释 ====================
 
     fun getCommentaries(source: String?, bookId: String, chapter: Int, verse: Int?): List<Commentary> {
@@ -118,10 +181,13 @@ class AnnotationService(
         }
     }
 
+    // Dictionary sources stored in COMMENTARIES table should NOT appear as commentary sources
+    private val dictionarySourceIds = setOf("Easton", "ISBE", "Nave")
+
     fun getAllCommentarySources(): List<Pair<String, String>> {
         return commentaryRepository.findDistinctSources().map { row ->
             Pair(row[0] as String, row[1] as String)
-        }
+        }.filter { (id, _) -> id !in dictionarySourceIds }
     }
 
     /**
