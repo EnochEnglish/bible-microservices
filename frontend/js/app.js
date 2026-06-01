@@ -12,7 +12,9 @@ var state = {
   view: "reader",
   lang: "bilingual",
   commentaries: null,
-  activeCommentary: "TSK"
+  activeCommentary: "TSK",
+  // TTS
+  tts: { playing: false, currentVerse: -1, voices: [] }
 };
 
 // ── Translation Names (Chinese) ──
@@ -37,7 +39,8 @@ var COMMENTARY_NAMES_ZH = {
   Calvin: "加尔文注释",
   Barnes: "Barnes NT 注释",
   RWP: "Robertson 词图",
-  Catena: "教父集注"
+  Catena: "教父集注",
+  Wesley: "Wesley 注释"
 };
 
 var COMMENTARY_NAMES_EN = {
@@ -49,7 +52,8 @@ var COMMENTARY_NAMES_EN = {
   Calvin: "Calvin's Commentary",
   Barnes: "Barnes NT Notes",
   RWP: "Robertson Word Pix",
-  Catena: "Catena Aurea"
+  Catena: "Catena Aurea",
+  Wesley: "Wesley's Notes"
 };
 
 function cmtName(id) {
@@ -106,7 +110,9 @@ var I18N = {
     dictTitle: "Bible Dictionary",
     dictSearch: "Select a dictionary and search for a term",
     dictSelect: "Select",
-    commentarySection: "Commentary"
+    commentarySection: "Commentary",
+    readChapter: "Read Full Chapter",
+    verseClickHint: "Click to hear verse"
   },
   zh: {
     search: "搜索经文...",
@@ -136,7 +142,9 @@ var I18N = {
     dictTitle: "圣经词典",
     dictSearch: "选择词典并搜索词条",
     dictSelect: "选择词典",
-    commentarySection: "注释"
+    commentarySection: "注释",
+    readChapter: "朗读全章",
+    verseClickHint: "点击朗读本节"
   }
 };
 
@@ -146,7 +154,10 @@ function t(key) {
     // For bilingual, prefer Chinese for section labels, English for UI
     var zh = I18N.zh[key];
     var en = I18N.en[key];
-    if (key === "commentary" || key === "oldTestament" || key === "newTestament" || key === "compareMode" || key === "compareOff") return zh || en;
+    // I18N bilingual: commentary / noCommentary / oldTestament / newTestament / compareMode / compareOff → prefer zh in bilingual
+  // I18N bilingual: readChapter stays bilingual
+  if (key === "readChapter" || key === "verseClickHint") return (zh || "") + " / " + (en || "");
+  if (key === "commentary" || key === "oldTestament" || key === "newTestament" || key === "compareMode" || key === "compareOff") return zh || en;
     return en;
   }
   return I18N.en[key];
@@ -390,6 +401,7 @@ function renderChapterGrid() {
 //  CHAPTER LOADING
 // ═══════════════════════════════════════════
 function loadChapter() {
+  stopTTS();
   state.view = "reader";
   document.getElementById("verseContent").innerHTML = '<div class="loading">' + t("loading") + '</div>';
   document.getElementById("searchResults").style.display = "none";
@@ -404,6 +416,7 @@ function loadChapter() {
     renderChapterHeader();
     renderVerses();
     renderChapterNav();
+    updateTTSControls();
     // Reload all compare versions
     if (state.compareTranslations.length) loadAllCompare();
   }).catch(function(e) {
@@ -483,7 +496,7 @@ function renderVerses() {
     var html = "";
     verses.forEach(function(v) {
       html += '<div class="verse">' +
-        '<span class="verse-num">' + v.verse + '</span>' +
+        '<span class="verse-num tts-btn" onclick="speakVerse(' + v.verse + ')" title="' + t("verseClickHint") + '">' + v.verse + '</span>' +
         '<span class="verse-text">' + makeWordsClickable(v.text || "") + '</span>' +
       '</div>';
     });
@@ -675,6 +688,7 @@ function renderCommentaryTabs() {
 
 function renderCommentaryBody() {
   var body = document.getElementById("commentaryBody");
+
   if (!state.commentaries || !state.commentaries.commentaries) {
     body.innerHTML = '<div class="empty-state">' + t("noCommentary") + '</div>';
     return;
@@ -795,6 +809,173 @@ function highlight(text, query) {
   if (!query || !text) return text || "";
   var escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   return text.replace(new RegExp("(" + escaped + ")", "gi"), "<mark>$1</mark>");
+}
+
+// Wesley is now stored as standard book/chapter entries (OT→GEN/1, NT→MAT/1)
+// and handled by the normal loadCommentaries() flow. No standalone loader needed.
+
+// ═══════════════════════════════════════════
+//  TTS (Text-to-Speech)
+// ═══════════════════════════════════════════
+function initTTS() {
+  if (!window.speechSynthesis) return;
+  // Load voices (may be async)
+  state.tts.voices = window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = function() {
+    state.tts.voices = window.speechSynthesis.getVoices();
+  };
+}
+
+function getTTSCfg() {
+  // Prefer an English voice; fall back to default
+  var voices = state.tts.voices;
+  var lang = state.lang;
+  var voice = null;
+  if (lang === "zh") {
+    voice = voices.find(function(v) { return v.lang.startsWith("zh") || v.lang.startsWith("cmn"); });
+  }
+  if (!voice) {
+    voice = voices.find(function(v) { return v.lang.startsWith("en") && v.name.indexOf("Google") < 0; });
+  }
+  if (!voice && voices.length) voice = voices[0];
+  return { voice: voice, rate: 0.9, pitch: 1.0 };
+}
+
+function speakVerse(verseNum) {
+  if (!state.verses || !state.verses.verses) return;
+  stopTTS();
+  var v = state.verses.verses.find(function(x) { return x.verse === verseNum; });
+  if (!v || !v.text) return;
+
+  var cfg = getTTSCfg();
+  var utterance = new SpeechSynthesisUtterance(cleanForTTS(v.text));
+  utterance.rate = cfg.rate;
+  utterance.pitch = cfg.pitch;
+  if (cfg.voice) utterance.voice = cfg.voice;
+
+  state.tts.playing = true;
+  state.tts.currentVerse = verseNum;
+  state.tts.utterance = utterance;
+  highlightSpeakingVerse();
+
+  utterance.onend = function() {
+    state.tts.playing = false;
+    state.tts.currentVerse = -1;
+    highlightSpeakingVerse();
+  };
+  utterance.onerror = function() {
+    state.tts.playing = false;
+    state.tts.currentVerse = -1;
+    highlightSpeakingVerse();
+  };
+
+  window.speechSynthesis.speak(utterance);
+  updateTTSControls();
+}
+
+function speakChapter() {
+  if (!state.verses || !state.verses.verses) return;
+  stopTTS();
+  
+  var verses = state.verses.verses.slice();
+  if (!verses.length) return;
+
+  var cfg = getTTSCfg();
+  state.tts.playing = true;
+  state.tts.utterances = [];
+  state.tts.chapterIdx = 0;
+  state.tts.chapterVerses = verses;
+
+  function speakNext() {
+    if (!state.tts.playing) return;
+    var idx = state.tts.chapterIdx;
+    if (idx >= verses.length) {
+      state.tts.playing = false;
+      state.tts.currentVerse = -1;
+      highlightSpeakingVerse();
+      updateTTSControls();
+      return;
+    }
+    var v = verses[idx];
+    state.tts.currentVerse = v.verse;
+    highlightSpeakingVerse();
+
+    var utterance = new SpeechSynthesisUtterance(cleanForTTS(v.text));
+    utterance.rate = cfg.rate;
+    utterance.pitch = cfg.pitch;
+    if (cfg.voice) utterance.voice = cfg.voice;
+
+    utterance.onend = function() {
+      state.tts.chapterIdx++;
+      speakNext();
+    };
+    utterance.onerror = function() {
+      state.tts.chapterIdx++;
+      speakNext();
+    };
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  updateTTSControls();
+  speakNext();
+}
+
+function stopTTS() {
+  window.speechSynthesis.cancel();
+  state.tts.playing = false;
+  state.tts.currentVerse = -1;
+  state.tts.chapterIdx = 0;
+  state.tts.chapterVerses = [];
+  highlightSpeakingVerse();
+  updateTTSControls();
+}
+
+function highlightSpeakingVerse() {
+  // Remove all highlights
+  document.querySelectorAll(".verse.speaking").forEach(function(el) {
+    el.classList.remove("speaking");
+  });
+  // Add highlight to current
+  if (state.tts.currentVerse > 0) {
+    var verses = document.querySelectorAll(".verse");
+    verses.forEach(function(el) {
+      var numEl = el.querySelector(".verse-num, .tts-btn");
+      if (numEl) {
+        var num = parseInt(numEl.textContent.replace(/[^0-9]/g, ""));
+        if (num === state.tts.currentVerse) {
+          el.classList.add("speaking");
+        }
+      }
+    });
+  }
+  updateTTSControls();
+}
+
+function updateTTSControls() {
+  var hdr = document.getElementById("chapterHeader");
+  var existing = document.getElementById("ttsControls");
+  if (existing) existing.remove();
+
+  var html = '<span id="ttsControls" style="margin-left:12px;display:inline-flex;gap:6px;align-items:center">';
+  if (state.tts.playing) {
+    html += '<button onclick="stopTTS()" title="Stop" style="padding:2px 8px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;font-size:12px">⏹</button>';
+    html += '<span style="font-size:12px;color:var(--accent)">v.' + state.tts.currentVerse + '</span>';
+  } else {
+    html += '<button onclick="speakChapter()" title="' + t("readChapter") + '" style="padding:2px 8px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text1);cursor:pointer;font-size:12px">🔊 ' + t("readChapter") + '</button>';
+  }
+  html += '</span>';
+  hdr.insertAdjacentHTML("beforeend", html);
+}
+
+function cleanForTTS(text) {
+  return text
+    .replace(/<[^>]+>/g, "")
+    .replace(/&[a-z]+;/gi, " ")
+    .replace(/[\u0300-\u036f\u0591-\u05c7\u05b0-\u05bd]/g, "")  // strip diacritics
+    .replace(/[{}[\]]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 // ═══════════════════════════════════════════
@@ -1031,6 +1212,7 @@ document.addEventListener("DOMContentLoaded", function() {
   setupLanguage();
   refreshLabels();
   setupStrongs();
+  initTTS();
   loadTranslations().then(function() {
     return loadBooks();
   }).then(function() {

@@ -165,6 +165,19 @@ body {
   line-height:1.8;
 }
 .verse .verse-num:hover { text-decoration:underline; opacity:0.8; }
+.verse .verse-num.tts-btn { color:var(--accent); }
+.verse .verse-num.tts-btn:hover { text-decoration:underline; opacity:0.7; cursor:pointer; }
+.verse.speaking {
+  background:rgba(100,180,255,0.12);
+  border-left:3px solid var(--accent);
+  padding-left:8px;
+  border-radius:0 6px 6px 0;
+  animation: speakingPulse 2s ease-in-out infinite;
+}
+@keyframes speakingPulse {
+  0%,100% { background:rgba(100,180,255,0.08); }
+  50% { background:rgba(100,180,255,0.18); }
+}
 
 .verse .verse-text {
   color:var(--text);

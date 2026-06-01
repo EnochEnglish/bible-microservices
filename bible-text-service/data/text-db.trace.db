@@ -318,3 +318,30 @@ Caused by: java.nio.channels.ClosedByInterruptException
 	at java.base/sun.nio.ch.FileChannelImpl.force(FileChannelImpl.java:472)
 	at org.h2.mvstore.SingleFileStore.sync(SingleFileStore.java:179)
 	... 18 more
+2026-05-31 01:35:24.847477+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DICTIONARIES" not found; SQL statement:
+DELETE FROM dictionaries WHERE source=? [42102-224]
+2026-05-31 01:35:24.893252+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DICTIONARIES" not found; SQL statement:
+DELETE FROM dictionaries WHERE source=? [42102-224]
+2026-05-31 01:35:24.894765+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DICTIONARIES" not found; SQL statement:
+DELETE FROM dictionaries WHERE source=? [42102-224]
+2026-05-31 01:41:24.565647+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DICTIONARIES" not found; SQL statement:
+DELETE FROM dictionaries WHERE source=? [42102-224]
+2026-05-31 01:41:24.606883+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DICTIONARIES" not found; SQL statement:
+DELETE FROM dictionaries WHERE source=? [42102-224]
+2026-05-31 01:41:24.607885+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DICTIONARIES" not found; SQL statement:
+DELETE FROM dictionaries WHERE source=? [42102-224]
+2026-05-31 01:58:18.218319+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DICTIONARIES" not found; SQL statement:
+DELETE FROM dictionaries WHERE source=? [42102-224]
+2026-05-31 01:58:18.267123+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DICTIONARIES" not found; SQL statement:
+DELETE FROM dictionaries WHERE source=? [42102-224]
+2026-05-31 01:58:18.269120+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DICTIONARIES" not found; SQL statement:
+DELETE FROM dictionaries WHERE source=? [42102-224]
