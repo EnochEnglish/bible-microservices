@@ -223,7 +223,7 @@ var BOOK_ORDER = [
 ];
 var OT_BOOKS = BOOK_ORDER.slice(0, 39);
 var NT_BOOKS = BOOK_ORDER.slice(39);
-var API = "http://localhost:8080/api/v1";
+var API = APP_CONFIG.apiBase;  // from config.js
 
 function apiGet(path) {
   return fetch(API + path).then(function(r) {

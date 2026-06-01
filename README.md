@@ -549,3 +549,36 @@ netstat -ano | Select-String ":8080" | ForEach-Object { ... }
 - GitHub 镜像: `D:\dev\github\bible-microservices\`
 - 任务文档: `artifacts/`
 - 版权清单: `COPYRIGHTS.md`
+
+---
+
+## 2026-06-02 更新
+
+### TTS 双语提示
+- 新增 I18N 键 `verseClickHint`: 中"点击朗读本节" / 英"Click to hear verse"
+- 双语模式: "点击朗读本节 / Click to hear verse"
+- 经节编号 title 属性动态获取
+
+### Wesley 注释修复
+- 分析 Wesley SWORD 模块：OT 仅 Genesis，NT 连续注释流
+- 重新导入为 2 条记录（GEN/1 + MAT/1）
+- 删除前端独立加载器 (~130 行)，Wesley 通过标准注释流程加载
+
+### 部署配置化
+- 新增 `frontend/js/config.js`：三种模式 (local/production/auto)
+  - `local`: API → `http://localhost:8080/api/v1`
+  - `production`: API → `/api/v1`（相对路径，配合 Nginx 反代）
+  - `auto`: 根据 hostname 自动检测
+- `api.js`: 删除硬编码 API_BASE
+- `app.js`: `var API = APP_CONFIG.apiBase`
+- `CorsConfig.kt`: 新增 usebible.com 白名单
+- 多域名支持 (usebible.com / www.usebible.com) 通过 Nginx + CORS 实现
+- SSL 建议使用 Let's Encrypt (免费)，非必须但强烈建议
+
+### 修改文件
+- `frontend/js/config.js` (新增)
+- `frontend/js/api.js` (API_BASE 配置化)
+- `frontend/js/app.js` (API 变量 + 删除 Wesley 独立函数 + verseClickHint)
+- `frontend/index.html` (加载顺序 config→api→app)
+- `bible-gateway/.../CorsConfig.kt` (新增域名白名单)
+- `README.md` (本次更新)

@@ -20,8 +20,14 @@ class CorsConfig {
         val config = CorsConfiguration().apply {
             // 允许所有来源（开发模式），生产环境需限制
             addAllowedOriginPattern("*")
+            // Local development
             addAllowedOrigin("http://localhost:5173")
             addAllowedOrigin("http://localhost:8080")
+            addAllowedOrigin("http://localhost:3000")
+            addAllowedOrigin("http://127.0.0.1:3000")
+            // Production domains
+            addAllowedOrigin("https://www.usebible.com")
+            addAllowedOrigin("https://usebible.com")
             addAllowedOrigin("https://andbible.cn")
             addAllowedOrigin("https://andbible.com")
             // 允许所有请求头和方法

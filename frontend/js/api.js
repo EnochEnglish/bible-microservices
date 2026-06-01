@@ -1,4 +1,5 @@
-const API_BASE = "http://localhost:8080/api/v1";
+// API_BASE is defined in config.js (APP_CONFIG.apiBase)
+// var API_BASE is set by config.js for backward compatibility
 
 class BibleAPI {
   static async getTranslations() {
