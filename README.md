@@ -1,51 +1,68 @@
-# bible-microservices 备份
+# bible-microservices — 圣经微服务系统
 
-**备份时间**: 2026-05-29 10:10 CST
-**备份大小**: 573.5 MB (源码+数据+部署包)
-**源路径**: C:\Users\PC\.qclaw\workspace-v733kxt9elzfv7u1\bible-microservices
+**最后更新**: 2026-06-10 CST
+**项目路径**: `C:\Users\PC\.qclaw\workspace-v733kxt9elzfv7u1\bible-microservices`
 
 ## 项目概述
 
-基于 Spring Boot 3.2 + Kotlin 的圣经微服务系统，4 服务架构：
+基于 Spring Boot 3.2 + Kotlin 的圣经学习微服务系统，灵感来自 AndBible，支持逐词对照 (Interlinear)、Strong's 词典、多版本对照。
+
+**6 服务架构**:
 - **Gateway** (:8080) — API 网关/路由/CORS
-- **Text** (:8081) — 经文查询/译本管理/Strong's 词典
+- **Text** (:8081) — 经文查询/译本管理/注释/Strong's/字典
 - **Search** (:8082) — Lucene 全文检索
 - **Module** (:8083) — 模块导入/格式解析
+- **Sword** (:8086) — SWORD 模块原生解析 (JSword), OSIS→逐词 JSON, 15 个 SWORD 模块
+- **Frontend** (:3000) — 纯静态 SPA, Node.js 代理
 
-## 当前数据
+## 当前数据 (2026-06-10)
 
-| 类别 | 数量 |
-|------|------|
-| 译本 | 13 个 (英文7 + 中文2 + 希腊2 + 拉丁1 + 希伯来1) |
-| 经文 | 23.2万+ 节 |
-| Strong's 词典 | 14,341 条 (希腊5,667 + 希伯来8,674) |
-| TSK 交叉引用 | 29,059 条 (52/66 书卷) |
-| 注释 | JFB 602 + MHCC 524 |
-| 搜索索引 | 13 个 Lucene 索引 |
-| 前端 | 三栏暗色主题，多版本对照，中英双语 |
-| 回归测试 | 74 项全通过 |
+| 类别 | 数量 | 说明 |
+|------|------|------|
+| **译本** | 22 | 英文 9 + 中文 3 + 希腊文 4 + 拉丁文 1 + 希伯来文 2 + 俄文 1 + 撒玛利亚五经 1 |
+| **SWORD 模块** | 15 | KJV/ChiUns/ChiUn/OSHB/Byz/SBLGNT/TR/MorphGNT/LXX/SP + Strong's ×2 + MHCC/JFB/Clarke |
+| **经文** | ~35 万节 | 涵盖 66 正典 + 次经/伪经 |
+| **Strong's 词典** | 14,341 条 | 希腊文 5,667 + 希伯来文 8,674 |
+| **TSK 交叉引用** | 29,059 条 | 52/66 书卷覆盖 |
+| **注释源** | 10 | JFB/MHCC/MHC/Clarke/Calvin/Barnes/RWP/Catena/TSK/Wesley |
+| **词典源** | 3 | Easton (3,961) / ISBE (9,349) / Nave (5,319) — 共 18,629 条 |
+| **搜索索引** | 22 | 每译本独立 Lucene 索引 |
+| **前端** | 中英双语 | Interlinear 🔤 / Strong's Hover / 多版本对照 / TTS / 形态码 |
+| **回归测试** | 74 项全通过 | E2E 10/10 + 渲染 14/14 + 后端 API 55/55 |
+| **服务总数** | **6** | Gateway(:8080) Text(:8081) Search(:8082) Module(:8083) Sword(:8086) Frontend(:3000) |
 
 ## 部署要求
 
 - **运行环境**: Java 17+ (推荐 OpenJDK 17)
 - **系统**: Windows / Linux (cloud-deploy 包支持 Linux)
-- **端口**: 8080-8083, 3000
-- **数据库**: H2 文件数据库 (data/text-db.mv.db, 121 MB)
+- **端口**: 8080-8083, 8086, 3000
+- **数据库**: H2 文件数据库 (data/text-db.mv.db, ~231 MB)
 
 ## 目录结构
 
 ```
 bible-microservices/
-├── bible-gateway/         # API 网关源码
-├── bible-text-service/    # 经文服务源码
-├── bible-search-service/  # 搜索服务源码
-├── bible-module-service/  # 模块服务源码
-├── frontend/              # 前端 SPA
-├── data/                  # 数据库 + 搜索索引 + SWORD 模块
-├── scripts/               # 导入脚本 + 工具
-├── cloud-deploy/          # Linux 云部署包 (含 4 个 JAR)
-├── tests/                 # 回归测试套件
-└── artifacts/             # 任务文档
+├── bible-gateway/              # API 网关源码
+├── bible-text-service/         # 经文服务源码
+├── bible-search-service/       # 搜索服务源码
+├── bible-module-service/       # 模块服务源码
+├── bible-sword-service/        # SWORD 解析服务源码 (JSword + Kotlin)
+├── bible-sword-reader/         # JSword 引擎改编 (含 LuceneIndexManager stub)
+├── frontend/                   # 前端 SPA (Node.js 代理)
+│   ├── index.html
+│   ├── server.js               # API 代理 (Gateway + Sword)
+│   ├── css/style.css
+│   └── js/ (app.js ~47KB, config.js, api.js)
+├── data/                       # 数据库 + 搜索索引 + SWORD 模块
+│   ├── text-db.mv.db (~231MB)
+│   ├── lucene-index/ (22 个)
+│   └── sword-mods/ (15 个模块, ~1.2GB)
+├── dist/                       # 编译好的 JAR (6 个服务)
+├── scripts/                    # 数据导入脚本
+├── cloud-deploy/               # Linux 云部署包
+├── tests/                      # 回归测试
+├── build.gradle.kts
+└── settings.gradle.kts
 ```
 
 ## 快速启动
@@ -64,30 +81,6 @@ cd frontend && python -m http.server 3000
 ```
 
 启动顺序: Text → Search → Module → Gateway，每个等待 15-30 秒。
-
-## 同步
-
-- GitHub: 待推送
-- 云服务器: cloud-deploy/ 目录上传即可
-# bible-microservices — 圣经微服务系统
-
-**最后更新**: 2026-06-02 CST  
-**项目路径**: `C:\Users\PC\.qclaw\workspace-v733kxt9elzfv7u1\bible-microservices`  
-**数据库**: H2 文件数据库 `data/text-db.mv.db` (~231 MB)
-
----
-
-## 项目概述
-
-基于 Spring Boot 3.2 + Kotlin 的圣经学习微服务系统，灵感来自 AndBible，支持本地运行、服务器部署、多端适配。自研 SWORD 格式解析引擎，不依赖 JSword 库。
-
-**4 服务架构**:
-- **Gateway** (:8080) — API 网关 / 路由聚合 / CORS
-- **Text** (:8081) — 经文查询 / 译本管理 / 注释 / Strong's 词典 / 字典
-- **Search** (:8082) — Lucene 全文检索（22 索引）
-- **Module** (:8083) — SWORD 模块导入 / 格式解析
-
-**前端**: 纯静态 SPA (:3000)，三栏暗色主题，22 译本支持，多版本对照，中英双语界面。
 
 ---
 
@@ -334,12 +327,22 @@ netstat -ano | Select-String ":8080" | ForEach-Object { ... }
 | GET | `/annotations/dictionary-sources` | 字典源列表 (3) |
 | GET | `/annotations/dictionaries/{source}?search=...` | 字典搜索 |
 
+### SWORD 模块 (SwordService :8086)
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/v1/sword/modules` | SWORD 模块列表 (15) |
+| GET | `/api/v1/sword/{module}/passage/{ref}?strongs=true` | OSIS→逐词 JSON (含 Strong's/形态码) |
+| GET | `/api/v1/sword/{module}/passage/{ref}` | 纯文本经文 |
+| GET | `/api/v1/sword/{module}/dict/{key}` | 字典条目 (Strong's/ISBE/Easton) |
+
 ---
 
 ## 前端功能
 
 ### 核心阅读
 - 📖 **22 译本切换**: 左侧栏下拉选择，实时加载
+- 🔤 **Interlinear 逐词对照**: SWORD 版本 (KJV/ChiUns/ChiUn) 支持词级显示 Strong's 编号 + 形态码 + 词形分析
 - 📚 **书卷导航**: 66 卷旧约/新约分类，快速跳转
 - 🔢 **章节网格**: 点击弹出章节跳转网格
 - 📝 **逐节渲染**: 每节可单独点击 Strong's 分析
@@ -363,6 +366,8 @@ netstat -ano | Select-String ":8080" | ForEach-Object { ... }
 - 🏷️ **单词可点击**: 经文中单词点击弹出 Strong's 面板
 - 🔤 **希腊/希伯来原文**: 显示原文字母 + 定义
 - 📎 **词形映射**: 希伯来文 300,764 词形映射
+- 🫧 **Hover 气泡**: 300ms 防抖 + session 缓存 — hover 单词即显示释义
+- 🏷️ **形态码显示**: H8804 等码 `<sup>` 可见显示, hover 气泡查看说明
 
 ### TTS 语音朗读
 - 🔊 **逐节朗读**: 点击节编号 → 浏览器原生 TTS
@@ -476,6 +481,48 @@ netstat -ano | Select-String ":8080" | ForEach-Object { ... }
 - 完整 README 文档编写
 - 代码备份至 D:\dev\github\bible-microservices
 
+### 2026-06-03 ~ 2026-06-06 — bible-sword-service 上线 (JSword 原生解析)
+- **新增服务**: SwordService (:8086)，基于 JSword 原生解析替代全部自定义导入脚本
+- 集成 CrossWire JSword 库，原生支持 zText/zCom/zCom4/zLD/RawLD 全格式
+- StubIndexManager 反射注入解决 `Books.<clinit>` NPE
+- ChiUns (简体中文 + Strong's) 模块集成
+- KJV 节边界精确检测 (BZV/BZS/BZZ 格式)
+- 前端 Interlinear 逐词对照视图 + 双语标签
+- Morphology 形态编码面板 (60 组) + `showMorphHelp()`
+- 6 个微服务全部运行
+
+### 2026-06-07 — 前端 CORS 修复 & E2E 测试
+- **CORS 最终方案**: `server.js` 全 API 代理 (`/api/v1/*` → Gateway, `/api/v1/sword/*` → Sword)
+- `config.js` 配置分层 (local/production/auto 三模式)
+- 所有测试通过: E2E 10/10, 渲染 14/14, 后端 API 55/55
+- Gateway JAR 过旧致 Strong's/dict 404 → 前端代理绕过 Gateway 直达 text:8081
+
+### 2026-06-08 — Strong's & Interlinear 体验完善
+- Multi-Strong's 拆分 (H0853+H01254 → 独立链接)
+- Strong's 前导零归一化 (H0853→H853)
+- Strong's Hover 气泡: 300ms 防抖 + session 缓存 + sword-service 字典查询
+- Morphology 码 H8804 可见显示 (`<sup class="il-morph">`)
+- Interlinear 双语标签: ilStrongs/ilLemma/ilMorph/ilFootnote + 图例
+- 翻译切换时 Interlinear 数据重置防残留
+- 翻译下拉中 🔤 标记 SWORD/Interlinear 版本
+- 脚注 `<catchWord>`/`<rdg>` HTML 原样渲染
+
+### 2026-06-09 — ChiUn 繁体 & "面"字修复
+- ChiUn (繁体中文和合本 + Strong's) 下载并集成
+- SWORD 翻译 (ChiUns/ChiUn/KJV) 排序置顶
+- H8804 形态码与 Strong's 编号分离过滤 (`isMorphCode()`)
+- **Bug**: ChiUns Gen.1:2 "渊面"的"面"字丢失 — 后端 OSIS 解析中 `<w>` 空节点吞自由文本
+- **修复**: `SwordPassageService.kt` 新增 `pendingPlainText` 缓冲机制
+- 形态码 hover 气泡 (`fetchMorphTooltip`)
+
+### 2026-06-10 — 服务恢复 & 构建修复
+- 电脑重启后全服务恢复
+- **SwordService Bug**: `LuceneIndexManager` 类 missing → 新建空 stub
+- **SwordService Bug**: `corsConfigurer` bean 重复定义 → 移除 Application 内联 CORS
+- Java 文件 BOM 导致 javac 编译失败 → 去除 BOM 后重新构建
+- SwordService 需 JDK 17 完整路径启动 (默认 Java 11)
+- 6 服务全在线, "面"字修复验证通过
+
 ---
 
 ## 格式解析技术积累
@@ -549,36 +596,3 @@ netstat -ano | Select-String ":8080" | ForEach-Object { ... }
 - GitHub 镜像: `D:\dev\github\bible-microservices\`
 - 任务文档: `artifacts/`
 - 版权清单: `COPYRIGHTS.md`
-
----
-
-## 2026-06-02 更新
-
-### TTS 双语提示
-- 新增 I18N 键 `verseClickHint`: 中"点击朗读本节" / 英"Click to hear verse"
-- 双语模式: "点击朗读本节 / Click to hear verse"
-- 经节编号 title 属性动态获取
-
-### Wesley 注释修复
-- 分析 Wesley SWORD 模块：OT 仅 Genesis，NT 连续注释流
-- 重新导入为 2 条记录（GEN/1 + MAT/1）
-- 删除前端独立加载器 (~130 行)，Wesley 通过标准注释流程加载
-
-### 部署配置化
-- 新增 `frontend/js/config.js`：三种模式 (local/production/auto)
-  - `local`: API → `http://localhost:8080/api/v1`
-  - `production`: API → `/api/v1`（相对路径，配合 Nginx 反代）
-  - `auto`: 根据 hostname 自动检测
-- `api.js`: 删除硬编码 API_BASE
-- `app.js`: `var API = APP_CONFIG.apiBase`
-- `CorsConfig.kt`: 新增 usebible.com 白名单
-- 多域名支持 (usebible.com / www.usebible.com) 通过 Nginx + CORS 实现
-- SSL 建议使用 Let's Encrypt (免费)，非必须但强烈建议
-
-### 修改文件
-- `frontend/js/config.js` (新增)
-- `frontend/js/api.js` (API_BASE 配置化)
-- `frontend/js/app.js` (API 变量 + 删除 Wesley 独立函数 + verseClickHint)
-- `frontend/index.html` (加载顺序 config→api→app)
-- `bible-gateway/.../CorsConfig.kt` (新增域名白名单)
-- `README.md` (本次更新)

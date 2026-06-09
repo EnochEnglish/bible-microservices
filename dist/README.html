@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Bible Microservices 使用说明</title>
+<style>
+body { font-family: "Microsoft YaHei", Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #f5f5f5; }
+h1 { color: #2c5aa0; border-bottom: 3px solid #2c5aa0; padding-bottom: 10px; }
+h2 { color: #1a3a6e; margin-top: 30px; }
+.code { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: Consolas, monospace; overflow-x: auto; }
+.endpoint { background: #e8f0fe; padding: 10px; border-left: 4px solid #2c5aa0; margin: 5px 0; font-family: monospace; }
+table { border-collapse: collapse; width: 100%%; }
+th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+th { background: #2c5aa0; color: white; }
+tr:nth-child(even) { background: #f9f9f9; }
+</style>
+</head>
+<body>
+<h1>📖 Bible Microservices 📖</h1>
+<p><strong>版本:</strong> 1.0.0 | <strong>Java:</strong> 8 (嵌入式) | <strong>数据库:</strong> H2 (嵌入式)</p>
+
+<h2>🚀 快速开始</h2>
+<ol>
+<li><strong>双击运行 <code>start.bat</code></strong>，等待所有服务启动完成</li>
+<li>浏览器会自动打开 Swagger UI 文档页面</li>
+<li>导入圣经数据后即可使用</li>
+</ol>
+
+<h2>🌐 服务地址</h2>
+<table>
+<tr><th>服务</th><th>端口</th><th>地址</th></tr>
+<tr><td>🔷 Gateway (API入口)</td><td>8080</td><td>http://localhost:8080</td></tr>
+<tr><td>📖 Text Service</td><td>8081</td><td>http://localhost:8081</td></tr>
+<tr><td>🔍 Search Service</td><td>8082</td><td>http://localhost:8082</td></tr>
+<tr><td>📦 Module Service</td><td>8083</td><td>http://localhost:8083</td></tr>
+</table>
+
+<h2>📚 API 示例</h2>
+
+<h3>获取译本列表</h3>
+<div class="endpoint">GET http://localhost:8081/api/v1/bible/translations</div>
+
+<h3>读取章节 (KJV 创世纪 第1章)</h3>
+<div class="endpoint">GET http://localhost:8081/api/v1/bible/kjv/genesis/1</div>
+
+<h3>读取单节经文</h3>
+<div class="endpoint">GET http://localhost:8081/api/v1/bible/kjv/genesis/1/1</div>
+
+<h3>读取经文范围 (创1:1-3)</h3>
+<div class="endpoint">GET http://localhost:8081/api/v1/bible/kjv/genesis/1?verseStart=1&verseEnd=3</div>
+
+<h3>获取随机经文</h3>
+<div class="endpoint">GET http://localhost:8081/api/v1/bible/kjv/random</div>
+
+<h3>全文搜索</h3>
+<div class="endpoint">GET http://localhost:8082/api/v1/search?query=love&translation=kjv</div>
+
+<h3>导入圣经数据 (通过 URL)</h3>
+<div class="endpoint">POST http://localhost:8083/api/v1/modules/import-url</div>
+<div class="code">Content-Type: application/json
+{
+  "url": "https://raw.githubusercontent.com/JohnWickReception/open-bibles/main/OSIS/kjv.xml",
+  "parser": "OSIS"
+}</div>
+
+<h2>💾 数据存储</h2>
+<p>所有数据存储在 <code>data/</code> 目录下：</p>
+<ul>
+<li><code>data/text-db/</code> - 经文数据库 (H2)</li>
+<li><code>data/search-index/</code> - 搜索索引 (Lucene)</li>
+</ul>
+
+<h2>🛑 停止服务</h2>
+<p>双击运行 <code>stop.bat</code> 即可停止所有服务。</p>
+
+<h2>🔧 故障排除</h2>
+<ul>
+<li><strong>端口被占用：</strong>运行 stop.bat 后重试，或修改 application.yml 中的端口</li>
+<li><strong>服务启动失败：</strong>查看 logs/ 目录下的日志文件</li>
+<li><strong>导入数据失败：</strong>确保网络连接正常，尝试使用不同的 Bible 数据源 URL</li>
+</ul>
+
+<hr>
+<p style="text-align:center; color:#888;">Bible Microservices v1.0.0 | 开源项目</p>
+</body>
+</html>

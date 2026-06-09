@@ -410,18 +410,13 @@ body {
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 
 /* ═══════════════════════════════════════════
-   STRONG'S DICTIONARY
+   INTERLINEAR LEGEND LABELS
    ═══════════════════════════════════════════ */
-.strongs-box {
-  width:160px; flex-shrink:0;
-}
-.strongs-box input {
-  width:100%; background:var(--bg3); color:var(--accent2);
-  border:1px solid var(--border); border-radius:8px;
-  padding:6px 10px; font-size:12px; outline:none;
-}
-.strongs-box input:focus { border-color:var(--accent2); }
-.strongs-box input::placeholder { color:var(--text2); font-size:11px; }
+.il-legend { margin-top:20px; padding:10px 14px; background:var(--bg3); border-radius:8px; font-size:11px; color:var(--text2); line-height:1.8; border:1px solid var(--border); }
+.il-strongs-label { color:var(--verse-num); }
+.il-lemma-label { color:var(--accent2); }
+.il-morph-label { color:#888; }
+.il-footnote-label { color:#999; }
 
 .strongs-overlay {
   position:fixed; top:0; left:0; width:100%; height:100%;
@@ -516,6 +511,203 @@ body {
 .verse-text .verse-word:hover {
   background:rgba(212,165,116,0.2); color:var(--accent2);
 }
+
+/* ===== Interlinear Mode ===== */
+#interlinearBtn { margin:0 4px; }
+.il-btn {
+  background:var(--bg3); color:var(--accent); border:1px solid var(--border);
+  border-radius:6px; padding:6px 12px; cursor:pointer; font-size:12px; font-weight:600;
+  transition:all 0.15s; white-space:nowrap;
+}
+.il-btn:hover { background:var(--highlight); }
+.il-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+.interlinear-verse {
+  display:flex; gap:12px; align-items:flex-start; padding:8px 0;
+  border-bottom:1px solid var(--border);
+}
+.interlinear-verse .verse-num {
+  flex-shrink:0; min-width:28px; margin-right:0; padding-top:3px;
+}
+.interlinear-words {
+  display:flex; flex-wrap:wrap; gap:4px 8px; align-items:flex-end;
+  flex:1; line-height:1.6;
+}
+.il-word {
+  display:inline-flex; flex-direction:column; align-items:center;
+  padding:2px 4px; border-radius:4px; transition:background 0.12s;
+}
+.il-word:hover { background:rgba(91,138,245,0.08); }
+.il-word-ghost {
+  display:inline-flex; flex-direction:column; align-items:center;
+  padding:2px 4px; border-radius:4px; opacity:0.65;
+}
+.il-word-ghost .il-strongs-only {
+  display:flex; gap:1px;
+}
+.il-word-text {
+  font-size:15px; color:var(--text); font-weight:500;
+}
+.il-strongs {
+  font-size:10px; display:flex; gap:2px;
+}
+.il-strongs-link {
+  color:var(--verse-num); cursor:pointer; text-decoration:none;
+  font-weight:600; transition:color 0.12s;
+}
+.il-strongs-link:hover { color:var(--accent2); text-decoration:underline; }
+.il-morph {
+  font-size:9px; color:#888; cursor:pointer;
+  transition:color 0.12s;
+}
+.il-morph:hover { color:var(--accent); text-decoration:underline; }
+
+/* Strong's hover tooltip */
+.strongs-tooltip {
+  position:fixed; z-index:9999;
+  max-width:360px; padding:10px 14px;
+  background:#1e1e2e; color:#e0e0e0;
+  border:1px solid var(--accent); border-radius:8px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.5);
+  font-size:13px; line-height:1.6;
+  pointer-events:none;
+}
+.strongs-tooltip .st-head {
+  font-size:14px; font-weight:600; color:var(--accent); margin-bottom:6px;
+}
+.strongs-tooltip .st-pron {
+  font-size:11px; color:#888; margin-bottom:4px;
+}
+.strongs-tooltip .st-def {
+  color:#ccc;
+}
+.strongs-tooltip .st-kjv {
+  margin-top:6px; font-size:11px; color:#999; font-style:italic;
+}
+
+/* Interlinear verse number */
+.il-verse-num {
+  flex-shrink:0; min-width:28px; font-size:13px;
+}
+
+/* Interlinear annotation line */
+.il-annot {
+  font-size:10px; display:flex; flex-wrap:wrap; gap:2px 6px; align-items:center;
+  justify-content:center; color:var(--verse-num); margin-top:2px;
+}
+.il-sep { color:var(--border); font-size:10px; }
+.il-lemma {
+  color:var(--accent2); font-style:italic; font-weight:500; cursor:help;
+}
+.il-morph {
+  color:#888; font-size:9px; font-family:'Courier New',monospace; cursor:pointer;
+  text-transform:uppercase;
+  transition:color .15s, background .15s;
+  border-radius:3px; padding:0 2px;
+}
+.il-morph:hover {
+  color:var(--accent2); background:rgba(232,168,72,0.1);
+  text-decoration:underline;
+}
+
+/* Morph help button in toolbar */
+.morph-help-btn {
+  margin-left:4px; padding:3px 8px; font-size:12px;
+}
+
+/* Morphology help popup */
+.morph-help-popup {
+  max-width:640px !important; max-height:85vh !important;
+}
+#morphHelpBody {
+  max-height:calc(85vh - 52px); overflow-y:auto; padding:12px 16px;
+}
+.morph-help-intro {
+  font-size:13px; color:var(--text-secondary); margin-bottom:12px;
+  padding:8px 12px; background:var(--hover-bg); border-radius:6px;
+}
+.morph-group {
+  margin-bottom:6px;
+}
+.morph-group-title {
+  font-size:13px; font-weight:700; color:var(--accent);
+  padding:6px 8px; margin-bottom:2px;
+  border-bottom:1px solid var(--border);
+}
+.morph-row {
+  display:flex; align-items:center; gap:8px;
+  padding:4px 8px; font-size:12px;
+  border-radius:4px; transition:background .15s;
+  cursor:default;
+}
+.morph-row:hover {
+  background:var(--hover-bg);
+}
+.morph-highlight {
+  background:rgba(232,168,72,0.15) !important;
+  border:1px solid var(--accent2);
+}
+.morph-code {
+  font-family:'Courier New',monospace;
+  font-weight:700; font-size:13px;
+  color:var(--accent2); min-width:65px;
+}
+.morph-label {
+  color:var(--text); font-weight:600; min-width:180px;
+  font-size:12px;
+}
+.morph-desc {
+  color:var(--text-secondary); font-size:11px;
+}
+
+/* Interlinear legend */
+.il-legend {
+  margin-top:20px; padding:10px 14px; background:var(--bg3); border-radius:8px;
+  font-size:11px; color:var(--text-secondary); line-height:1.8;
+  border:1px solid var(--border);
+}
+.il-legend span { white-space:nowrap; }
+
+/* Footnotes in interlinear */
+.il-footnotes {
+  margin-top:6px; padding-left:40px;
+}
+.il-fn {
+  font-size:11px; color:#999; padding:2px 0; line-height:1.4;
+}
+.il-fn-num {
+  color:var(--accent2); font-weight:700; margin-right:4px;
+}
+.il-fn-text {
+  color:var(--text-secondary);
+}
+
+/* OSIS footnote tag styling */
+.fn-catchword {
+  font-weight:700; color:var(--accent);
+}
+.fn-rdg {
+  font-style:italic; color:var(--text-secondary);
+}
+.fn-rdg-x-literal {
+  font-style:italic; color:#7ec8e3;
+}
+.fn-tc {
+  font-style:italic;
+}
+.fn-hi {
+  font-weight:600;
+}
+.fn-divine {
+  color:#d4a84b;
+}
+
+.strongs-dict-search {
+  margin-top:12px; padding-top:10px; border-top:1px solid var(--border);
+  display:flex; align-items:center; gap:8px;
+}
+
+.scrip-ref { color:var(--accent2); font-weight:600; }
 /* ===== Dictionary Popup Styles ===== */
 #dictBtn {
   background:var(--bg3); color:var(--accent); border:1px solid var(--border);
@@ -566,3 +758,46 @@ body {
   padding:14px 20px; font-size:13px; line-height:1.7; color:var(--text);
 }
 .dict-detail-content p { margin:0 0 8px; }
+
+/* ===== Unified Tabs Popup ===== */
+.unified-tabs {
+  display:flex; gap:4px; padding:8px 12px 0;
+  border-bottom:2px solid var(--border); overflow-x:auto;
+}
+.unified-tab {
+  padding:6px 14px; border:1px solid var(--border); border-bottom:none;
+  background:var(--bg2); color:var(--text-secondary); border-radius:8px 8px 0 0;
+  font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap;
+  transition:all 0.15s;
+}
+.unified-tab:hover { background:var(--highlight); }
+.unified-tab.active {
+  background:var(--accent); color:#fff; border-color:var(--accent);
+}
+.unified-search-row {
+  display:flex; gap:6px; padding:10px 12px;
+}
+.unified-search-row input {
+  flex:1; padding:8px 12px; border:1px solid var(--border);
+  border-radius:6px; background:var(--bg); color:var(--text);
+  font-size:13px; outline:none;
+}
+.unified-search-row input:focus { border-color:var(--accent); }
+.unified-search-row button {
+  padding:8px 14px; background:var(--accent); color:#fff;
+  border:none; border-radius:6px; cursor:pointer; font-size:13px;
+}
+.unified-placeholder {
+  padding:2rem; text-align:center; color:var(--text-secondary);
+}
+#unifiedContent {
+  max-height:60vh; overflow-y:auto; padding:0 12px 12px;
+}
+
+/* Morph detail (quick help) */
+.morph-detail-main {
+  font-size:15px; font-weight:600; color:var(--text); padding:12px 0 4px;
+}
+.morph-detail-code {
+  font-size:12px; color:var(--text-secondary); font-family:'Courier New',monospace;
+}

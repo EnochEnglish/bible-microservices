@@ -11,6 +11,9 @@ var state = {
   searchResults: null,
   view: "reader",
   lang: "bilingual",
+  interlinear: false,
+  interlinearData: null,
+  hasStrongs: false,
   commentaries: null,
   activeCommentary: "TSK",
   // TTS
@@ -28,6 +31,30 @@ var TRANSLATION_NAMES = {
   sp: "撒玛利亚五经", bsb: "BSB 庇哩亚标准", geneva1599: "日内瓦圣经",
   drc: "杜埃-兰斯译本", chincvs: "中文新译本", russynodal: "俄文译本"
 };
+
+// ── SWORD module map (for interlinear / Strong's data) ──
+var SWORD_MODULE_MAP = {
+  "kjv": "KJV",
+  "chiuns": "ChiUns",
+  "chiun": "ChiUn"
+};
+function isSwordTranslation(tid) { return tid in SWORD_MODULE_MAP; }
+
+// Sword-only translations (not in text-service H2, only in sword-service via JSword)
+function isSwordOnlyTranslation(tid) { return tid === "chiuns" || tid === "chiun"; }
+
+function swordBookToAppBook(swordBook) {
+  var osisId = swordBook.osisId.toUpperCase();
+  var b = BOOK_ORDER.find(function(x) { return x.id === osisId; });
+  return {
+    id: osisId,
+    book_id: osisId,
+    name: b ? b.name : osisId,
+    nameZh: b ? b.nameZh : osisId,
+    chapter_count: swordBook.chapterCount,
+    chapters: swordBook.chapterCount
+  };
+}
 
 // ── Commentary Names (language-aware) ──
 var COMMENTARY_NAMES_ZH = {
@@ -112,7 +139,12 @@ var I18N = {
     dictSelect: "Select",
     commentarySection: "Commentary",
     readChapter: "Read Full Chapter",
-    verseClickHint: "Click to hear verse"
+    verseClickHint: "Click to hear verse",
+    // I18N keys for bilingual labels
+    interlinearBtn: "🔤 Interlinear",
+    interlinearTip: "Toggle word-by-word interlinear view",
+    ilWord: "Word", ilStrongs: "Strong's", ilLemma: "Lemma", ilMorph: "Morph", ilFootnote: "Footnotes",
+    morphUnknown: "No description available for this code"
   },
   zh: {
     search: "搜索经文...",
@@ -144,7 +176,11 @@ var I18N = {
     dictSelect: "选择词典",
     commentarySection: "注释",
     readChapter: "朗读全章",
-    verseClickHint: "点击朗读本节"
+    verseClickHint: "点击朗读本节",
+    interlinearBtn: "🔤 逐词对照",
+    interlinearTip: "切换逐词对照视图",
+    ilWord: "词", ilStrongs: "原文字典", ilLemma: "词形", ilMorph: "形态", ilFootnote: "脚注",
+    morphUnknown: "此编码暂无中文说明"
   }
 };
 
@@ -238,6 +274,13 @@ function apiGet(path) {
 function loadTranslations() {
   return apiGet("/bible/translations").then(function(data) {
     state.translations = data.translations || [];
+    // Inject sword-only translations not in text-service
+    var swordOnly = [{id:"chiuns", name:"和合本 (简体字)", nameZh:"和合本 (简体字)", language:"chinese", abbreviation:"CUVS"},{id:"chiun", name:"和合本 (繁體字)", nameZh:"和合本 (繁體字)", language:"chinese", abbreviation:"CUVT"}];
+    swordOnly.forEach(function(st) {
+      if (!state.translations.find(function(t) { return t.id === st.id; })) {
+        state.translations.push(st);
+      }
+    });
     renderTranslationSelector();
     renderCompareSelector();
   }).catch(function() {
@@ -248,15 +291,25 @@ function loadTranslations() {
 function renderTranslationSelector() {
   var sel = document.getElementById("translationSelect");
   var html = "";
-  state.translations.forEach(function(t) {
+  // Sort: sword/interlinear versions first, then others
+  var sorted = state.translations.slice().sort(function(a, b) {
+    var aIl = isSwordTranslation(a.id) ? 0 : 1;
+    var bIl = isSwordTranslation(b.id) ? 0 : 1;
+    return aIl - bIl;
+  });
+  sorted.forEach(function(t) {
     var label = transLabel(t);
-    html += '<option value="' + t.id + '"' + (t.id === state.currentTranslation ? " selected" : "") + '>' + label + '</option>';
+    var ilBadge = isSwordTranslation(t.id) ? ' 🔤' : '';
+    html += '<option value="' + t.id + '"' + (t.id === state.currentTranslation ? " selected" : "") + '>' + label + ilBadge + '</option>';
   });
   sel.innerHTML = html;
   sel.onchange = function(e) {
     state.currentTranslation = e.target.value;
     state.compareTranslations = [];
     state.compareData = {};
+    // Reset interlinear when switching translations
+    state.interlinear = false;
+    state.interlinearData = null;
     renderCompareSelector();
     renderCompareBar();
     loadBooks().then(function() { loadChapter(); });
@@ -299,6 +352,7 @@ function setupLanguage() {
     renderChapterNav();
     if (state.view === "reader") {
       renderChapterHeader();
+      updateTTSControls();
       renderCompareSelector();
       renderCommentaryTabs();
       renderCommentaryBody();
@@ -317,18 +371,26 @@ function setupLanguage() {
 
 function refreshLabels() {
   document.getElementById("searchBox").placeholder = t("search");
-  var si = document.getElementById("strongsInput");
-  if (si) si.placeholder = t("strongsPlaceholder");
-  var di = document.getElementById("dictSearchInput");
-  if (di) di.placeholder = t("dictSearch");
 }
 
 // ═══════════════════════════════════════════
 //  BOOKS
 // ═══════════════════════════════════════════
 function loadBooks() {
+  // Sword-only translations: fetch books from sword-service
+  if (isSwordOnlyTranslation(state.currentTranslation)) {
+    var mod = SWORD_MODULE_MAP[state.currentTranslation];
+    return fetch("/api/v1/sword/modules/" + mod + "/books")
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        state.books = (data.books || []).map(swordBookToAppBook);
+        renderBookList();
+      }).catch(function() { renderBookList(); });
+  }
   return apiGet("/bible/" + state.currentTranslation + "/books").then(function(data) {
-    if (data.books) state.books = data.books;
+    if (data.books) state.books = data.books.map(function(b) {
+      b.id = b.book_id; b.chapters = b.chapter_count; return b;
+    });
     renderBookList();
   }).catch(function() { renderBookList(); });
 }
@@ -409,16 +471,53 @@ function loadChapter() {
   document.getElementById("searchBox").value = "";
 
   var bookId = state.currentBook.id.toLowerCase();
+
+  // Sword-only translations: fetch verse text from sword-service
+  if (isSwordOnlyTranslation(state.currentTranslation)) {
+    var mod = SWORD_MODULE_MAP[state.currentTranslation];
+    var ref = bookId + "." + state.currentChapter;
+    var swordUrl = "/api/v1/sword/" + mod + "/passage/" + ref;
+    if (state.interlinear) swordUrl += "?strongs=true";
+
+    fetch(swordUrl).then(function(r) { return r.json(); }).then(function(data) {
+      // Normalize sword response to text-service format
+      var verses = (data.verses || []).map(function(v) {
+        return { chapter: v.chapter, verse: v.verse, text: v.text };
+      });
+      state.verses = { verses: verses };
+      state.hasStrongs = !!(data.verses && data.verses.length > 0 && data.verses[0].words);
+      renderChapterHeader();
+      renderChapterNav();
+      updateTTSControls();
+      // If interlinear, sword data is both verse text and word-level data
+      if (state.interlinear && data.verses && data.verses.length > 0 && data.verses[0].words) {
+        state.interlinearData = data;
+      }
+      renderVerses();
+    }).catch(function(e) {
+      document.getElementById("verseContent").innerHTML = '<div class="loading">' + t("failed") + '</div>';
+    });
+    loadCommentaries();
+    return;
+  }
+
   var url = "/bible/" + state.currentTranslation + "/" + bookId + "/" + state.currentChapter;
 
   apiGet(url).then(function(data) {
     state.verses = data;
+    state.hasStrongs = (data.verses && data.verses.length > 0 && data.verses[0].strongsAnnotation != null);
     renderChapterHeader();
-    renderVerses();
     renderChapterNav();
     updateTTSControls();
     // Reload all compare versions
     if (state.compareTranslations.length) loadAllCompare();
+
+    // Load interlinear data if applicable
+    if (state.interlinear && isSwordTranslation(state.currentTranslation)) {
+      loadInterlinear();
+    } else {
+      renderVerses();
+    }
   }).catch(function(e) {
     document.getElementById("verseContent").innerHTML = '<div class="loading">' + t("failed") + '</div>';
   });
@@ -431,6 +530,18 @@ function loadChapter() {
 // ═══════════════════════════════════════════
 function renderVerses() {
   var container = document.getElementById("verseContent");
+
+  // Interlinear mode: render word-by-word from sword data
+  if (state.interlinear && state.interlinearData && isSwordTranslation(state.currentTranslation)) {
+    renderInterlinear();
+    return;
+  }
+  // Interlinear pending: show loading while waiting for sword data
+  if (state.interlinear && isSwordTranslation(state.currentTranslation) && !state.interlinearData) {
+    container.innerHTML = '<div class="loading">' + t("loading") + '</div>';
+    return;
+  }
+
   var verses = state.verses ? (state.verses.verses || []) : [];
 
   // Multi-version compare mode
@@ -517,11 +628,332 @@ function makeWordsClickable(text) {
   return text.replace(/([a-zA-ZΑ-ω]{3,})/g, '<span class="verse-word">$1</span>');
 }
 
+// ── Interlinear Data Loader (from sword-service :8086, via proxy) ──
+function loadInterlinear() {
+  var mod = SWORD_MODULE_MAP[state.currentTranslation];
+  if (!mod) {
+    state.interlinear = false;
+    renderVerses();
+    return Promise.reject("no sword module");
+  }
+  var key = state.currentBook.id.toLowerCase() + "." + state.currentChapter;
+  state.interlinearData = null; // reset while loading
+  return fetch("/api/v1/sword/" + mod + "/passage/" + key)
+    .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(data) {
+      state.interlinearData = data;
+      renderVerses();
+    }).catch(function(e) {
+      console.error("Interlinear failed, fallback to plain", e);
+      state.interlinear = false;
+      state.interlinearData = null;
+      renderVerses();
+    });
+}
+
+// ── Strong's hover tooltip ──
+var strongsCache = {};
+var strongsHoverTimer = null;
+
+function hideStrongsTooltip() {
+  var el = document.getElementById("strongsTooltip");
+  if (el) el.style.display = "none";
+  if (strongsHoverTimer) { clearTimeout(strongsHoverTimer); strongsHoverTimer = null; }
+}
+
+function showStrongsTooltip(event, html) {
+  var el = document.getElementById("strongsTooltip");
+  if (!el) return;
+  el.innerHTML = html;
+  el.style.display = "block";
+  var x = event.clientX + 14;
+  var y = event.clientY - 8;
+  var vw = window.innerWidth, vh = window.innerHeight;
+  if (x + 370 > vw) x = event.clientX - 370;
+  if (y + 200 > vh) y = event.clientY - 210;
+  if (x < 4) x = 4;
+  if (y < 4) y = 4;
+  el.style.left = x + "px";
+  el.style.top = y + "px";
+}
+
+function parseStrongsContent(raw, prefix) {
+  if (!raw) return '<div class="st-def">(no definition)</div>';
+  // Greek XML format from sword-service
+  if (raw.indexOf("<entryFree") !== -1 || raw.indexOf("<orth>") !== -1) {
+    var m0 = raw.match(/<orth[^>]*>([^<]+)<\/orth>/);
+    var mT = raw.match(/<orth[^>]*type=\"trans\"[^>]*>([^<]+)<\/orth>/);
+    var mP = raw.match(/<pron[^>]*>([^<]+)<\/pron>/);
+    var mD = raw.match(/<def>\s*([\s\S]*?)\s*<\/def>/);
+    var tr = mT ? mT[1] : "";
+    var pr = mP ? mP[1] : "";
+    var df = mD ? mD[1].replace(/<lb\/>/g, "").replace(/--/g, "—").trim() : "";
+    var or = m0 ? m0[1] : "";
+    var h = "";
+    if (or) h += '<div class="st-head">' + escHtml(or) + (tr ? ' <span style="font-weight:400;color:#aaa">' + escHtml(tr) + '</span>' : "") + '</div>';
+    if (pr) h += '<div class="st-pron">' + escHtml(pr) + '</div>';
+    if (df) h += '<div class="st-def">' + escHtml(df) + '</div>';
+    return h || '<div class="st-def">(no definition)</div>';
+  }
+  // Hebrew plain text
+  var lines = raw.split(/\n/);
+  var head = "", i = 0;
+  while (i < lines.length && /^\s*\d+/.test(lines[i])) { head += lines[i].trim() + " "; i++; }
+  var def = lines.slice(i).join(" ").replace(/\s+/g, " ").trim();
+  head = head.replace(/\\$/, "").trim();
+  var h2 = "";
+  if (head) h2 += '<div class="st-head">' + escHtml(head) + '</div>';
+  if (def) {
+    var kj = def.indexOf("--");
+    var md = def, kp = "";
+    if (kj !== -1) { md = def.substring(0, kj).trim(); kp = def.substring(kj + 2).trim(); }
+    h2 += '<div class="st-def">' + escHtml(md) + '</div>';
+    if (kp) h2 += '<div class="st-kjv">KJV: ' + escHtml(kp) + '</div>';
+  }
+  return h2 || '<div class="st-def">(no definition)</div>';
+}
+
+function fetchStrongsTooltip(sn, event) {
+  var mod = sn.charAt(0).toUpperCase() === "H" ? "StrongsHebrew" : "StrongsGreek";
+  if (strongsCache[sn] !== undefined) {
+    if (strongsCache[sn] !== "__EMPTY__") showStrongsTooltip(event, strongsCache[sn]);
+    return;
+  }
+  var eve = event;
+  fetch(API_BASE + "/sword/" + mod + "/dict/" + sn)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d && d.found && d.content) {
+        var h = parseStrongsContent(d.content, sn.charAt(0));
+        strongsCache[sn] = h;
+        showStrongsTooltip(eve, h);
+      } else { strongsCache[sn] = "__EMPTY__"; }
+    })
+    .catch(function() { strongsCache[sn] = "__EMPTY__"; });
+}
+
+// ── Morph tooltip (hover) ──
+var morphCache = {};
+
+var MORPH_QUICK = {
+  // Hebrew (partial subset for quick lookup; full table in showMorphHelp)
+  "H8804": "Qal Perfect — simple action completed",
+  "H8764": "Hiphil Imperfect — causative, ongoing",
+  "H8685": "Hithpael Perfect — reflexive action completed",
+  "H8799": "Qal Imperfect — simple action, ongoing",
+  "H8802": "Qal Participle active — continuous state",
+  "H8735": "Niphal Perfect — passive/reflexive completed",
+  "H8737": "Niphal Imperfect — passive/reflexive ongoing",
+  "H8848": "Piel Perfect — intensive action completed",
+  "H8849": "Piel Imperfect — intensive, ongoing",
+  "H8852": "Pual Perfect — passive intensive completed",
+  "H8853": "Pual Imperfect — passive intensive ongoing",
+  "H8688": "Hiphil Perfect — causative completed",
+  "H8689": "Hiphil Imperfect — causative ongoing",
+  "H8714": "Hophal Perfect — passive causative completed",
+  "H8717": "Hophal Imperfect — passive causative ongoing"
+};
+
+function fetchMorphTooltip(morph, event) {
+  // Check quick cache
+  if (morphCache[morph] !== undefined) {
+    if (morphCache[morph]) showStrongsTooltip(event, morphCache[morph]);
+    return;
+  }
+  // Try local MORPH_QUICK table
+  if (MORPH_QUICK[morph]) {
+    var desc = MORPH_QUICK[morph];
+    var html = '<div class="st-head">' + escHtml(morph) + '</div><div class="st-def">' + escHtml(desc) + '</div>';
+    morphCache[morph] = html;
+    showStrongsTooltip(event, html);
+    return;
+  }
+  // Fetch from sword-service
+  var eve = event;
+  fetch(API_BASE + "/sword/OSHB/dict/" + morph)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d && d.found && d.content) {
+        var h = parseStrongsContent(d.content, 'H');
+        morphCache[morph] = h;
+        showStrongsTooltip(eve, h);
+      } else { morphCache[morph] = null; }
+    })
+    .catch(function() { morphCache[morph] = null; });
+}
+
+// ── Interlinear Rendering (word-by-word with Strong's links) ──
+// Check if a strongs-like code is actually a morphology code
+function isMorphCode(code) {
+  if (!code) return false;
+  code = code.toUpperCase();
+  var m = code.match(/^([HG])(\d+)$/);
+  if (!m) return false;
+  var num = parseInt(m[2], 10);
+  // Hebrew morphology: H8685-H8999, Greek morphology: G5000-G5999
+  if (m[1] === 'H' && num >= 8685) return true;
+  if (m[1] === 'G' && num >= 5000) return true;
+  return false;
+}
+
+function renderInterlinear() {
+  var ctx = document.getElementById("verseContent");
+  if (!state.interlinearData || !state.interlinearData.verses) {
+    ctx.innerHTML = '<div class="loading">' + t("loading") + '</div>';
+    return;
+  }
+
+  var bookId = state.currentBook.id.toLowerCase();
+  var html = "";
+
+  state.interlinearData.verses.forEach(function(v) {
+    if (v.verse === 0) return; // skip chapter headings
+    if (!v.words || !v.words.length) return;
+
+    html += '<div class="interlinear-verse">';
+    html += '<span class="verse-num">' + v.verse + '</span> ';
+
+    // Rebuild word list: separate Strong's numbers from morphology codes
+    v.words.forEach(function(w) {
+      var strongsList = (w.strongs || "").split("+").filter(Boolean);
+      var morph = w.morph || "";
+      var morphClean = morph.replace(/^robinson:/i, "").replace(/^[TVPM]/, "").trim();
+
+      // Separate real Strong's numbers from morphology codes mixed in strongs field
+      var realStrongs = [];
+      var morphTags = [];
+      strongsList.forEach(function(sn) {
+        if (isMorphCode(sn)) {
+          morphTags.push(sn);
+        } else {
+          realStrongs.push(sn);
+        }
+      });
+
+      // Ghost word: JSword extracted Strong's data but no display text
+      // (e.g. ChiUns Gen.1:2 H05921+H06440 — the "面" character lives
+      // between OSIS <w> tags, not inside them). Show only Strong's links
+      // so the numbers are preserved in the right position.
+      if (!w.text || !w.text.trim()) {
+        html += '<span class="il-word il-word-ghost">';
+        if (realStrongs.length > 0) {
+          html += '<sub class="il-strongs il-strongs-only">';
+          realStrongs.forEach(function(sn, si) {
+            if (si > 0) html += ' + ';
+            html += '<a class="il-strongs-link" data-strongs="' + escHtml(sn) + '">' + escHtml(sn) + '</a>';
+          });
+          html += '</sub>';
+        }
+        if (morphTags.length > 0) {
+          html += ' <sup class="il-morph" data-morph="' + escHtml(morphTags[0]) + '">' + escHtml(morphTags[0]) + '</sup>';
+        }
+        html += '</span> ';
+        return;
+      }
+
+      html += '<span class="il-word">';
+      html += escHtml(w.text);
+      if (realStrongs.length > 0) {
+        html += ' <sub class="il-strongs">';
+        realStrongs.forEach(function(sn, si) {
+          if (si > 0) html += ' ';
+          html += '<a class="il-strongs-link" data-strongs="' + escHtml(sn) + '">' + escHtml(sn) + '</a>';
+        });
+        html += '</sub>';
+      }
+      // Show morphology codes (from both strongs field and morph field)
+      var allMorph = morphTags.concat(morph ? [morph] : []);
+      if (allMorph.length > 0) {
+        html += ' <sup class="il-morph" title="' + escHtml(allMorph.join(', ')) + '" data-morph="' + escHtml(allMorph[0]) + '">' + escHtml(allMorph[0]) + '</sup>';
+      }
+      html += '</span> ';
+    });
+
+    // Footnotes (render as HTML — sword-service provides safe semantic markup)
+    if (v.footnotes && v.footnotes.length) {
+      html += '<div class="il-footnotes">';
+      v.footnotes.forEach(function(fn) {
+        html += '<span class="il-fn">' + (fn.text || fn.note || "") + '</span> ';
+      });
+      html += '</div>';
+    }
+
+    html += '</div>';
+  });
+
+  // Bilingual legend (must be before innerHTML set so event bindings survive)
+  html += '<div class="il-legend">' +
+    '<span class="il-strongs-label">🔢 ' + t("ilStrongs") + '</span> &nbsp;' +
+    '<span class="il-lemma-label">📝 ' + t("ilLemma") + '</span> &nbsp;' +
+    '<span class="il-morph-label">🏷 ' + t("ilMorph") + '</span> &nbsp;' +
+    '<span class="il-footnote-label">📌 ' + t("ilFootnote") + '</span>' +
+  '</div>';
+
+  ctx.innerHTML = html;
+
+  // Bind interlinear Strong's link clicks (split numbers, each clickable)
+  ctx.querySelectorAll(".il-strongs-link").forEach(function(link) {
+    link.addEventListener("click", function(e) {
+      e.stopPropagation();
+      var sn = link.dataset.strongs;
+      if (sn) searchStrongs(sn);
+    });
+    // Hover tooltip (300ms debounce)
+    link.addEventListener("mouseenter", function(e) {
+      var sn = link.dataset.strongs;
+      if (!sn) return;
+      var eve = e;
+      strongsHoverTimer = setTimeout(function() {
+        fetchStrongsTooltip(sn, eve);
+      }, 300);
+    });
+    link.addEventListener("mouseleave", function() {
+      hideStrongsTooltip();
+    });
+  });
+
+  // Morph links: click opens morph help; hover shows tooltip (300ms debounce)
+  ctx.querySelectorAll(".il-morph").forEach(function(el) {
+    el.addEventListener("click", function(e) {
+      e.stopPropagation();
+      var morph = el.getAttribute("data-morph");
+      if (morph) showMorphHelp(morph);
+    });
+    el.addEventListener("mouseenter", function(e) {
+      var morph = el.getAttribute("data-morph");
+      if (!morph) return;
+      var eve = e;
+      strongsHoverTimer = setTimeout(function() {
+        fetchMorphTooltip(morph, eve);
+      }, 300);
+    });
+    el.addEventListener("mouseleave", function() {
+      hideStrongsTooltip();
+    });
+  });
+}
+
 function renderChapterHeader() {
   var hdrEl = document.getElementById("chapterHeader");
   var label = bookLabel(state.currentBook);
+  var isSword = isSwordTranslation(state.currentTranslation);
+  var ilBtn = isSword
+    ? '<button id="btnInterlinear" class="il-btn' + (state.interlinear ? ' active' : '') + '" title="' + t("interlinearTip") + '">' + t("interlinearBtn") + '</button>'
+    : '';
   hdrEl.innerHTML = '<span class="book-name">' + label + '</span>' +
-    '<span class="chapter-num">' + t("chapterNum") + ' ' + state.currentChapter + ' 章</span>';
+    '<span class="chapter-num">' + t("chapterNum") + ' ' + state.currentChapter + ' 章</span>' + ilBtn;
+  if (isSword) {
+    setTimeout(function() {
+      var btn = document.getElementById("btnInterlinear");
+      if (btn) btn.addEventListener("click", toggleInterlinear);
+    }, 0);
+  }
+}
+
+function toggleInterlinear() {
+  state.interlinear = !state.interlinear;
+  state.interlinearData = null;
+  loadChapter();
 }
 
 function renderChapterNav() {
@@ -981,74 +1413,42 @@ function cleanForTTS(text) {
 // ═══════════════════════════════════════════
 //  STRONG'S DICTIONARY
 // ═══════════════════════════════════════════
-function setupStrongs() {
-  var input = document.getElementById("strongsInput");
-  if (!input) return;
-
-  input.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") { searchStrongs(input.value.trim()); }
-  });
-
-  var strongsTimer = null;
-  input.addEventListener("input", function() {
-    clearTimeout(strongsTimer);
-    var q = input.value.trim();
-    if (!q) return;
-    strongsTimer = setTimeout(function() { searchStrongs(q); }, 500);
-  });
-}
-
 function searchStrongs(query) {
   if (!query || query.length < 2) return;
-
-  var body = document.getElementById("strongsPopupBody");
-  body.innerHTML = '<div class="loading">' + t("strongsSearching") + '</div>';
-  document.getElementById("strongsOverlay").style.display = "flex";
-  document.getElementById("strongsPopupTitle").textContent = '📖 ' + t("strongsTitle") + ': ' + query;
-
-  var upper = query.toUpperCase();
-  var prefix = upper.charAt(0);
-  if ((prefix === "G" || prefix === "H") && /^\d+$/.test(query.substring(1))) {
-    BibleAPI.strongsLookup(query).then(function(data) {
-      if (data.error) { doWordSearch(query); }
-      else { renderStrongsResults(query, [data], 1); }
-    }).catch(function() { doWordSearch(query); });
-  } else {
-    doWordSearch(query);
-  }
+  // Normalize: strip leading zeros (H0853 → H853, G0001 → G1)
+  query = query.replace(/^([HG])0+(\d+)$/i, '$1$2');
+  unifiedQuery = query;
+  unifiedTab = "strongs";
+  openUnifiedPopup("strongs", query);
 }
 
 function doWordSearch(query) {
-  BibleAPI.strongsSearch(query).then(function(data) {
-    var matches = data.matches || [];
-    renderStrongsResults(query, matches, data.count || matches.length);
-  }).catch(function() {
-    document.getElementById("strongsPopupBody").innerHTML = '<div class="loading">' + t("searchFailed") + '</div>';
-  });
+  strongsKeywordSearch(query);
 }
 
 function renderStrongsResults(query, matches, total) {
-  var body = document.getElementById("strongsPopupBody");
+  var content = document.getElementById("unifiedContent");
+  if (!content) return;
   if (!matches.length) {
-    body.innerHTML = '<div class="empty-state">' + t("strongsNoResult") + ' &quot;' + escHtml(query) + '&quot;</div>';
+    content.innerHTML = '<div class="empty-state">' + t("strongsNoResult") + ' &quot;' + escHtml(query) + '&quot;</div>';
     return;
   }
 
-  var greek = matches.filter(function(m) { return m.prefix === "G"; });
-  var hebrew = matches.filter(function(m) { return m.prefix === "H"; });
+  var greek = matches.filter(function(m) { return m.prefix === "G" || (m.id && m.id.startsWith("G")); });
+  var hebrew = matches.filter(function(m) { return m.prefix === "H" || (m.id && m.id.startsWith("H")); });
 
   var html = '<div class="strongs-count">' + total + ' ' + t("results") + '</div>';
 
   if (hebrew.length) {
     html += '<div class="strongs-section-title">' + t("strongsHebrew") + ' (' + hebrew.length + ')</div>';
-    hebrew.forEach(function(m) { html += renderStrongsEntry("H" + m.number, m); });
+    hebrew.forEach(function(m) { html += renderStrongsEntry(m.id || "H" + m.number, m); });
   }
   if (greek.length) {
     html += '<div class="strongs-section-title">' + t("strongsGreek") + ' (' + greek.length + ')</div>';
-    greek.forEach(function(m) { html += renderStrongsEntry("G" + m.number, m); });
+    greek.forEach(function(m) { html += renderStrongsEntry(m.id || "G" + m.number, m); });
   }
 
-  body.innerHTML = html;
+  content.innerHTML = html;
 }
 
 function renderStrongsEntry(id, entry) {
@@ -1078,106 +1478,189 @@ function renderStrongsEntry(id, entry) {
   return html;
 }
 
+// ── Unified Popup (Strong's + Dictionaries with Tabs) ──
+var unifiedDictSources = []; // [{id, name}]
+var unifiedDictResults = []; // current dict results
+var unifiedTab = "strongs";   // "strongs" or dict source id
+var unifiedQuery = "";
+
+function setupDictPopup() {
+  var btn = document.getElementById("dictBtn");
+  if (btn) btn.addEventListener("click", openUnifiedPopup);
+  fetchDictSources();
+}
+
+function fetchDictSources() {
+  fetch("/api/v1/annotations/dictionary-sources")
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      unifiedDictSources = d.sources || [];
+    }).catch(function(e) { console.error("Dict sources:", e); });
+}
+
+function openUnifiedPopup(tab, query) {
+  if (tab) unifiedTab = tab;
+  if (query) unifiedQuery = query;
+  unifiedDictResults = [];
+
+  document.getElementById("strongsOverlay").style.display = "flex";
+  document.getElementById("strongsPopupTitle").textContent = '\uD83D\uDCD6 ' + t("dictTitle");
+
+  // Build tab bar + content area
+  var body = document.getElementById("strongsPopupBody");
+  body.innerHTML = 
+    '<div class="unified-tabs">' +
+      '<button class="unified-tab' + (unifiedTab === "strongs" ? ' active' : '') + '" data-tab="strongs">Strong\'s</button>' +
+      unifiedDictSources.map(function(s) {
+        return '<button class="unified-tab' + (unifiedTab === s.id ? ' active' : '') + '" data-tab="' + escHtml(s.id) + '">' + escHtml(dictName(s.id) || s.name) + '</button>';
+      }).join('') +
+    '</div>' +
+    '<div class="unified-search-row">' +
+      '<input type="text" id="unifiedSearchInput" placeholder="' + (unifiedTab === "strongs" ? 'Strong\'s # (e.g. H0430, G2316) or keyword' : 'Search ' + (dictName(unifiedTab) || unifiedTab)) + '"' +
+      ' value="' + escHtml(unifiedQuery) + '" onkeydown="if(event.key===\'Enter\')unifiedSearch()">' +
+      '<button onclick="unifiedSearch()">\uD83D\uDD0D</button>' +
+    '</div>' +
+    '<div id="unifiedContent"><div class="unified-placeholder">' + t("dictSearch") + '</div></div>';
+
+  // Bind tab clicks
+  body.querySelectorAll(".unified-tab").forEach(function(el) {
+    el.addEventListener("click", function() {
+      var newTab = el.dataset.tab;
+      if (newTab !== unifiedTab) {
+        unifiedTab = newTab;
+        unifiedDictResults = [];
+        unifiedQuery = "";
+        // If switching to strongs from query context, keep query
+        var inp = document.getElementById("unifiedSearchInput");
+        if (inp && inp.value.trim()) unifiedQuery = inp.value.trim();
+        openUnifiedPopup(newTab, inp ? inp.value.trim() : "");
+        if (inp && inp.value.trim()) {
+          setTimeout(function() { unifiedSearch(); }, 100);
+        }
+      }
+    });
+  });
+
+  // Focus search
+  setTimeout(function() {
+    var inp = document.getElementById("unifiedSearchInput");
+    if (inp) inp.focus();
+  }, 50);
+
+  // Auto-search if query was provided
+  if (unifiedQuery) {
+    setTimeout(function() { unifiedSearch(); }, 100);
+  }
+}
+
+function unifiedSearch() {
+  var inp = document.getElementById("unifiedSearchInput");
+  if (!inp) return;
+  var query = inp.value.trim();
+  unifiedQuery = query;
+  if (!query || query.length < 2) return;
+
+  var content = document.getElementById("unifiedContent");
+  if (!content) return;
+  content.innerHTML = '<div class="loading">' + t("searching") + '</div>';
+
+  if (unifiedTab === "strongs") {
+    // Strong's search
+    var upper = query.toUpperCase();
+    var prefix = upper.charAt(0);
+    if ((prefix === "G" || prefix === "H") && /^\d+$/.test(query.substring(1))) {
+      BibleAPI.strongsLookup(query).then(function(data) {
+        if (data.error) { strongsKeywordSearch(query); }
+        else { renderStrongsResults(query, [data], 1); }
+      }).catch(function() { strongsKeywordSearch(query); });
+    } else {
+      strongsKeywordSearch(query);
+    }
+  } else {
+    // Dictionary search
+    dictSearch(query);
+  }
+}
+
+function strongsKeywordSearch(query) {
+  // If query looks like a Strong's ID (H/G + digits), do direct ID lookup
+  var idMatch = query.match(/^([HG])(\d+)$/i);
+  if (idMatch) {
+    var id = idMatch[1].toUpperCase() + idMatch[2];
+    BibleAPI.strongsLookup(id).then(function(entry) {
+      renderStrongsResults(query, [entry], 1);
+    }).catch(function() {
+      document.getElementById("unifiedContent").innerHTML = '<div class="empty-state">' + t("strongsNoResult") + ' &quot;' + escHtml(query) + '&quot;</div>';
+    });
+    return;
+  }
+
+  BibleAPI.strongsSearch(query).then(function(data) {
+    var matches = data.matches || [];
+    renderStrongsResults(query, matches, data.count || matches.length);
+  }).catch(function() {
+    document.getElementById("unifiedContent").innerHTML = '<div class="loading">' + t("searchFailed") + '</div>';
+  });
+}
+
+function dictSearch(query) {
+  var url = "/api/v1/annotations/dictionaries/" + unifiedTab + "?search=" + encodeURIComponent(query);
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      unifiedDictResults = d.entries || [];
+      renderUnifiedDictResults(query);
+    }).catch(function(e) {
+      document.getElementById("unifiedContent").innerHTML =
+        '<div class="error">Error: ' + escHtml(String(e)) + '</div>';
+    });
+}
+
+function renderUnifiedDictResults(query) {
+  var content = document.getElementById("unifiedContent");
+  if (!content) return;
+  if (!unifiedDictResults.length) {
+    content.innerHTML = '<div class="unified-placeholder">' + t("strongsNoResult") + ' "' + escHtml(query) + '"</div>';
+    return;
+  }
+  var html = '<div class="strongs-count">' + unifiedDictResults.length + ' ' + t("results") + ' for "' + escHtml(query) + '"</div>';
+  unifiedDictResults.forEach(function(e, i) {
+    var preview = (e.definition || "").replace(/<[^>]+>/g, '').substring(0, 150);
+    if (preview.length === 150) preview += '...';
+    html += '<div class="dict-entry-row" onclick="showUnifiedDictEntry(' + i + ')">';
+    html += '<div class="key">' + escHtml(e.entryId || '') + '</div>';
+    html += '<div class="preview">' + escHtml(preview) + '</div>';
+    html += '</div>';
+  });
+  content.innerHTML = html;
+}
+
+function showUnifiedDictEntry(idx) {
+  var e = unifiedDictResults[idx];
+  var content = document.getElementById("unifiedContent");
+  if (!content) return;
+  var html = '<div class="dict-detail-header">';
+  html += '<button onclick="renderUnifiedDictResultsBack()">&#8592; Back</button>';
+  html += '<span class="key">' + escHtml(e.entryId || '') + '</span>';
+  html += '</div>';
+  html += '<div class="dict-detail-content">';
+  html += (e.definition || '').replace(/\n/g, '<br>').replace(/→/g, '<br>→ ');
+  html += '</div>';
+  content.innerHTML = html;
+  content.scrollTop = 0;
+}
+
+function renderUnifiedDictResultsBack() {
+  renderUnifiedDictResults(unifiedQuery);
+}
+
 function closeStrongsPopup() {
   document.getElementById("strongsOverlay").style.display = "none";
 }
 
-// ==================== Dictionary Popup ====================
-var dictSources = [];
-var dictResults = [];
-
-function openDictPopup() {
-  document.getElementById("dictOverlay").style.display = "flex";
-  document.getElementById("dictPopupTitle").textContent = "📚 " + t("dictTitle");
-  loadDictSources();
-  document.getElementById("dictSearchInput").placeholder = t("dictSearch");
-  var body = document.getElementById("dictPopupBody");
-  body.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text2)">' + t("dictSearch") + '</div>';
-  document.getElementById("dictSearchInput").focus();
-}
-
-function closeDictPopup() {
-  document.getElementById("dictOverlay").style.display = "none";
-}
-
-function loadDictSources() {
-  var sel = document.getElementById("dictSourceSelect");
-  if (sel.options.length > 1) return; // Already loaded
-
-  fetch(API_BASE + "/annotations/dictionary-sources")
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      dictSources = d.sources || [];
-      sel.innerHTML = '<option value="">-- ' + t("dictSelect") + ' --</option>';
-      dictSources.forEach(function(s) {
-        sel.innerHTML += '<option value="' + escHtml(s.id) + '">' + escHtml(dictName(s.id) || s.name) + '</option>';
-      });
-    })
-    .catch(function(e) {
-      console.error("Dict sources:", e);
-    });
-}
-
-function searchDictionary() {
-  var source = document.getElementById("dictSourceSelect").value;
-  var query = document.getElementById("dictSearchInput").value.trim();
-  if (!source || !query) return;
-
-  var body = document.getElementById("dictPopupBody");
-  body.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text2)">' + t("searching") + '</div>';
-
-  var url = API_BASE + "/annotations/dictionaries/" + source + "?search=" + encodeURIComponent(query);
-  fetch(url)
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      dictResults = d.entries || [];
-      renderDictResults(query);
-    })
-    .catch(function(e) {
-      body.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--error)">Error: ' + escHtml(String(e)) + '</div>';
-    });
-}
-
-function renderDictResults(query) {
-  var body = document.getElementById("dictPopupBody");
-  if (dictResults.length === 0) {
-    body.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text2)">No results for "' + escHtml(query) + '"</div>';
-    return;
-  }
-  var html = '<div class="dict-results-count">' + dictResults.length + ' result(s) for "' + escHtml(query) + '"</div>';
-  for (var i = 0; i < dictResults.length; i++) {
-    var e = dictResults[i];
-    var preview = e.definition ? e.definition.replace(/<[^>]+>/g, '').substring(0, 150) : '';
-    if (preview.length === 150) preview += '...';
-    html += '<div class="dict-entry-row" onclick="showDictEntry(' + i + ')">';
-    html += '<div class="key">' + escHtml(e.entryId) + '</div>';
-    html += '<div class="preview">' + escHtml(preview) + '</div>';
-    html += '</div>';
-  }
-  body.innerHTML = html;
-}
-
-function showDictEntry(idx) {
-  var e = dictResults[idx];
-  var body = document.getElementById("dictPopupBody");
-  var html = '<div class="dict-detail-header">';
-  html += '<button onclick="renderDictResultsBack()">← Back</button>';
-  html += '<span class="key">' + escHtml(e.entryId || '') + '</span>';
-  html += '</div>';
-  html += '<div class="dict-detail-content">';
-  // Preserve line breaks and basic formatting
-  var def = (e.definition || '')
-    .replace(/\n/g, '<br>')
-    .replace(/→/g, '<br>→ ');
-  html += def;
-  html += '</div>';
-  body.innerHTML = html;
-  body.scrollTop = 0;
-}
-
-function renderDictResultsBack() {
-  renderDictResults(document.getElementById("dictSearchInput").value);
-}
+// Backward compat: openDictPopup / closeDictPopup redirect to unified
+function openDictPopup() { openUnifiedPopup(null, null); }
+function closeDictPopup() { closeStrongsPopup(); }
 
 function handleWordClick(e) {
   var selection = window.getSelection();
@@ -1205,13 +1688,116 @@ function escHtml(str) {
   return (str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+// ── Morph Help Popup ──
+var MORPH_TABLE = [
+  { code: "N-NSF", desc: "名词·主格·单数·阴性 (Nominative Singular Feminine)" },
+  { code: "N-GSF", desc: "名词·属格·单数·阴性 (Genitive Singular Feminine)" },
+  { code: "N-DSF", desc: "名词·与格·单数·阴性 (Dative Singular Feminine)" },
+  { code: "N-ASF", desc: "名词·宾格·单数·阴性 (Accusative Singular Feminine)" },
+  { code: "N-VSF", desc: "名词·呼格·单数·阴性 (Vocative Singular Feminine)" },
+  { code: "N-NSM", desc: "名词·主格·单数·阳性 (Nominative Singular Masculine)" },
+  { code: "N-GSM", desc: "名词·属格·单数·阳性 (Genitive Singular Masculine)" },
+  { code: "N-DSM", desc: "名词·与格·单数·阳性 (Dative Singular Masculine)" },
+  { code: "N-ASM", desc: "名词·宾格·单数·阳性 (Accusative Singular Masculine)" },
+  { code: "N-VSM", desc: "名词·呼格·单数·阳性 (Vocative Singular Masculine)" },
+  { code: "N-NSN", desc: "名词·主格·单数·中性 (Nominative Singular Neuter)" },
+  { code: "N-GSN", desc: "名词·属格·单数·中性 (Genitive Singular Neuter)" },
+  { code: "N-DSN", desc: "名词·与格·单数·中性 (Dative Singular Neuter)" },
+  { code: "N-ASN", desc: "名词·宾格·单数·中性 (Accusative Singular Neuter)" },
+  { code: "N-VSN", desc: "名词·呼格·单数·中性 (Vocative Singular Neuter)" },
+  { code: "N-NPM", desc: "名词·主格·复数·阳性 (Nominative Plural Masculine)" },
+  { code: "N-GPM", desc: "名词·属格·复数·阳性 (Genitive Plural Masculine)" },
+  { code: "N-DPM", desc: "名词·与格·复数·阳性 (Dative Plural Masculine)" },
+  { code: "N-APM", desc: "名词·宾格·复数·阳性 (Accusative Plural Masculine)" },
+  { code: "N-NPF", desc: "名词·主格·复数·阴性 (Nominative Plural Feminine)" },
+  { code: "N-NPN", desc: "名词·主格·复数·中性 (Nominative Plural Neuter)" },
+  { code: "V-PAI-1S", desc: "动词·现在·主动·陈述·第一人称·单数" },
+  { code: "V-PAI-3S", desc: "动词·现在·主动·陈述·第三人称·单数" },
+  { code: "V-PAI-3P", desc: "动词·现在·主动·陈述·第三人称·复数" },
+  { code: "V-AAS-1S", desc: "动词·不定过去·主动·假设·第一人称·单数" },
+  { code: "V-AAS-3S", desc: "动词·不定过去·主动·假设·第三人称·单数" },
+  { code: "V-APP-NSM", desc: "动词·不定过去·被动·分词·主格·单数·阳性" },
+  { code: "V-APP-GSM", desc: "动词·不定过去·被动·分词·属格·单数·阳性" },
+  { code: "V-PAP-NPM", desc: "动词·现在·主动·分词·主格·复数·阳性" },
+  { code: "V-AMI-3S", desc: "动词·不定过去·关身·陈述·第三人称·单数" },
+  { code: "V-FAI-3S", desc: "动词·将来·主动·陈述·第三人称·单数" },
+  { code: "V-API-3S", desc: "动词·不定过去·被动·陈述·第三人称·单数" },
+  { code: "A-ASF", desc: "形容词·宾格·单数·阴性" },
+  { code: "A-ASM", desc: "形容词·宾格·单数·阳性" },
+  { code: "A-GSM", desc: "形容词·属格·单数·阳性" },
+  { code: "A-DSM", desc: "形容词·与格·单数·阳性" },
+  { code: "A-NSM", desc: "形容词·主格·单数·阳性" },
+  { code: "A-NSF", desc: "形容词·主格·单数·阴性" },
+  { code: "A-NPM", desc: "形容词·主格·复数·阳性" },
+  { code: "P-GSM", desc: "代词·属格·单数·阳性 (e.g. 他的)" },
+  { code: "P-ASM", desc: "代词·宾格·单数·阳性" },
+  { code: "P-GS", desc: "代词·属格·单数" },
+  { code: "P-DSM", desc: "代词·与格·单数·阳性" },
+  { code: "P-NSM", desc: "代词·主格·单数·阳性" },
+  { code: "P-NPM", desc: "代词·主格·复数·阳性" },
+  { code: "P-NSF", desc: "代词·主格·单数·阴性" },
+  { code: "CONJ", desc: "连词 (Conjunction, e.g. and, but)" },
+  { code: "PREP", desc: "介词 (Preposition, e.g. in, to)" },
+  { code: "ADV", desc: "副词 (Adverb)" },
+  { code: "PRT", desc: "小品词 (Particle)" },
+  { code: "INJ", desc: "感叹词 (Interjection)" },
+  { code: "ARAM", desc: "亚兰文转写 (Aramaic)" },
+  { code: "T-NSF", desc: "冠词·主格·单数·阴性" },
+  { code: "T-GSM", desc: "冠词·属格·单数·阳性" },
+  { code: "T-DSM", desc: "冠词·与格·单数·阳性" },
+  { code: "T-ASF", desc: "冠词·宾格·单数·阴性" },
+  { code: "T-NPM", desc: "冠词·主格·复数·阳性" },
+
+  // ── Hebrew morphology codes ──
+  { code: "H8804", desc: "Qal 完成式 (Qal Perfect)" },
+  { code: "H8799", desc: "Qal 未完成式 (Qal Imperfect)" },
+  { code: "H8802", desc: "Qal 主动分词 (Qal Active Participle)" },
+  { code: "H8803", desc: "Qal 被动分词 (Qal Passive Participle)" },
+  { code: "H8685", desc: "Qal 命令式 (Qal Imperative)" },
+  { code: "H8800", desc: "Qal 不定式独立形 (Qal Infinitive Absolute)" },
+  { code: "H8801", desc: "Qal 不定式附属形 (Qal Infinitive Construct)" },
+  { code: "H8735", desc: "Niphal 未完成式 (Niphal Imperfect)" },
+  { code: "H8738", desc: "Niphal 完成式 (Niphal Perfect)" },
+  { code: "H8737", desc: "Niphal 分词 (Niphal Participle)" },
+  { code: "H8848", desc: "Piel 完成式 (Piel Perfect)" },
+  { code: "H8845", desc: "Piel 未完成式 (Piel Imperfect)" },
+  { code: "H8689", desc: "Hiphil 完成式 (Hiphil Perfect)" },
+  { code: "H8686", desc: "Hiphil 未完成式 (Hiphil Imperfect)" },
+  { code: "H8692", desc: "Hiphil 分词 (Hiphil Participle)" },
+  { code: "H8691", desc: "Hiphil 命令式 (Hiphil Imperative)" },
+  { code: "H8827", desc: "Hithpael 未完成式 (Hithpael Imperfect)" },
+  { code: "H8819", desc: "Hithpael 完成式 (Hithpael Perfect)" }
+];
+
+function showMorphHelp(morph) {
+  // Strip Robinson prefix: "robinson:" or single-letter (T/V/P/M)
+  var code = (morph || "").replace(/^robinson:/i, "").replace(/^[TVPM]/, "").trim();
+  var match = MORPH_TABLE.find(function(m) { return m.code === code; });
+  var body = document.getElementById("morphHelpBody");
+  var title = document.getElementById("morphHelpTitle");
+  if (!body || !title) return;
+  title.textContent = '&#128214; Morphology: ' + code;
+  if (match) {
+    body.innerHTML = '<div class="morph-detail-main">' + escHtml(match.desc) + '</div>' +
+      '<div class="morph-detail-code">Code: ' + escHtml(code) + '</div>';
+  } else {
+    body.innerHTML = '<div class="morph-detail-main">' + t("morphUnknown") + '</div>' +
+      '<div class="morph-detail-code">Code: ' + escHtml(code) + '</div>';
+  }
+  document.getElementById("morphHelpOverlay").style.display = "flex";
+}
+
+function closeMorphHelp() {
+  document.getElementById("morphHelpOverlay").style.display = "none";
+}
+
 // ═══════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════
 document.addEventListener("DOMContentLoaded", function() {
   setupLanguage();
   refreshLabels();
-  setupStrongs();
+  setupDictPopup();
   initTTS();
   loadTranslations().then(function() {
     return loadBooks();

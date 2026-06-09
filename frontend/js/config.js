@@ -1,8 +1,8 @@
-﻿/**
+/**
  * Bible Microservices - Deployment Configuration
  * ===============================================
  * 
- * Mode: "local"      → API on http://localhost:8080, frontend on http://localhost:3000
+ * Mode: "local"      → API on /api/v1 (proxied via frontend :3000)
  * Mode: "production" → API at relative path /api/v1 (requires Nginx reverse proxy)
  * Mode: "auto"       → auto-detect from window.location.hostname
  */
@@ -24,9 +24,9 @@ var APP_CONFIG = (function() {
 
   function getApiBase() {
     if (mode === "production") return "/api/v1";
-    if (mode === "local")      return "http://localhost:8080/api/v1";
-    // auto: detect from hostname
-    return isLocalHost ? "http://localhost:8080/api/v1" : "/api/v1";
+    if (mode === "local")      return "/api/v1";
+    // auto: detect from hostname (frontend proxy handles routing to backend)
+    return "/api/v1";
   }
 
   function getIsProduction() {
