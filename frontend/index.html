@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bible Reader / 圣经阅读器</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="logo">📖 Bible / 圣经</div>
+      <select id="translationSelect"></select>
+      <span id="interlinearBtn" style="display:none"></span>
+      <select id="langToggle">
+        <option value="bilingual">🌐 双语</option>
+        <option value="zh">🇨🇳 中文</option>
+        <option value="en">🇺🇸 English</option>
+      </select>
+      <select id="compareSelect">
+        <option value="">📐 对照模式</option>
+      </select>
+      <div class="search-box"><input type="text" id="searchBox" placeholder="搜索经文..."></div>
+      <button id="dictBtn" title="Bible Dictionary" onclick="openDictPopup()">📚</button>
+      <button id="devotionBtn" title="Daily Devotion" data-zh="🔔 灵修" data-en="🔔 Devotion" onclick="openDevotionPanel()">🔔 灵修</button>
+      <button id="genbookBtn" title="General Books" data-zh="📖 阅读" data-en="📖 Read" onclick="openGenBookPanel()">📖 阅读</button>
+      <button id="modulesBtn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" onclick="openModulesPanel()">📦 模块</button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div id="chapterGrid" class="chapters"></div>
+      <div id="bookList"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <div id="readerView">
+        <div class="chapter-header" id="chapterHeader"></div>
+        <!-- Compare bar shows when bilingual comparison is active -->
+        <div id="compareBar" class="compare-bar" style="display:none">
+          <label>📐 对照:</label>
+          <select id="compareTrans2"></select>
+          <div class="close-btn" id="compareClose" title="关闭对照">✕</div>
+        </div>
+        <div class="chapter-nav-top" id="chapterNavTop"></div>
+        <div id="verseContent" class="loading">加载中...</div>
+        <div class="chapter-nav" id="chapterNav"></div>
+      </div>
+      <div id="searchResults" style="display:none"></div>
+    </div>
+
+    <!-- Commentary Panel -->
+    <div class="tsk-panel" id="tskContent">
+      <div class="commentary-tabs" id="commentaryTabs"></div>
+      <div id="commentaryBody">
+        <div class="loading">加载中...</div>
+      </div>
+    </div>
+
+    <!-- Dictionary Panel (Easton/ISBE/Nave) -->
+    <div class="strongs-overlay" id="dictOverlay" style="display:none" onclick="closeDictPopup()">
+      <div class="strongs-popup" id="dictPopup" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="dictPopupTitle">📚 Bible Dictionary</span>
+          <span class="strongs-popup-close" onclick="closeDictPopup()">✕</span>
+        </div>
+        <div class="dict-search-area">
+          <select id="dictSourceSelect"></select>
+          <input type="text" id="dictSearchInput" placeholder="Search dictionary..." onkeyup="if(event.key==='Enter')searchDictionary()">
+          <button onclick="searchDictionary()">🔍</button>
+        </div>
+        <div id="dictPopupBody">
+          <div style="padding:2rem;text-align:center;color:var(--muted)">Select a dictionary and search for a term</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strong's Dictionary Popup -->
+    <div class="strongs-overlay" id="strongsOverlay" style="display:none" onclick="closeStrongsPopup()">
+      <div class="strongs-popup" id="strongsPopup" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="strongsPopupTitle">📖 Strong's Dictionary</span>
+          <span class="strongs-popup-close" onclick="closeStrongsPopup()">✕</span>
+        </div>
+        <div id="strongsPopupBody"></div>
+      </div>
+    </div>
+
+    <!-- Morphology Code Help Popup -->
+    <div class="strongs-overlay" id="morphHelpOverlay" style="display:none" onclick="closeMorphHelp()">
+      <div class="strongs-popup morph-help-popup" id="morphHelpPopup" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="morphHelpTitle">📘 Morphology Codes / 语法编码对照表</span>
+          <span class="strongs-popup-close" onclick="closeMorphHelp()">✕</span>
+        </div>
+        <div id="morphHelpBody"></div>
+      </div>
+    </div>
+    <!-- Strong's hover tooltip -->
+    <div id="strongsTooltip" class="strongs-tooltip" style="display:none"></div>
+
+    <!-- Module Manager Panel -->
+    <div class="strongs-overlay" id="modulesOverlay" style="display:none" onclick="closeModulesPanel()">
+      <div class="modules-panel" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="modulesPanelTitle">📦 模块管理</span>
+          <span class="strongs-popup-close" onclick="closeModulesPanel()">✕</span>
+        </div>
+        <div class="modules-toolbar">
+          <div class="modules-tabs">
+            <button class="modules-tab active" data-tab="installed" onclick="switchModulesTab('installed')">📋 已安装</button>
+            <button class="modules-tab" data-tab="browse" onclick="switchModulesTab('browse')">🔍 可安装</button>
+          </div>
+          <div class="modules-source">
+            <label>数据源:</label>
+            <select id="modulesSourceSelect" onchange="switchSource(this.value)">
+              <option value="crosswire">CrossWire Main</option>
+            </select>
+          </div>
+          <div class="modules-search">
+            <input type="text" id="modulesSearchInput" placeholder="搜索模块..." oninput="filterModuleList()">
+            <select id="modulesCategoryFilter" onchange="filterModuleList()">
+              <option value="">全部类型</option>
+              <option value="BIBLE">📖 圣经</option>
+              <option value="COMMENTARY">💬 注释</option>
+              <option value="DICTIONARY">📚 词典</option>
+              <option value="GENERAL_BOOK">📔 通用</option>
+              <option value="DAILY_DEVOTION">📅 灵修</option>
+              <option value="CULT">🏛 异教</option>
+            </select>
+          </div>
+        </div>
+        <div id="modulesListContainer">
+          <div class="loading">加载中...</div>
+        </div>
+        <div id="modulesStatus" class="modules-status"></div>
+      </div>
+    </div>
+
+    <!-- Daily Devotion Panel -->
+    <div class="strongs-overlay" id="devotionOverlay" style="display:none" onclick="closeDevotionPanel()">
+      <div class="devotion-panel" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="devotionTitle">📅 今日灵修</span>
+          <span class="strongs-popup-close" onclick="closeDevotionPanel()">✕</span>
+        </div>
+        <div class="devotion-toolbar">
+          <select id="devotionModule" onchange="switchDevotionModule()">
+            <option value="SME" data-zh="Spurgeon 清晨甘露" data-en="Spurgeon M&amp;E">Spurgeon M&amp;E</option>
+            <option value="Daily" data-zh="Daily Light 日粮" data-en="Daily Light">Daily Light</option>
+          </select>
+          <button onclick="goToToday()" data-zh="📅 今天" data-en="📅 Today">📅 今天</button>
+        </div>
+        <div id="devotionKeyList" class="book-key-list"></div>
+        <div id="devotionCheckBar">
+          <label><input type="checkbox" id="devotionReadCheck" onchange="toggleDevotionRead()"> <span id="devotionCheckLabel"></span></label>
+          <button id="devotionNoteBtn" onclick="toggleDevotionNote()"></button>
+        </div>
+        <div id="devotionNoteArea" style="display:none">
+          <textarea id="devotionNoteText" placeholder="记录灵修心得..." oninput="saveDevotionNote()"></textarea>
+        </div>
+        <div id="devotionContent" class="devotion-content"></div>
+      </div>
+    </div>
+
+    <!-- General Book Panel -->
+    <div class="strongs-overlay" id="genbookOverlay" style="display:none" onclick="closeGenBookPanel()">
+      <div class="devotion-panel" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="genbookTitle">📖 通用书</span>
+          <span class="strongs-popup-close" onclick="closeGenBookPanel()">✕</span>
+        </div>
+        <div class="devotion-toolbar">
+          <select id="genbookModule" onchange="switchGenBookModule()">
+            <option value="Pilgrim" data-zh="天路历程" data-en="Pilgrim's Progress">Pilgrim's Progress</option>
+          </select>
+        </div>
+        <div class="book-keys-bar">
+          <div class="book-keys-search">
+            <input type="text" id="genbookKeySearch" placeholder="搜索章节..." onkeydown="if(event.key==='Enter')searchGenBookKeys()">
+            <button onclick="searchGenBookKeys()" data-zh="搜索" data-en="Search">搜索</button>
+          </div>
+          <div class="book-keys-nav">
+            <span id="genbookKeyPage">0/0</span>
+            <button onclick="loadGenBookKeys('prev')" id="genbookKeyPrev" disabled>◀</button>
+            <button onclick="loadGenBookKeys('next')" id="genbookKeyNext" disabled>▶</button>
+          </div>
+        </div>
+        <div id="genbookKeyList" class="book-key-list"></div>
+        <div id="genbookContent" class="devotion-content"></div>
+      </div>
+    </div>
+  </div>
+  <script src="js/config.js?v=20260611j"></script>
+  <script src="js/api.js?v=20260611j"></script>
+  <script src="js/app.js?v=20260611j"></script>
+</body>
+</html>

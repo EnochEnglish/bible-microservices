@@ -1,0 +1,22 @@
+﻿# Build
+.gradle/
+build/
+dist/
+cloud-deploy/
+node_modules/
+out/
+
+# Runtime data
+**/data/
+data/
+
+# Temp/clones
+tmp/
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

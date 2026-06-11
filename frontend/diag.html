@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Diag</title>
+<style>body{font:14px monospace;background:#1a1a2e;color:#e0e0e0;padding:20px}
+.ok{color:#4caf50}.err{color:#f44336}.warn{color:#ff9800}</style></head>
+<body>
+<h2>Bible Frontend Diagnostics</h2>
+<div id="results"></div>
+<script>
+var API = "http://localhost:8080/api/v1";
+var SWORD = "http://localhost:8086/api/v1/sword";
+var out = document.getElementById("results");
+
+function log(msg, cls) {
+  var d = document.createElement("div");
+  d.className = cls || "";
+  d.textContent = msg;
+  out.appendChild(d);
+}
+
+async function test(url, label) {
+  try {
+    var start = Date.now();
+    var r = await fetch(url);
+    var data = await r.json();
+    var elapsed = Date.now() - start;
+    var size = JSON.stringify(data).length;
+    log("[" + r.status + "] " + label + " (" + elapsed + "ms, " + size + " bytes)", "ok");
+    if (data.translations) log("  translations: " + data.translations.length, "ok");
+    if (Array.isArray(data)) log("  array count: " + data.length, "ok");
+  } catch(e) {
+    log("[FAIL] " + label + ": " + e.message, "err");
+  }
+}
+
+(async function() {
+  log("=== Config ===");
+  log("API: " + API);
+  log("SWORD: " + SWORD);
+  log("Origin: " + window.location.origin);
+  log("");
+
+  log("=== Gateway API Tests ===");
+  await test(API + "/bible/translations", "GET translations");
+  await test(API + "/bible/kjv/gen/1", "GET KJV Gen 1");
+  await test(API + "/annotations/dictionary-sources", "GET dictionary sources");
+
+  log("");
+  log("=== SWORD API Tests ===");
+  await test(SWORD + "/modules", "GET modules");
+
+  log("");
+  log("=== Done ===");
+})();
+</script></body></html>

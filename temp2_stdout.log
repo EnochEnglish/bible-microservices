@@ -1,0 +1,306 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.2)
+
+2026-05-22T06:53:43.514+08:00  INFO 11576 --- [bible-text-service] [           main] c.bible.text.TextServiceApplicationKt    : Starting TextServiceApplicationKt using Java 17.0.15 with PID 11576 (C:\Users\PC\.qclaw\workspace-v733kxt9elzfv7u1\bible-microservices\bible-text-service\build\libs\bible-text-service.jar started by PC in C:\Users\PC\.qclaw\workspace-v733kxt9elzfv7u1\bible-microservices)
+2026-05-22T06:53:43.520+08:00 DEBUG 11576 --- [bible-text-service] [           main] c.bible.text.TextServiceApplicationKt    : Running with Spring Boot v3.2.2, Spring v6.1.3
+2026-05-22T06:53:43.526+08:00  INFO 11576 --- [bible-text-service] [           main] c.bible.text.TextServiceApplicationKt    : No active profile set, falling back to 1 default profile: "default"
+2026-05-22T06:53:49.867+08:00  INFO 11576 --- [bible-text-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-22T06:53:50.129+08:00  INFO 11576 --- [bible-text-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 239 ms. Found 6 JPA repository interfaces.
+2026-05-22T06:53:57.127+08:00  INFO 11576 --- [bible-text-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-05-22T06:53:57.167+08:00  INFO 11576 --- [bible-text-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-22T06:53:57.179+08:00  INFO 11576 --- [bible-text-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.18]
+2026-05-22T06:53:57.647+08:00  INFO 11576 --- [bible-text-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-22T06:53:57.649+08:00  INFO 11576 --- [bible-text-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 13524 ms
+2026-05-22T06:53:57.932+08:00  INFO 11576 --- [bible-text-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-22T06:53:59.118+08:00  INFO 11576 --- [bible-text-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./data/text-db user=SA
+2026-05-22T06:53:59.122+08:00  INFO 11576 --- [bible-text-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-22T06:53:59.181+08:00  INFO 11576 --- [bible-text-service] [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./data/text-db'
+2026-05-22T06:54:01.376+08:00  INFO 11576 --- [bible-text-service] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-22T06:54:01.572+08:00  INFO 11576 --- [bible-text-service] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.1.Final
+2026-05-22T06:54:01.795+08:00  INFO 11576 --- [bible-text-service] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-05-22T06:54:02.446+08:00  INFO 11576 --- [bible-text-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-22T06:54:02.652+08:00  WARN 11576 --- [bible-text-service] [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-22T06:54:05.491+08:00  INFO 11576 --- [bible-text-service] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-22T06:54:05.787+08:00 DEBUG 11576 --- [bible-text-service] [           main] org.hibernate.SQL                        : 
+    alter table if exists bookmarks 
+       alter column note set data type TEXT
+2026-05-22T06:54:05.920+08:00 DEBUG 11576 --- [bible-text-service] [           main] org.hibernate.SQL                        : 
+    alter table if exists commentaries 
+       add column book_id varchar(10) not null
+2026-05-22T06:54:05.935+08:00 DEBUG 11576 --- [bible-text-service] [           main] org.hibernate.SQL                        : 
+    alter table if exists commentaries 
+       add column source_name varchar(100) not null
+2026-05-22T06:54:05.950+08:00 DEBUG 11576 --- [bible-text-service] [           main] org.hibernate.SQL                        : 
+    alter table if exists commentaries 
+       alter column text set data type TEXT
+2026-05-22T06:54:05.961+08:00 DEBUG 11576 --- [bible-text-service] [           main] org.hibernate.SQL                        : 
+    alter table if exists notes 
+       alter column content set data type TEXT
+2026-05-22T06:54:05.978+08:00 DEBUG 11576 --- [bible-text-service] [           main] org.hibernate.SQL                        : 
+    alter table if exists verses 
+       alter column text set data type TEXT
+2026-05-22T06:54:21.777+08:00 DEBUG 11576 --- [bible-text-service] [           main] org.hibernate.SQL                        : 
+    create index idx_bookmarks_verse 
+       on bookmarks (verse_ref)
+2026-05-22T06:54:21.780+08:00 DEBUG 11576 --- [bible-text-service] [           main] org.hibernate.SQL                        : 
+    create index idx_commentary_lookup 
+       on commentaries (source, book_id, chapter, verse_start)
+2026-05-22T06:54:21.782+08:00 DEBUG 11576 --- [bible-text-service] [           main] org.hibernate.SQL                        : 
+    create index idx_notes_verse 
+       on notes (verse_ref)
+2026-05-22T06:54:21.807+08:00  INFO 11576 --- [bible-text-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-22T06:54:28.137+08:00  INFO 11576 --- [bible-text-service] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-22T06:54:33.224+08:00  WARN 11576 --- [bible-text-service] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-22T06:54:37.249+08:00  INFO 11576 --- [bible-text-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path ''
+2026-05-22T06:54:37.306+08:00  INFO 11576 --- [bible-text-service] [           main] c.bible.text.TextServiceApplicationKt    : Started TextServiceApplicationKt in 56.15 seconds (process running for 58.984)
+2026-05-22T06:54:39.596+08:00  INFO 11576 --- [bible-text-service] [nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-22T06:54:39.597+08:00  INFO 11576 --- [bible-text-service] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-22T06:54:39.600+08:00  INFO 11576 --- [bible-text-service] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-05-22T06:54:39.978+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-1] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.abbreviation,
+        t1_0.code,
+        t1_0.description,
+        t1_0.is_active,
+        t1_0.language,
+        t1_0.name 
+    from
+        translations t1_0 
+    where
+        t1_0.is_active
+2026-05-22T06:54:40.493+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-4] c.bible.text.service.BibleTextService    : 获取章节: translation=kjv, book=john, chapter=3
+2026-05-22T06:54:40.518+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-4] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.abbreviation,
+        t1_0.code,
+        t1_0.description,
+        t1_0.is_active,
+        t1_0.language,
+        t1_0.name 
+    from
+        translations t1_0 
+    where
+        t1_0.code=?
+2026-05-22T06:54:40.560+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-4] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.book_id,
+        b1_0.chapter_count,
+        b1_0.english_name,
+        b1_0.name,
+        b1_0.order_index,
+        b1_0.osis_id,
+        b1_0.translation_id 
+    from
+        books b1_0 
+    where
+        b1_0.translation_id=? 
+        and upper(b1_0.book_id)=upper(?)
+2026-05-22T06:54:40.608+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-6] c.bible.text.service.BibleTextService    : 获取章节: translation=cuv_gb, book=genesis, chapter=1
+2026-05-22T06:54:40.613+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-6] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.abbreviation,
+        t1_0.code,
+        t1_0.description,
+        t1_0.is_active,
+        t1_0.language,
+        t1_0.name 
+    from
+        translations t1_0 
+    where
+        t1_0.code=?
+2026-05-22T06:54:40.617+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-6] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.book_id,
+        b1_0.chapter_count,
+        b1_0.english_name,
+        b1_0.name,
+        b1_0.order_index,
+        b1_0.osis_id,
+        b1_0.translation_id 
+    from
+        books b1_0 
+    where
+        b1_0.translation_id=? 
+        and upper(b1_0.book_id)=upper(?)
+2026-05-22T06:56:18.593+08:00 DEBUG 11576 --- [bible-text-service] [io-8081-exec-10] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.abbreviation,
+        t1_0.code,
+        t1_0.description,
+        t1_0.is_active,
+        t1_0.language,
+        t1_0.name 
+    from
+        translations t1_0 
+    where
+        t1_0.code=?
+2026-05-22T06:56:18.594+08:00 DEBUG 11576 --- [bible-text-service] [io-8081-exec-10] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.book_id,
+        b1_0.chapter_count,
+        b1_0.english_name,
+        b1_0.name,
+        b1_0.order_index,
+        b1_0.osis_id,
+        b1_0.translation_id 
+    from
+        books b1_0 
+    where
+        b1_0.translation_id=? 
+    order by
+        b1_0.order_index
+2026-05-22T06:56:50.049+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-2] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.abbreviation,
+        t1_0.code,
+        t1_0.description,
+        t1_0.is_active,
+        t1_0.language,
+        t1_0.name 
+    from
+        translations t1_0 
+    where
+        t1_0.code=?
+2026-05-22T06:56:50.055+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-2] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.book_id,
+        b1_0.chapter_count,
+        b1_0.english_name,
+        b1_0.name,
+        b1_0.order_index,
+        b1_0.osis_id,
+        b1_0.translation_id 
+    from
+        books b1_0 
+    where
+        b1_0.translation_id=? 
+    order by
+        b1_0.order_index
+2026-05-22T07:04:11.205+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-2] c.bible.text.service.BibleTextService    : 获取章节: translation=kjv, book=john, chapter=1
+2026-05-22T07:04:11.214+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-2] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.abbreviation,
+        t1_0.code,
+        t1_0.description,
+        t1_0.is_active,
+        t1_0.language,
+        t1_0.name 
+    from
+        translations t1_0 
+    where
+        t1_0.code=?
+2026-05-22T07:04:11.221+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-2] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.book_id,
+        b1_0.chapter_count,
+        b1_0.english_name,
+        b1_0.name,
+        b1_0.order_index,
+        b1_0.osis_id,
+        b1_0.translation_id 
+    from
+        books b1_0 
+    where
+        b1_0.translation_id=? 
+        and upper(b1_0.book_id)=upper(?)
+2026-05-22T07:04:11.370+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-1] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.abbreviation,
+        t1_0.code,
+        t1_0.description,
+        t1_0.is_active,
+        t1_0.language,
+        t1_0.name 
+    from
+        translations t1_0 
+    where
+        t1_0.code=?
+2026-05-22T07:04:11.376+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.book_id,
+        b1_0.chapter_count,
+        b1_0.english_name,
+        b1_0.name,
+        b1_0.order_index,
+        b1_0.osis_id,
+        b1_0.translation_id 
+    from
+        books b1_0 
+    where
+        b1_0.translation_id=? 
+        and upper(b1_0.book_id)=upper(?)
+2026-05-22T07:04:11.408+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-4] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.abbreviation,
+        t1_0.code,
+        t1_0.description,
+        t1_0.is_active,
+        t1_0.language,
+        t1_0.name 
+    from
+        translations t1_0 
+    where
+        t1_0.code=?
+2026-05-22T07:04:11.417+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-4] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.book_id,
+        b1_0.chapter_count,
+        b1_0.english_name,
+        b1_0.name,
+        b1_0.order_index,
+        b1_0.osis_id,
+        b1_0.translation_id 
+    from
+        books b1_0 
+    where
+        b1_0.translation_id=? 
+        and upper(b1_0.book_id)=upper(?)
+2026-05-22T07:04:11.432+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-6] org.hibernate.SQL                        : 
+    select
+        t1_0.id,
+        t1_0.abbreviation,
+        t1_0.code,
+        t1_0.description,
+        t1_0.is_active,
+        t1_0.language,
+        t1_0.name 
+    from
+        translations t1_0 
+    where
+        t1_0.code=?
+2026-05-22T07:04:11.439+08:00 DEBUG 11576 --- [bible-text-service] [nio-8081-exec-6] org.hibernate.SQL                        : 
+    select
+        b1_0.id,
+        b1_0.book_id,
+        b1_0.chapter_count,
+        b1_0.english_name,
+        b1_0.name,
+        b1_0.order_index,
+        b1_0.osis_id,
+        b1_0.translation_id 
+    from
+        books b1_0 
+    where
+        b1_0.translation_id=? 
+        and upper(b1_0.book_id)=upper(?)

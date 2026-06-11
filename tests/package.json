@@ -1,0 +1,20 @@
+{
+  "name": "bible-microservices-tests",
+  "version": "1.0.0",
+  "description": "Re#gression test suite for bible-microservices — back end API + front end validation",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/run-all.js",
+    "test:api": "node tests/backend/api.test.js",
+    "test:js": "node tests/frontend/js.test.js",
+    "test:html": "node tests/frontend/html.test.js",
+    "test:frontend": "node tests/frontend/js.test.js && node tests/frontend/html.test.js",
+    "smoke": "node tests/smoke.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}
