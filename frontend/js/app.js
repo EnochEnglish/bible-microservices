@@ -629,14 +629,25 @@ function renderVerses() {
   } else {
     // Normal single-translation mode
     var html = "";
+    var bookId = state.currentBook ? state.currentBook.id : "gen";
+    var chapter = state.currentChapter;
     verses.forEach(function(v) {
-      html += '<div class="verse">' +
+      var ref = bookId + "." + chapter + "." + v.verse;
+      html += '<div class="verse-line" data-ref="' + ref + '" id="v-' + ref + '">' +
+        '<div class="verse">' +
         '<span class="verse-num tts-btn" onclick="speakVerse(' + v.verse + ')" title="' + t("verseClickHint") + '">' + v.verse + '</span>' +
         '<span class="verse-text">' + makeWordsClickable(v.text || "") + '</span>' +
-      '</div>';
+        '</div>' +
+        '<div class="verse-tools">' +
+        '<button class="vt-btn vt-bookmark" title="' + (t("bookmark")||"Bookmark") + '" onclick="event.stopPropagation();toggleBookmark(\'' + ref + '\',this)">🔖</button>' +
+        '<button class="vt-btn vt-note" title="' + (t("note")||"Note") + '" onclick="event.stopPropagation();openNoteEditor(\'' + ref + '\')">📝</button>' +
+        '<button class="vt-btn vt-xref" title="' + (t("crossRefs")||"Cross Refs") + '" onclick="event.stopPropagation();toggleCrossRefs(\'' + ref + '\',this)">🔗</button>' +
+        '</div></div>';
     });
     container.innerHTML = html;
     container.classList.remove("loading");
+    // Apply bookmark indicators
+    updateVerseToolUI();
   }
 
   // Attach click handlers for Strong's
@@ -1857,6 +1868,7 @@ function switchModulesTab(tab){
   document.querySelectorAll('#modulesOverlay .modules-tab').forEach(function(t){t.classList.toggle('active',t.dataset.tab===tab)});
   if(tab==='installed')loadInstalledModules(); else loadAvailableModules();
 }
+function switchSource(sourceId){modulesState.source=sourceId;loadAvailableModules();}
 
 function setModuleStatus(msg,cls){
   var e=document.getElementById('modulesStatus'); e.textContent=msg; e.className=cls||'';
@@ -2444,3 +2456,211 @@ function parseThMLContent(raw) {
   if (!text.match(/<p>/i)) text = '<p>' + text + '</p>';
   return text;
 }
+
+
+// ── Verse Tools: bookmarks, notes, cross-references ──
+var verseTools = { bookmarks: {}, notes: {}, xrefEl: null };
+
+function loadBookmarks() {
+  fetch('/api/v1/text/bookmarks/' + (state.currentBook ? state.currentBook.id : 'gen') + '.' + state.currentChapter + '.1')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      verseTools.bookmarks = {};
+      (data || []).forEach(function(b) { verseTools.bookmarks[b.verseRef || b.ref] = true; });
+      updateVerseToolUI();
+    }).catch(function() {});
+}
+
+function isBookmarked(ref) { return !!verseTools.bookmarks[ref]; }
+
+function toggleBookmark(ref, btn) {
+  if (isBookmarked(ref)) {
+    fetch('/api/v1/text/bookmarks/' + encodeURIComponent(ref), { method: 'DELETE' })
+      .then(function() { delete verseTools.bookmarks[ref]; updateVerseToolUI(); showVerseToast('🔖 书签已移除'); })
+      .catch(function() { showVerseToast('删除失败', true); });
+  } else {
+    fetch('/api/v1/text/bookmarks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ verseRef: ref, label: ref })
+    }).then(function() { verseTools.bookmarks[ref] = true; updateVerseToolUI(); showVerseToast('🔖 已添加书签'); })
+      .catch(function() { showVerseToast('添加失败', true); });
+  }
+}
+
+function updateVerseToolUI() {
+  document.querySelectorAll('.verse-line').forEach(function(el) {
+    var ref = el.getAttribute('data-ref');
+    if (!ref) return;
+    var bmBtn = el.querySelector('.vt-bookmark');
+    if (isBookmarked(ref)) {
+      el.classList.add('bookmarked');
+      if (bmBtn) bmBtn.classList.add('active');
+    } else {
+      el.classList.remove('bookmarked');
+      if (bmBtn) bmBtn.classList.remove('active');
+    }
+    if (verseTools.notes[ref]) el.classList.add('has-note');
+    else el.classList.remove('has-note');
+  });
+}
+
+// ── Notes ──
+
+function loadNote(ref) {
+  return fetch('/api/v1/text/notes/' + encodeURIComponent(ref))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data && (Array.isArray(data) ? data.length > 0 : data)) {
+        var note = Array.isArray(data) ? data[0] : data;
+        verseTools.notes[ref] = note.content || note.text || '';
+      } else {
+        verseTools.notes[ref] = '';
+      }
+      return verseTools.notes[ref];
+    }).catch(function() { verseTools.notes[ref] = ''; return ''; });
+}
+
+function openNoteEditor(ref) {
+  loadNote(ref).then(function(content) {
+    var existing = document.getElementById('noteEditorOverlay');
+    if (existing) existing.remove();
+    var overlay = document.createElement('div');
+    overlay.id = 'noteEditorOverlay';
+    overlay.className = 'note-editor-overlay';
+    overlay.onclick = function(e) { if (e.target === overlay) closeNoteEditor(); };
+    overlay.innerHTML =
+      '<div class="note-editor-panel" onclick="event.stopPropagation()">' +
+      '<div class="note-editor-header">' +
+      '<h3>📝 ' + (t('note')||'Note') + '</h3>' +
+      '<button class="vt-close" onclick="closeNoteEditor()">✕</button>' +
+      '</div>' +
+      '<div class="note-editor-ref" data-ref="' + escAttr(ref) + '">' + ref + '</div>' +
+      '<textarea class="note-editor-textarea" id="noteEditorTextarea" placeholder="' + (t('notePlaceholder')||'Write your note...') + '">' + escHtml(content || '') + '</textarea>' +
+      '<div class="note-editor-actions">' +
+      (content ? '<button class="ne-delete" onclick="deleteNote(\x27' + ref + '\x27)">' + (t('delete')||'Delete') + '</button>' : '') +
+      '<button class="ne-cancel" onclick="closeNoteEditor()">' + (t('cancel')||'Cancel') + '</button>' +
+      '<button class="ne-save" onclick="saveNote()">' + (t('save')||'Save') + '</button>' +
+      '</div></div>';
+    document.body.appendChild(overlay);
+    document.getElementById('noteEditorTextarea').focus();
+  });
+}
+
+function closeNoteEditor() {
+  var el = document.getElementById('noteEditorOverlay');
+  if (el) el.remove();
+}
+
+function saveNote() {
+  var ta = document.getElementById('noteEditorTextarea');
+  var refEl = document.querySelector('.note-editor-ref');
+  if (!ta || !refEl) return;
+  var ref = refEl.getAttribute('data-ref');
+  var content = ta.value.trim();
+  if (!content) { deleteNote(ref); return; }
+  fetch('/api/v1/text/notes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ verseRef: ref, content: content })
+  }).then(function() {
+    verseTools.notes[ref] = content;
+    updateVerseToolUI();
+    closeNoteEditor();
+    showVerseToast('📝 笔记已保存');
+  }).catch(function() { showVerseToast('保存失败', true); });
+}
+
+function deleteNote(ref) {
+  fetch('/api/v1/text/notes/' + encodeURIComponent(ref), { method: 'DELETE' })
+    .then(function() {
+      delete verseTools.notes[ref];
+      updateVerseToolUI();
+      closeNoteEditor();
+      showVerseToast('📝 笔记已删除');
+    }).catch(function() { showVerseToast('删除失败', true); });
+}
+
+// ── Cross References ──
+
+function toggleCrossRefs(ref, btn) {
+  var line = btn.closest('.verse-line');
+  if (!line) return;
+  // Close if already open
+  if (verseTools.xrefEl && verseTools.xrefEl.parentNode) {
+    verseTools.xrefEl.remove();
+    verseTools.xrefEl = null;
+    if (verseTools._lastXrefRef === ref) return;
+  }
+  // Open
+  verseTools._lastXrefRef = ref;
+  var panel = document.createElement('div');
+  panel.className = 'xref-panel';
+  panel.innerHTML = '<div class="xref-loading">' + (t('loading')||'Loading...') + '</div>';
+  line.after(panel);
+  verseTools.xrefEl = panel;
+  loadCrossRefs(ref, panel);
+}
+
+function loadCrossRefs(ref, panel) {
+  fetch('/api/v1/text/crossrefs?ref=' + encodeURIComponent(ref))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var refs = data.crossRefs || data.refs || [];
+      if (!refs.length) {
+        panel.innerHTML = '<div class="xref-loading">' + (t('noCrossRefs')||'No cross references') + '</div>';
+        return;
+      }
+      panel.innerHTML = '<div class="xref-title">🔗 ' + (t('crossRefs')||'Cross References') + ' (' + refs.length + ')</div>' +
+        '<div class="xref-list">' +
+        refs.map(function(r) {
+          return '<span class="xref-item" onclick="navigateToRef(\x27' + escAttr(r) + '\x27)">' + escHtml(r.toUpperCase()) + '</span>';
+        }).join('') +
+        '</div>';
+    }).catch(function() {
+      panel.innerHTML = '<div class="xref-loading" style="color:#e05555">' + (t('loadFailed')||'Failed to load') + '</div>';
+    });
+}
+
+function navigateToRef(ref) {
+  var parts = (ref || '').split('.');
+  if (parts.length < 3) return;
+  var book = parts[0].toLowerCase();
+  var chapter = parseInt(parts[1]) || 1;
+  var books = state.books || [];
+  var bk = books.find(function(b) { return b.id === book; });
+  if (!bk) { showVerseToast('书卷未找到: ' + book, true); return; }
+  state.currentBook = bk;
+  state.currentChapter = chapter;
+  loadChapter().then(function() {
+    // Scroll to verse after render
+    setTimeout(function() {
+      var el = document.getElementById('v-' + ref);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+  });
+}
+
+// ── Toast ──
+
+function showVerseToast(msg, isError) {
+  var existing = document.getElementById('verseToast');
+  if (existing) existing.remove();
+  var toast = document.createElement('div');
+  toast.id = 'verseToast';
+  toast.style.cssText = 'position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);padding:0.55rem 1.2rem;background:' + (isError ? '#e05555' : 'var(--accent)') + ';color:#fff;border-radius:8px;font-size:0.85rem;z-index:2000;pointer-events:none;transition:opacity 0.3s;';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(function() { toast.style.opacity = '0'; setTimeout(function() { if (toast.parentNode) toast.remove(); }, 300); }, 2000);
+}
+
+// Load bookmarks when chapter changes
+var _origLoadChapter = loadChapter;
+loadChapter = function() {
+  var result = _origLoadChapter.apply(this, arguments);
+  if (result && result.then) {
+    result.then(function() { loadBookmarks(); });
+  }
+  return result;
+};
+

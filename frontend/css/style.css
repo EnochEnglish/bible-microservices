@@ -1060,3 +1060,82 @@ body {
 .dev-cal-day:not(.has-data):not(.today):not(.empty) {
   color: var(--border); cursor: default;
 }
+
+
+/* ═══════════════════════════════════════════
+   VERSE TOOLS: notes, bookmarks, crossrefs
+   ═══════════════════════════════════════════ */
+.verse-tools {
+  display: none; position: absolute; right: 0.25rem; top: 50%; transform: translateY(-50%);
+  gap: 2px; z-index: 2;
+}
+.verse-line { position: relative; }
+.verse-line:hover .verse-tools { display: flex; }
+.vt-btn {
+  width: 24px; height: 24px; border: none; background: var(--bg3); color: var(--text2);
+  border-radius: 4px; cursor: pointer; font-size: 12px; display: flex;
+  align-items: center; justify-content: center; transition: all 0.15s;
+}
+.vt-btn:hover { background: var(--accent); color: #fff; }
+.vt-btn.active { background: #d4a574; color: #fff; }
+.verse-line.bookmarked { border-left: 3px solid #d4a574; padding-left: 0.35rem; }
+
+/* Notes inline editor */
+.note-editor-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex;
+  align-items: center; justify-content: center; z-index: 1000;
+}
+.note-editor-panel {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.25rem; width: 460px; max-width: 95vw; max-height: 80vh;
+  display: flex; flex-direction: column; gap: 0.75rem;
+}
+.note-editor-header {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.note-editor-header h3 { font-size: 1rem; color: var(--text); }
+.note-editor-header .vt-close {
+  width: 28px; height: 28px; border: none; background: var(--bg3); color: var(--text2);
+  border-radius: 50%; cursor: pointer; font-size: 14px; display: flex;
+  align-items: center; justify-content: center;
+}
+.note-editor-header .vt-close:hover { background: #e05555; color: #fff; }
+.note-editor-ref { font-size: 0.85rem; color: var(--accent); font-weight: 600; }
+.note-editor-textarea {
+  width: 100%; min-height: 100px; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 0.75rem; color: var(--text); font-size: 0.9rem;
+  font-family: inherit; resize: vertical; outline: none;
+}
+.note-editor-textarea:focus { border-color: var(--accent); }
+.note-editor-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+.note-editor-actions button {
+  padding: 0.45rem 1rem; border: none; border-radius: 6px; cursor: pointer;
+  font-size: 0.85rem; font-weight: 600; transition: background 0.15s;
+}
+.ne-save { background: var(--accent); color: #fff; }
+.ne-save:hover { background: #4a7ae0; }
+.ne-delete { background: transparent; color: #e05555; border: 1px solid #e05555 !important; }
+.ne-delete:hover { background: #e05555; color: #fff; }
+.ne-cancel { background: var(--bg3); color: var(--text2); }
+
+/* Verse with note indicator */
+.verse-line.has-note::after {
+  content: '📝'; position: absolute; left: -18px; top: 2px; font-size: 10px;
+  opacity: 0.6;
+}
+
+/* Cross-ref panel */
+.xref-panel {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1rem; max-height: 320px; overflow-y: auto; margin-top: 0.5rem;
+}
+.xref-title { font-size: 0.85rem; color: var(--text2); margin-bottom: 0.5rem; }
+.xref-list { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.xref-item {
+  padding: 0.25rem 0.6rem; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer; font-size: 0.8rem; color: var(--accent);
+  transition: all 0.15s;
+}
+.xref-item:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.xref-loading { color: var(--text2); font-size: 0.85rem; }
+
