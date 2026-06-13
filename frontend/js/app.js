@@ -1132,12 +1132,20 @@ function renderCommentaryTabs() {
     });
   }
 
+  // Always show TSK as an option (data comes from Sword service, not text-service)
+  var fallbacks = [
+    { id: "TSK", name: cmtName("TSK") },
+    { id: "JFB", name: cmtName("JFB") },
+    { id: "MHCC", name: cmtName("MHCC") }
+  ];
   if (!sources.length) {
-    sources = [
-      { id: "TSK", name: cmtName("TSK") },
-      { id: "JFB", name: cmtName("JFB") },
-      { id: "MHCC", name: cmtName("MHCC") }
-    ];
+    sources = fallbacks;
+  } else {
+    fallbacks.forEach(function(fb) {
+      if (!sources.some(function(s){return s.id === fb.id})) {
+        sources.push(fb);
+      }
+    });
   }
 
   var html = "";
@@ -1174,13 +1182,36 @@ function renderCommentaryBody() {
   }
 
   if (state.activeCommentary === "TSK") {
-    var html = "";
-    filtered.forEach(function(c) {
-      var ref = (c.bookId || "") + " " + (c.chapter || "") + ":" + (c.verseStart || "");
-      if (c.verseEnd && c.verseEnd !== c.verseStart) ref += "-" + c.verseEnd;
-      html += '<div class="tsk-item"><div class="tsk-ref">📌 ' + ref + '</div><div>' + (c.text || "") + '</div></div>';
-    });
-    body.innerHTML = html;
+    if (filtered.length) {
+      // TSK data from text-service
+      var html = "";
+      filtered.forEach(function(c) {
+        var ref = (c.bookId || "") + " " + (c.chapter || "") + ":" + (c.verseStart || "");
+        if (c.verseEnd && c.verseEnd !== c.verseStart) ref += "-" + c.verseEnd;
+        html += '<div class="tsk-item"><div class="tsk-ref">' + ref + '</div><div>' + (c.text || "") + '</div></div>';
+      });
+      body.innerHTML = html;
+    } else {
+      // TSK not in text-service, load from Sword service
+      body.innerHTML = '<div class="loading">' + t("loading") + '</div>';
+      var bookId = state.currentBook ? state.currentBook.id.toLowerCase() : 'gen';
+      var passageRef = bookId + '.' + state.currentChapter;
+      fetch('/api/v1/sword/TSK/passage/' + passageRef + '?strongs=false')
+        .then(function(r){return r.json()})
+        .then(function(data){
+          if (!data || !data.verses || !data.verses.length) {
+            body.innerHTML = '<div class="empty-state">' + t("noCommentary") + '</div>';
+            return;
+          }
+          var html = '';
+          data.verses.forEach(function(v){
+            html += '<div class="tsk-item"><div class="tsk-ref">v' + (v.verse||'') + '</div><div>' + escHtml(v.text||'') + '</div></div>';
+          });
+          body.innerHTML = html;
+        }).catch(function(){
+          body.innerHTML = '<div class="empty-state">TSK data unavailable. Install TSK module in Module Manager.</div>';
+        });
+    }
   } else {
     var html = "";
     filtered.forEach(function(c) {
@@ -1860,7 +1891,7 @@ function mcCatLabel(cat) {
 function openModulesPanel(){
   document.getElementById('modulesOverlay').style.display='flex'; modulesState.tab='installed';
   document.querySelectorAll('#modulesOverlay .modules-tab').forEach(function(t){t.classList.toggle('active',t.dataset.tab==='installed')});
-  loadInstalledModules();
+  loadRepoSources().then(function(){loadInstalledModules()});
 }
 function closeModulesPanel(){ document.getElementById('modulesOverlay').style.display='none'; }
 function switchModulesTab(tab){
@@ -1868,6 +1899,48 @@ function switchModulesTab(tab){
   document.querySelectorAll('#modulesOverlay .modules-tab').forEach(function(t){t.classList.toggle('active',t.dataset.tab===tab)});
   if(tab==='installed')loadInstalledModules(); else loadAvailableModules();
 }
+var _repoSources = [];
+var _repoSourcesLoaded = false;
+
+function loadRepoSources() {
+  // Load built-in repos from server + custom repos from repos.json
+  return Promise.all([
+    fetch('/api/v1/sword/install/sources').then(function(r){return r.json()}).catch(function(){return []}),
+    fetch('/repos.json').then(function(r){return r.json()}).catch(function(){return {customRepositories:[]}})
+  ]).then(function(arr){
+    var builtin = arr[0] || [];
+    var customRaw = (arr[1] || {}).customRepositories || [];
+    // Parse custom repo baseUrl → host + path; system auto-derives catalogDir/packageDir
+    var custom = customRaw.map(function(r){
+      var u;
+      try { u = new URL(r.baseUrl); } catch(e) { return null; }
+      var id = r.id || r.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      return {
+        id: id, name: r.name, type: 'sword-https',
+        host: u.host,
+        catalogDir: u.pathname.replace(/\/+$/,''),        // → mods.d.tar.gz
+        packageDir: u.pathname.replace(/\/+$/,'') + '/packages/rawzip',  // → .zip files
+        _source: 'custom', _original: r
+      };
+    }).filter(function(x){return x});
+    _repoSources = builtin.map(function(s){s._source='builtin';return s}).concat(custom);
+    _repoSourcesLoaded = true;
+    renderSourceSelector();
+    return _repoSources;
+  });
+}
+
+function renderSourceSelector() {
+  var sel = document.getElementById('modulesSourceSelect');
+  if (!sel) return;
+  if (!_repoSourcesLoaded) { return; }
+  var currentId = modulesState.source;
+  sel.innerHTML = _repoSources.filter(function(s){return !s._disabled}).map(function(s){
+    var label = (s._source==='custom'?'⭐ ':'') + (s.name||s.id);
+    return '<option value="' + escAttr(s.id) + '"' + (s.id===currentId?' selected':'') + '>' + escHtml(label) + '</option>';
+  }).join('');
+}
+
 function switchSource(sourceId){modulesState.source=sourceId;loadAvailableModules();}
 
 function setModuleStatus(msg,cls){
@@ -2663,4 +2736,234 @@ loadChapter = function() {
   }
   return result;
 };
+
+// ══════════════════════════════════════════════════════════════════
+// ── Bookmarks Management Panel ──
+// ══════════════════════════════════════════════════════════════════
+
+function openBookmarksPanel() {
+  var el = document.getElementById('bookmarksOverlay');
+  if (!el) return;
+  el.style.display = 'flex';
+  loadBookmarkList();
+}
+
+function closeBookmarksPanel() {
+  var el = document.getElementById('bookmarksOverlay');
+  if (el) el.style.display = 'none';
+}
+
+function loadBookmarkList() {
+  var list = document.getElementById('bookmarkList');
+  if (!list) return;
+  list.innerHTML = '<div class="bm-empty">' + (t('loading')||'Loading...') + '</div>';
+  fetch('/api/v1/text/bookmarks')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data || !data.length) {
+        list.innerHTML = '<div class="bm-empty">📭 ' + (t('noBookmarks')||'No bookmarks yet') + '</div>';
+        return;
+      }
+      var countHtml = '<div class="bm-count">' + data.length + ' bookmark(s)</div>';
+      var itemsHtml = data.map(function(b) {
+        var ref = b.verseRef || '';
+        var label = b.note || b.label || ref;
+        var date = b.createdAt ? new Date(b.createdAt).toLocaleDateString() : '';
+        return '<div class="bm-item">' +
+          '<span class="bm-item-ref" onclick="navigateToRef(\x27' + escAttr(ref) + '\x27);closeBookmarksPanel()" title="' + escAttr(t('goTo')||'Go to') + '">' + escHtml(ref) + '</span>' +
+          '<span class="bm-item-preview">' + escHtml(label) + '</span>' +
+          '<span class="bm-item-date">' + date + '</span>' +
+          '<button class="bm-item-del" onclick="deleteBookmarkItem(\x27' + escAttr(ref) + '\x27)" title="' + escAttr(t('delete')||'Delete') + '">✕</button>' +
+          '</div>';
+      }).join('');
+      list.innerHTML = countHtml + itemsHtml;
+    }).catch(function() {
+      list.innerHTML = '<div class="bm-empty" style="color:#e05555">' + (t('loadFailed')||'Failed to load') + '</div>';
+    });
+}
+
+function deleteBookmarkItem(ref) {
+  fetch('/api/v1/text/bookmarks/' + encodeURIComponent(ref), { method: 'DELETE' })
+    .then(function() {
+      delete verseTools.bookmarks[ref];
+      updateVerseToolUI();
+      loadBookmarkList();
+      showVerseToast('🔖 书签已删除');
+    }).catch(function() { showVerseToast('删除失败', true); });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── Notes Management Panel ──
+// ══════════════════════════════════════════════════════════════════
+
+function openNotesPanel() {
+  var el = document.getElementById('notesOverlay');
+  if (!el) return;
+  el.style.display = 'flex';
+  loadNoteList();
+}
+
+function closeNotesPanel() {
+  var el = document.getElementById('notesOverlay');
+  if (el) el.style.display = 'none';
+}
+
+function loadNoteList() {
+  var list = document.getElementById('noteList');
+  if (!list) return;
+  list.innerHTML = '<div class="bm-empty">' + (t('loading')||'Loading...') + '</div>';
+  fetch('/api/v1/text/notes')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data || !data.length) {
+        list.innerHTML = '<div class="bm-empty">📭 ' + (t('noNotes')||'No notes yet') + '</div>';
+        return;
+      }
+      var countHtml = '<div class="bm-count">' + data.length + ' note(s)</div>';
+      var itemsHtml = data.map(function(n) {
+        var ref = n.verseRef || '';
+        var preview = (n.content || '').substring(0, 80);
+        if ((n.content || '').length > 80) preview += '...';
+        var date = n.updatedAt ? new Date(n.updatedAt).toLocaleDateString() : '';
+        return '<div class="bm-item">' +
+          '<span class="bm-item-ref" onclick="closeNotesPanel();navigateToRef(\x27' + escAttr(ref) + '\x27)" title="' + escAttr(t('goTo')||'Go to') + '">' + escHtml(ref) + '</span>' +
+          '<span class="bm-item-preview">' + escHtml(preview) + '</span>' +
+          '<span class="bm-item-date">' + date + '</span>' +
+          '<button class="bm-item-del" onclick="deleteNoteItem(\x27' + escAttr(ref) + '\x27)" title="' + escAttr(t('delete')||'Delete') + '">✕</button>' +
+          '</div>';
+      }).join('');
+      list.innerHTML = countHtml + itemsHtml;
+    }).catch(function() {
+      list.innerHTML = '<div class="bm-empty" style="color:#e05555">' + (t('loadFailed')||'Failed to load') + '</div>';
+    });
+}
+
+function deleteNoteItem(ref) {
+  fetch('/api/v1/text/notes/' + encodeURIComponent(ref), { method: 'DELETE' })
+    .then(function() {
+      delete verseTools.notes[ref];
+      updateVerseToolUI();
+      loadNoteList();
+      showVerseToast('📝 笔记已删除');
+    }).catch(function() { showVerseToast('删除失败', true); });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── Repository Management Panel ──
+// ══════════════════════════════════════════════════════════════════
+
+var customRepos = [];
+
+function loadCustomReposFile() {
+  return fetch('/repos.json').then(function(r){return r.json()}).then(function(d){
+    customRepos = (d||{}).customRepositories || [];
+    return customRepos;
+  }).catch(function(){customRepos=[];return customRepos});
+}
+
+function saveCustomReposFile() {
+  var data = { version: 1, customRepositories: customRepos };
+  return fetch('/api/v1/text/repos', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(data)
+  }).then(function(r){return r.json()});
+}
+
+function openReposPanel() {
+  var el = document.getElementById('reposOverlay');
+  if (!el) return;
+  el.style.display = 'flex';
+  document.getElementById('repoAddForm').style.display = 'none';
+  loadCustomReposFile().then(function(){
+    renderRepoList();
+  });
+}
+
+function closeReposPanel() {
+  var el = document.getElementById('reposOverlay');
+  if (el) el.style.display = 'none';
+}
+
+function renderRepoList() {
+  var c = document.getElementById('repoListContainer');
+  if (!c) return;
+  var all = [];
+  if (_repoSources && _repoSources.length) {
+    _repoSources.forEach(function(s){
+      if (s._source === 'builtin') {
+        all.push({ id: s.id, name: s.name||s.id, baseUrl: 'https://' + s.host + (s._path||''), _source: 'builtin' });
+      }
+    });
+  }
+  customRepos.forEach(function(r){ all.push({id:r.id||'custom',name:r.name,baseUrl:r.baseUrl,_source:'custom'}) });
+
+  if (!all.length) {
+    c.innerHTML = '<div class="bm-empty">Loading repositories...</div>';
+    return;
+  }
+  var html = '<div class="bm-count">' + all.length + ' repository(ies)</div>';
+  all.forEach(function(r){
+    var badge = r._source==='builtin'
+      ? '<span class="repo-badge builtin">Built-in</span>'
+      : '<span class="repo-badge custom">Custom</span>';
+    var actions = r._source==='custom'
+      ? '<button class="bm-item-del" onclick="removeCustomRepo(\x27' + escAttr(r.id) + '\x27)" title="Remove">\u2715</button>'
+      : '';
+    html += '<div class="bm-item">' +
+      '<span class="bm-item-preview" style="flex:1"><strong>' + escHtml(r.name) + '</strong>' +
+      '<br><span style="font-size:0.72rem;color:var(--text3);word-break:break-all">' + escHtml(r.baseUrl||'') + '</span></span>' +
+      badge + actions +
+      '</div>';
+  });
+  c.innerHTML = html;
+}
+
+function showAddRepoForm() {
+  document.getElementById('repoAddForm').style.display = 'block';
+  document.getElementById('repoAddName').value = '';
+  document.getElementById('repoAddUrl').value = '';
+}
+
+function cancelAddRepo() {
+  document.getElementById('repoAddForm').style.display = 'none';
+}
+
+function saveCustomRepo() {
+  var name = document.getElementById('repoAddName').value.trim();
+  var baseUrl = document.getElementById('repoAddUrl').value.trim();
+  if (!name || !baseUrl) {
+    alert('请填写名称和地址');
+    return;
+  }
+  // Normalize URL
+  if (!/^https?:\/\//.test(baseUrl)) baseUrl = 'https://' + baseUrl;
+  baseUrl = baseUrl.replace(/\/+$/, '');
+  // Auto-derive id from name
+  var id = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  var repo = { name: name, baseUrl: baseUrl, id: id };
+  customRepos = customRepos.filter(function(r){return r.id !== id});
+  customRepos.push(repo);
+  saveCustomReposFile().then(function(){
+    cancelAddRepo();
+    loadRepoSources().then(function(){
+      renderRepoList();
+      closeReposPanel();
+      openModulesPanel();
+    });
+  }).catch(function(e){
+    alert('保存失败: ' + e);
+  });
+}
+
+function removeCustomRepo(id) {
+  if (!confirm('删除仓库 "' + id + '"?')) return;
+  customRepos = customRepos.filter(function(r){return r.id !== id});
+  saveCustomReposFile().then(function(){
+    loadRepoSources().then(function(){
+      renderRepoList();
+    });
+  }).catch(function(e){
+    alert('保存失败: ' + e);
+  });
+}
 

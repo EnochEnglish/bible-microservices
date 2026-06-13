@@ -1,6 +1,7 @@
 var h=require('http'),fs=require('fs'),p=require('path');
 var dir=__dirname;
 var BACKEND = 'http://localhost:8080';
+var TEXT    = 'http://localhost:8081';
 var SWORD   = 'http://localhost:8086';
 
 // Proxy helper
@@ -35,6 +36,29 @@ h.createServer(function(rq, rs) {
   // Proxy /api/v1/sword/* to Sword service (:8086)
   if (url.startsWith('/api/v1/sword/') || url.startsWith('/api/v1/strongs/sword/')) {
     proxy(SWORD, rq, rs); return;
+  }
+
+  // Proxy /api/v1/text/repos (save custom repos) — write to local repos.json
+  if (url === '/api/v1/text/repos' && rq.method === 'POST') {
+    var body = [];
+    rq.on('data', function(c){body.push(c)});
+    rq.on('end', function(){
+      try {
+        var data = JSON.parse(Buffer.concat(body).toString());
+        fs.writeFileSync(p.join(dir, 'repos.json'), JSON.stringify(data, null, 2), 'utf8');
+        rs.writeHead(200, {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+        rs.end(JSON.stringify({success:true}));
+      } catch(e) {
+        rs.writeHead(400, {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+        rs.end(JSON.stringify({success:false,error:e.message}));
+      }
+    });
+    return;
+  }
+
+  // Proxy /api/v1/text/* to Text service (:8081) — bookmarks/notes
+  if (url.startsWith('/api/v1/text/')) {
+    proxy(TEXT, rq, rs); return;
   }
 
   // Proxy ALL other /api/* requests to Gateway (:8080)

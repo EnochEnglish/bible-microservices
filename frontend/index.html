@@ -25,6 +25,8 @@
       <button id="dictBtn" title="Bible Dictionary" onclick="openDictPopup()">📚</button>
       <button id="devotionBtn" title="Daily Devotion" data-zh="🔔 灵修" data-en="🔔 Devotion" onclick="openDevotionPanel()">🔔 灵修</button>
       <button id="genbookBtn" title="General Books" data-zh="📖 阅读" data-en="📖 Read" onclick="openGenBookPanel()">📖 阅读</button>
+      <button id="bookmarksBtn" title="Bookmarks" data-zh="🔖 书签" data-en="🔖 Bookmarks" onclick="openBookmarksPanel()">🔖 书签</button>
+      <button id="notesBtn" title="Notes" data-zh="📝 笔记" data-en="📝 Notes" onclick="openNotesPanel()">📝 笔记</button>
       <button id="modulesBtn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" onclick="openModulesPanel()">📦 模块</button>
     </div>
 
@@ -115,13 +117,8 @@
           </div>
           <div class="modules-source">
             <label>数据源:</label>
-            <select id="modulesSourceSelect" onchange="switchSource(this.value)">
-              <option value="crosswire">🌐 CrossWire Main</option>
-              <option value="crosswire-beta">🧪 CrossWire Beta</option>
-              <option value="crosswire-av11n">📐 CrossWire Av11n</option>
-              <option value="xmission">🇺🇸 XMission Mirror (USA)</option>
-              <option value="andbible">📱 AndBible</option>
-            </select>
+            <select id="modulesSourceSelect" onchange="switchSource(this.value)"></select>
+            <button class="repo-mgr-btn" onclick="openReposPanel()" title="管理仓库">⚙</button>
           </div>
           <div class="modules-search">
             <input type="text" id="modulesSearchInput" placeholder="搜索模块..." oninput="filterModuleList()">
@@ -197,8 +194,53 @@
       </div>
     </div>
   </div>
-  <script src="js/config.js?v=20260613a"></script>
-  <script src="js/api.js?v=20260613a"></script>
-  <script src="js/app.js?v=20260613a"></script>
+  <!-- Bookmarks Management Panel -->
+  <div class="strongs-overlay" id="bookmarksOverlay" style="display:none" onclick="closeBookmarksPanel()">
+    <div class="bm-panel" onclick="event.stopPropagation()">
+      <div class="strongs-popup-header">
+        <span id="bookmarksPanelTitle">🔖 书签管理</span>
+        <span class="strongs-popup-close" onclick="closeBookmarksPanel()">✕</span>
+      </div>
+      <div id="bookmarkList" class="bm-list"></div>
+    </div>
+  </div>
+
+  <!-- Notes Management Panel -->
+  <div class="strongs-overlay" id="notesOverlay" style="display:none" onclick="closeNotesPanel()">
+    <div class="bm-panel" onclick="event.stopPropagation()">
+      <div class="strongs-popup-header">
+        <span id="notesPanelTitle">📝 笔记管理</span>
+        <span class="strongs-popup-close" onclick="closeNotesPanel()">✕</span>
+      </div>
+      <div id="noteList" class="bm-list"></div>
+    </div>
+  </div>
+
+  <!-- Repository Management Panel -->
+  <div class="strongs-overlay" id="reposOverlay" style="display:none" onclick="closeReposPanel()">
+    <div class="bm-panel" onclick="event.stopPropagation()">
+      <div class="strongs-popup-header">
+        <span id="reposPanelTitle">⚙ 仓库管理</span>
+        <span class="strongs-popup-close" onclick="closeReposPanel()">✕</span>
+      </div>
+      <div id="repoListContainer" class="bm-list"></div>
+      <div class="repo-add-form" style="display:none" id="repoAddForm">
+        <input type="text" id="repoAddName" placeholder="仓库名称（如：我的镜像站）">
+        <input type="text" id="repoAddUrl" placeholder="仓库地址（如：https://example.com/sword）">
+        <div class="repo-add-hint">只需提供网址。系统会自动找到 mods.d.tar.gz 和模块包。</div>
+        <div class="repo-add-actions">
+          <button onclick="saveCustomRepo()">💾 保存</button>
+          <button class="btn-cancel" onclick="cancelAddRepo()">取消</button>
+        </div>
+      </div>
+      <div class="repo-footer">
+        <button onclick="showAddRepoForm()">➕ 添加仓库</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js?v=20260613d"></script>
+  <script src="js/api.js?v=20260613d"></script>
+  <script src="js/app.js?v=20260613d"></script>
 </body>
 </html>
