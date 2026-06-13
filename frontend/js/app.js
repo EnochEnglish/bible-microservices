@@ -2967,3 +2967,120 @@ function removeCustomRepo(id) {
   });
 }
 
+
+// ==================== Maps ====================
+var mapsState = {
+  modules: [],
+  currentModule: '',
+  maps: [],
+  currentIndex: 0
+};
+
+function openMapsPanel() {
+  var overlay = $("mapsOverlay");
+  if (!overlay) return;
+  fetch(API + "/sword/modules")
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var mapMods = (data.modules || []).filter(function(m) { return m.category === "MAPS"; });
+      mapsState.modules = mapMods;
+      var sel = $("mapsModule");
+      if (!sel) return;
+      sel.innerHTML = '<option value="">-- 选择地图集 --</option>' +
+        mapMods.map(function(m) {
+          return '<option value="' + escHtml(m.initials) + '">' + escHtml(m.name) + '</option>';
+        }).join('');
+      overlay.style.display = 'flex';
+      if (mapMods.length > 0) {
+        sel.value = mapMods[0].initials;
+        switchMapsModule();
+      }
+    }).catch(function(e) {
+      console.error('Failed to load map modules:', e);
+    });
+}
+
+function closeMapsPanel() {
+  var overlay = $("mapsOverlay");
+  if (overlay) overlay.style.display = 'none';
+  closeMapImageViewer();
+}
+
+function switchMapsModule() {
+  var sel = $("mapsModule");
+  if (!sel) return;
+  var mod = sel.value;
+  mapsState.currentModule = mod;
+  if (!mod) {
+    $("mapsThumbnailGrid").innerHTML = '<p style="padding:16px;color:#888;">请选择一个地图集</p>';
+    return;
+  }
+  fetch(API + "/sword/genbook/" + mod + "/keys")
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.success) { showMapError(data.message || "加载失败"); return; }
+      mapsState.maps = data.data.keys || [];
+      renderMapThumbnails();
+    }).catch(function(e) {
+      showMapError("加载地图列表失败: " + e.message);
+    });
+}
+
+function showMapError(msg) {
+  $("mapsThumbnailGrid").innerHTML = '<p style="padding:16px;color:#c0392b;">' + escHtml(msg) + '</p>';
+}
+
+function renderMapThumbnails() {
+  var grid = $("mapsThumbnailGrid");
+  if (!grid) return;
+  if (mapsState.maps.length === 0) {
+    grid.innerHTML = '<p style="padding:16px;color:#888;">此地图集没有内容</p>';
+    return;
+  }
+  grid.innerHTML = mapsState.maps.map(function(m, i) {
+    var imgUrl = API + "/sword/genbook/" + mapsState.currentModule + "/image?key=" + encodeURIComponent(m.osisRef);
+    return '<div class="maps-thumbnail-card" onclick="openMapImage(' + i + ')">' +
+      '<img src="' + imgUrl + '" alt="' + escHtml(m.name) + '" loading="lazy">' +
+      '<div class="maps-thumb-title">' + escHtml(m.name) + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function openMapImage(index) {
+  mapsState.currentIndex = index;
+  var m = mapsState.maps[index];
+  if (!m) return;
+  var viewer = $("mapsImageViewer");
+  var img = $("mapsFullImage");
+  var title = $("mapsImageTitle");
+  if (!viewer || !img || !title) return;
+  img.src = API + "/sword/genbook/" + mapsState.currentModule + "/image?key=" + encodeURIComponent(m.osisRef);
+  img.classList.remove("zoomed");
+  title.textContent = m.name;
+  viewer.style.display = "flex";
+  updateMapNavButtons();
+}
+
+function closeMapImageViewer() {
+  var viewer = $("mapsImageViewer");
+  if (viewer) viewer.style.display = "none";
+}
+
+function navigateMap(delta) {
+  var newIdx = mapsState.currentIndex + delta;
+  if (newIdx >= 0 && newIdx < mapsState.maps.length) {
+    openMapImage(newIdx);
+  }
+}
+
+function updateMapNavButtons() {
+  var prevBtn = $("mapsPrevBtn");
+  var nextBtn = $("mapsNextBtn");
+  if (prevBtn) prevBtn.disabled = mapsState.currentIndex <= 0;
+  if (nextBtn) nextBtn.disabled = mapsState.currentIndex >= mapsState.maps.length - 1;
+}
+
+function toggleMapZoom() {
+  var img = $("mapsFullImage");
+  if (img) img.classList.toggle("zoomed");
+}

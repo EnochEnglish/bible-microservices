@@ -25,6 +25,7 @@
       <button id="dictBtn" title="Bible Dictionary" onclick="openDictPopup()">📚</button>
       <button id="devotionBtn" title="Daily Devotion" data-zh="🔔 灵修" data-en="🔔 Devotion" onclick="openDevotionPanel()">🔔 灵修</button>
       <button id="genbookBtn" title="General Books" data-zh="📖 阅读" data-en="📖 Read" onclick="openGenBookPanel()">📖 阅读</button>
+      <button id="mapsBtn" title="Bible Maps" data-zh="🗺️ 地图" data-en="🗺️ Maps" onclick="openMapsPanel()">🗺️ 地图</button>
       <button id="bookmarksBtn" title="Bookmarks" data-zh="🔖 书签" data-en="🔖 Bookmarks" onclick="openBookmarksPanel()">🔖 书签</button>
       <button id="notesBtn" title="Notes" data-zh="📝 笔记" data-en="📝 Notes" onclick="openNotesPanel()">📝 笔记</button>
       <button id="modulesBtn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" onclick="openModulesPanel()">📦 模块</button>
@@ -166,6 +167,34 @@
       </div>
     </div>
 
+    <!-- Maps Panel -->
+    <div class="strongs-overlay" id="mapsOverlay" style="display:none" onclick="closeMapsPanel()">
+      <div class="maps-panel" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="mapsTitle">🗺️ 圣经地图</span>
+          <span class="strongs-popup-close" onclick="closeMapsPanel()">✕</span>
+        </div>
+        <div class="devotion-toolbar">
+          <select id="mapsModule" onchange="switchMapsModule()">
+            <option value="">-- 选择地图集 --</option>
+          </select>
+        </div>
+        <div id="mapsThumbnailGrid" class="maps-thumbnail-grid"></div>
+        <!-- Full-size image viewer -->
+        <div id="mapsImageViewer" class="maps-image-viewer" style="display:none">
+          <div class="maps-image-nav">
+            <button onclick="navigateMap(-1)" id="mapsPrevBtn">◀</button>
+            <span id="mapsImageTitle"></span>
+            <button onclick="navigateMap(1)" id="mapsNextBtn">▶</button>
+            <button onclick="closeMapImageViewer()" class="maps-img-close">✕</button>
+          </div>
+          <div class="maps-image-container">
+            <img id="mapsFullImage" src="" alt="Map" onclick="toggleMapZoom()">
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- General Book Panel -->
     <div class="strongs-overlay" id="genbookOverlay" style="display:none" onclick="closeGenBookPanel()">
       <div class="devotion-panel" onclick="event.stopPropagation()">
@@ -241,6 +270,6 @@
 
   <script src="js/config.js?v=20260613d"></script>
   <script src="js/api.js?v=20260613d"></script>
-  <script src="js/app.js?v=20260613d"></script>
+  <script src="js/app.js?v=20260613f"></script>
 </body>
 </html>

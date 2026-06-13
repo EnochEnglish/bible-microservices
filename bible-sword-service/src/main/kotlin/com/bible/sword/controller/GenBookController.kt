@@ -3,7 +3,11 @@ package com.bible.sword.controller
 import com.bible.sword.dto.GenBookContentResponse
 import com.bible.sword.dto.GenBookKeysResponse
 import com.bible.sword.service.GenBookService
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.io.File
 
 @RestController
 @RequestMapping("/api/v1/sword")
@@ -59,5 +63,27 @@ class GenBookController(
                 "message" to "Module not found or not a General Book: $module"
             )
         }
+    }
+
+    /**
+     * Get map image for a MAPS module entry.
+     *
+     * GET /api/v1/sword/genbook/{module}/image?key=N
+     * Returns the image binary with appropriate Content-Type.
+     */
+    @GetMapping("/genbook/{module}/image")
+    fun getMapImage(
+        @PathVariable module: String,
+        @RequestParam("key") keyRef: String
+    ): ResponseEntity<Any> {
+        val (file, mime) = genBookService.getMapImageFile(module, keyRef)
+            ?: return ResponseEntity.notFound().build<Any>()
+
+        val bytes = file.readBytes()
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_TYPE, mime)
+            .header(HttpHeaders.CACHE_CONTROL, "max-age=86400")
+            .contentLength(bytes.size.toLong())
+            .body(bytes)
     }
 }
