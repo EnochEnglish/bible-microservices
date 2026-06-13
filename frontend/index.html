@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -28,7 +28,8 @@
       <button id="mapsBtn" title="Bible Maps" data-zh="🗺️ 地图" data-en="🗺️ Maps" onclick="openMapsPanel()">🗺️ 地图</button>
       <button id="bookmarksBtn" title="Bookmarks" data-zh="🔖 书签" data-en="🔖 Bookmarks" onclick="openBookmarksPanel()">🔖 书签</button>
       <button id="notesBtn" title="Notes" data-zh="📝 笔记" data-en="📝 Notes" onclick="openNotesPanel()">📝 笔记</button>
-      <button id="modulesBtn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" onclick="openModulesPanel()">📦 模块</button>
+      <button id="modulesBtn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" onclick="openModulesPanel()" style="display:none">📦 模块</button>
+      <button id="loginBtn" title="Login / Register" data-zh="👤 登录" data-en="👤 Login" onclick="openAuthPanel()">👤 登录</button>
     </div>
 
     <!-- Sidebar -->
@@ -268,8 +269,41 @@
     </div>
   </div>
 
-  <script src="js/config.js?v=20260613d"></script>
-  <script src="js/api.js?v=20260613d"></script>
-  <script src="js/app.js?v=20260613f"></script>
+  <!-- Auth Overlay -->
+  <div class="strongs-overlay" id="authOverlay" style="display:none" onclick="closeAuthPanel()">
+    <div class="auth-panel" onclick="event.stopPropagation()">
+      <div class="strongs-popup-header">
+        <span id="authTitle">👤 登录</span>
+        <span class="strongs-popup-close" onclick="closeAuthPanel()">✕</span>
+      </div>
+      <div id="authTabs" class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
+        <button class="auth-tab" onclick="switchAuthTab('register')">注册</button>
+      </div>
+      <div id="authLoginForm" class="auth-form">
+        <input type="text" id="loginUsername" placeholder="用户名" autocomplete="username">
+        <input type="password" id="loginPassword" placeholder="密码" autocomplete="current-password">
+        <div id="authError" class="auth-error" style="display:none"></div>
+        <button class="auth-submit-btn" onclick="doLogin()">登录</button>
+      </div>
+      <div id="authRegisterForm" class="auth-form" style="display:none">
+        <input type="text" id="regUsername" placeholder="用户名 (2-50字符)" autocomplete="username">
+        <input type="password" id="regPassword" placeholder="密码 (3-100字符)" autocomplete="new-password">
+        <div id="regError" class="auth-error" style="display:none"></div>
+        <button class="auth-submit-btn" onclick="doRegister()">注册</button>
+      </div>
+      <!-- Admin user management (hidden by default) -->
+      <div id="adminUserPanel" class="admin-user-panel" style="display:none">
+        <div class="strongs-popup-header" style="margin-top:12px">
+          <span>⚙️ 用户管理</span>
+        </div>
+        <div id="adminUserList" class="admin-user-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js?v=20260614c"></script>
+  <script src="js/api.js?v=20260614c"></script>
+  <script src="js/app.js?v=20260614c"></script>
 </body>
 </html>

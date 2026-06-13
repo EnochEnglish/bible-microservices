@@ -2,5 +2,6 @@
   "_comment": "Add SWORD module repositories. Just 2 fields: name (label) + baseUrl (the URL). The system handles the rest automatically.",
   "version": 1,
   "customRepositories": [
+    { "name": "Xiphos", "baseUrl": "ftp://ftp.xiphos.org/pub/xiphos" }
   ]
 }

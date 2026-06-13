@@ -3,6 +3,7 @@ var dir=__dirname;
 var BACKEND = 'http://localhost:8080';
 var TEXT    = 'http://localhost:8081';
 var SWORD   = 'http://localhost:8086';
+var AUTH    = 'http://localhost:8084';
 
 // Proxy helper
 function proxy(target, rq, rs) {
@@ -32,6 +33,11 @@ function proxy(target, rq, rs) {
 
 h.createServer(function(rq, rs) {
   var url = rq.url.replace(/[?#].*/,'');
+
+  // Proxy /api/v1/auth/* to Auth service (:8084)
+  if (url.startsWith('/api/v1/auth/')) {
+    proxy(AUTH, rq, rs); return;
+  }
 
   // Proxy /api/v1/sword/* to Sword service (:8086)
   if (url.startsWith('/api/v1/sword/') || url.startsWith('/api/v1/strongs/sword/')) {

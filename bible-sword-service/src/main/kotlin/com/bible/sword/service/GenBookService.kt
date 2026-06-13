@@ -128,7 +128,6 @@ class GenBookService {
      */
     private fun detectImageMime(bytes: ByteArray?): String {
         if (bytes == null || bytes.size < 4) return "image/png"
-        // Check for SVG (text-based, starts with <svg or <xml)
         val head = String(bytes.copyOfRange(0, kotlin.math.min(bytes.size, 200)), Charsets.UTF_8).trimStart()
         if (head.startsWith("<svg") || head.startsWith("<?xml") || head.contains("<svg")) return "image/svg+xml"
         return when {
@@ -140,81 +139,116 @@ class GenBookService {
         }
     }
 
+    private fun resolveModulesDir(): java.io.File {
+        return java.io.File(modulesPath).canonicalFile
+    }
+
     /**
-     * Get the image file for a MAPS module entry.
-     * Returns Pair of (File, mimeType) or null if not found.
+     * Find the genbook tree root for a MAPS module.
+     */
+    private fun findMapGenBookRoot(module: String): java.io.File? {
+        val baseDir = resolveModulesDir()
+        val sharedBase = java.io.File(baseDir, "modules/genbook/rawgenbook")
+        if (sharedBase.exists()) {
+            for (d in sharedBase.listFiles() ?: emptyArray()) {
+                if (!d.isDirectory) continue
+                if (!d.name.lowercase().startsWith(module.lowercase())) continue
+                if (isMapTreeRoot(d)) return d
+                for (sub in d.listFiles() ?: emptyArray()) {
+                    if (sub.isDirectory && isMapTreeRoot(sub)) return sub
+                }
+            }
+        }
+        // Self-contained: {root}/{Module}/modules/genbook/rawgenbook/{name}/{name}
+        for (modCase in listOf(module, module.lowercase())) {
+            val scDir = java.io.File(baseDir, "$modCase/modules/genbook/rawgenbook/$modCase/$modCase")
+            if (scDir.exists() && isMapTreeRoot(scDir)) return scDir
+        }
+        return null
+    }
+
+    private fun isMapTreeRoot(dir: java.io.File): Boolean {
+        val hasNumbered = dir.listFiles()?.any { it.isDirectory && it.name.toIntOrNull() != null } ?: false
+        val hasImages = java.io.File(dir, "images").let { it.exists() && it.isDirectory }
+        val hasTree = dir.listFiles()?.any { it.isFile && (it.name.endsWith(".bdt") || it.name.endsWith(".dat")) } ?: false
+        return hasNumbered || hasImages || hasTree
+    }
+
+    /**
+     * Get image file for MAPS module. Supports numbered-dir and images/ formats.
      */
     fun getMapImageFile(module: String, keyRef: String): Pair<java.io.File, String>? {
         val book = findBook(module) ?: return null
         if (book.bookCategory != BookCategory.MAPS) return null
-
-        // Walk module directory to find the image
-        val baseDir = resolveModulesDir()
-        val moduleDir = java.io.File(baseDir, module)
-        if (!moduleDir.exists()) return null
-
-        // Look for image in: modules/genbook/rawgenbook/{module}/{module}/{key}/
-        val imageDirs = listOf(
-            java.io.File(moduleDir, "modules/genbook/rawgenbook/$module/$module/$keyRef"),
-            java.io.File(moduleDir, "modules/genbook/rawgenbook/${module.lowercase()}/${module.lowercase()}/$keyRef"),
-            java.io.File(moduleDir, "modules/genbook/rawgenbook/${module.lowercase()}/${module.lowercase()}/${keyRef.padStart(5, '0')}")
-        )
-        for (dir in imageDirs) {
-            if (dir.exists()) {
-                // Try common image file names
+        val treeRoot = findMapGenBookRoot(module) ?: return null
+        // Format 1: Numbered directories {keyRef}/image
+        for (dir in listOf(java.io.File(treeRoot, keyRef), java.io.File(treeRoot, keyRef.padStart(5, '0')))) {
+            if (dir.exists() && dir.isDirectory) {
                 for (name in listOf("image", "image.jpg", "image.png", "image.jpeg", "image.gif")) {
                     val imgFile = java.io.File(dir, name)
-                    if (imgFile.exists()) {
-                        val bytes = imgFile.readBytes()
-                        val mime = detectImageMime(bytes)
-                        return Pair(imgFile, mime)
+                    if (imgFile.exists() && imgFile.isFile) {
+                        return Pair(imgFile, detectImageMime(imgFile.readBytes()))
                     }
+                }
+            }
+        }
+        // Format 2: images/ subdirectory
+        val imagesDir = java.io.File(treeRoot, "images")
+        if (imagesDir.exists() && imagesDir.isDirectory) {
+            for (ext in listOf("", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp")) {
+                val imgFile = java.io.File(imagesDir, "$keyRef$ext")
+                if (imgFile.exists() && imgFile.isFile) {
+                    return Pair(imgFile, detectImageMime(imgFile.readBytes()))
                 }
             }
         }
         return null
     }
 
-    private fun resolveModulesDir(): java.io.File {
-        return java.io.File(modulesPath).canonicalFile
-    }
-
     /**
-     * List map keys by scanning image directories on filesystem.
-     * Each subdirectory N contains title and image files.
+     * List map keys. Format 1: numbered dirs. Format 2: images/ dir.
      */
     private fun listMapKeys(module: String, moduleName: String, offset: Int, limit: Int): GenBookKeysResponse {
-        val baseDir = resolveModulesDir()
-        val imgDir = java.io.File(baseDir, "$module/modules/genbook/rawgenbook/${module.lowercase()}/${module.lowercase()}")
-
         val keys = mutableListOf<GenBookKeyInfo>()
-        if (imgDir.exists() && imgDir.isDirectory) {
-            imgDir.listFiles()?.filter { it.isDirectory && it.name.matches(Regex("\\d+")) }?.sortedBy { it.name.toIntOrNull() ?: 0 }?.forEach { dir ->
-                val titleFile = java.io.File(dir, "title")
-                val title = if (titleFile.exists()) titleFile.readText().trim() else "Map ${dir.name}"
-                keys.add(GenBookKeyInfo(
-                osisRef = dir.name,
-                name = title
-            ))
+        val treeRoot = findMapGenBookRoot(module)
+        if (treeRoot != null) {
+            // Format 1: Numbered subdirectories
+            for (dir in (treeRoot.listFiles() ?: emptyArray())) {
+                if (dir.isDirectory && dir.name.toIntOrNull() != null) {
+                    val titleFile = java.io.File(dir, "title")
+                    val title = if (titleFile.exists()) titleFile.readText().trim() else "Map ${dir.name}"
+                    keys.add(GenBookKeyInfo(osisRef = dir.name, name = title))
+                }
+            }
+            // Format 2: images/ directory
+            if (keys.isEmpty()) {
+                val imagesDir = java.io.File(treeRoot, "images")
+                if (imagesDir.exists() && imagesDir.isDirectory) {
+                    for (imgFile in (imagesDir.listFiles() ?: emptyArray())) {
+                        if (imgFile.isFile && imgFile.name.matches(Regex(".*\\.(jpg|jpeg|png|gif|svg|webp)$", RegexOption.IGNORE_CASE))) {
+                            val dispName = imgFile.nameWithoutExtension
+                                .replace('_', ' ').replace('-', ' ')
+                                .split(' ').joinToString(" ") { it.replaceFirstChar { c -> c.uppercaseChar() } }
+                            keys.add(GenBookKeyInfo(osisRef = imgFile.name, name = dispName))
+                        }
+                    }
+                }
+            }
         }
-    }
-
-    val sliced = keys.drop(offset).take(limit)
-    return GenBookKeysResponse(
-        module = module,
-        moduleName = moduleName,
-        totalCount = keys.size,
-        offset = offset,
-        returnedCount = sliced.size,
-        hasMore = (offset + limit) < keys.size,
-        keys = sliced
+        val sliced = keys.drop(offset).take(limit)
+        return GenBookKeysResponse(
+            module = module,
+            moduleName = moduleName,
+            totalCount = keys.size,
+            offset = offset,
+            returnedCount = sliced.size,
+            hasMore = (offset + limit) < keys.size,
+            keys = sliced
         )
     }
 
     /**
      * Check if a key is contained in the book.
-     * JSword Book.contains() returns a Key (not boolean) — truthy if found.
-     * Uses try/catch since absent keys throw ArrayIndexOutOfBoundsException.
      */
     private fun bookContains(book: Book, key: org.crosswire.jsword.passage.Key): Boolean {
         return try {

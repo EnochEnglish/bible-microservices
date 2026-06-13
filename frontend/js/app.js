@@ -2977,14 +2977,14 @@ var mapsState = {
 };
 
 function openMapsPanel() {
-  var overlay = $("mapsOverlay");
+  var overlay = document.getElementById("mapsOverlay");
   if (!overlay) return;
   fetch(API + "/sword/modules")
     .then(function(r) { return r.json(); })
     .then(function(data) {
       var mapMods = (data.modules || []).filter(function(m) { return m.category === "MAPS"; });
       mapsState.modules = mapMods;
-      var sel = $("mapsModule");
+      var sel = document.getElementById("mapsModule");
       if (!sel) return;
       sel.innerHTML = '<option value="">-- 选择地图集 --</option>' +
         mapMods.map(function(m) {
@@ -3001,18 +3001,18 @@ function openMapsPanel() {
 }
 
 function closeMapsPanel() {
-  var overlay = $("mapsOverlay");
+  var overlay = document.getElementById("mapsOverlay");
   if (overlay) overlay.style.display = 'none';
   closeMapImageViewer();
 }
 
 function switchMapsModule() {
-  var sel = $("mapsModule");
+  var sel = document.getElementById("mapsModule");
   if (!sel) return;
   var mod = sel.value;
   mapsState.currentModule = mod;
   if (!mod) {
-    $("mapsThumbnailGrid").innerHTML = '<p style="padding:16px;color:#888;">请选择一个地图集</p>';
+    document.getElementById("mapsThumbnailGrid").innerHTML = '<p style="padding:16px;color:#888;">请选择一个地图集</p>';
     return;
   }
   fetch(API + "/sword/genbook/" + mod + "/keys")
@@ -3027,11 +3027,11 @@ function switchMapsModule() {
 }
 
 function showMapError(msg) {
-  $("mapsThumbnailGrid").innerHTML = '<p style="padding:16px;color:#c0392b;">' + escHtml(msg) + '</p>';
+  document.getElementById("mapsThumbnailGrid").innerHTML = '<p style="padding:16px;color:#c0392b;">' + escHtml(msg) + '</p>';
 }
 
 function renderMapThumbnails() {
-  var grid = $("mapsThumbnailGrid");
+  var grid = document.getElementById("mapsThumbnailGrid");
   if (!grid) return;
   if (mapsState.maps.length === 0) {
     grid.innerHTML = '<p style="padding:16px;color:#888;">此地图集没有内容</p>';
@@ -3050,9 +3050,9 @@ function openMapImage(index) {
   mapsState.currentIndex = index;
   var m = mapsState.maps[index];
   if (!m) return;
-  var viewer = $("mapsImageViewer");
-  var img = $("mapsFullImage");
-  var title = $("mapsImageTitle");
+  var viewer = document.getElementById("mapsImageViewer");
+  var img = document.getElementById("mapsFullImage");
+  var title = document.getElementById("mapsImageTitle");
   if (!viewer || !img || !title) return;
   img.src = API + "/sword/genbook/" + mapsState.currentModule + "/image?key=" + encodeURIComponent(m.osisRef);
   img.classList.remove("zoomed");
@@ -3062,7 +3062,7 @@ function openMapImage(index) {
 }
 
 function closeMapImageViewer() {
-  var viewer = $("mapsImageViewer");
+  var viewer = document.getElementById("mapsImageViewer");
   if (viewer) viewer.style.display = "none";
 }
 
@@ -3074,13 +3074,190 @@ function navigateMap(delta) {
 }
 
 function updateMapNavButtons() {
-  var prevBtn = $("mapsPrevBtn");
-  var nextBtn = $("mapsNextBtn");
+  var prevBtn = document.getElementById("mapsPrevBtn");
+  var nextBtn = document.getElementById("mapsNextBtn");
   if (prevBtn) prevBtn.disabled = mapsState.currentIndex <= 0;
   if (nextBtn) nextBtn.disabled = mapsState.currentIndex >= mapsState.maps.length - 1;
 }
 
 function toggleMapZoom() {
-  var img = $("mapsFullImage");
+  var img = document.getElementById("mapsFullImage");
   if (img) img.classList.toggle("zoomed");
 }
+
+// ============ Auth ============
+var authState = {
+  loggedIn: false,
+  user: null,
+  token: null
+};
+
+// Load token on startup
+(function() {
+  try {
+    var saved = localStorage.getItem("bible_auth");
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      authState.token = parsed.token;
+      authState.user = parsed.user;
+      // Validate token
+      fetch(API_BASE + "/auth/me", {
+        headers: { "Authorization": "Bearer " + authState.token }
+      }).then(function(r) {
+        return r.json();
+      }).then(function(d) {
+        if (d.success) {
+          authState.loggedIn = true;
+          authState.user = d.user;
+          updateLoginButton();
+          if (d.user.role === "ADMIN") showAdminFeatures();
+        } else {
+          authState.token = null;
+          authState.user = null;
+          localStorage.removeItem("bible_auth");
+        }
+      }).catch(function() {});
+    }
+  } catch(e) {}
+})();
+
+function openAuthPanel() {
+  if (authState.loggedIn) {
+    showAuthMenu();
+    return;
+  }
+  document.getElementById("authOverlay").style.display = "flex";
+  switchAuthTab("login");
+  document.getElementById("authError").style.display = "none";
+  document.getElementById("regError").style.display = "none";
+}
+
+function closeAuthPanel() {
+  document.getElementById("authOverlay").style.display = "none";
+}
+
+function switchAuthTab(tab) {
+  var tabs = document.querySelectorAll(".auth-tab");
+  tabs.forEach(function(t) { t.classList.remove("active"); });
+  if (tab === "login") {
+    tabs[0].classList.add("active");
+    document.getElementById("authLoginForm").style.display = "block";
+    document.getElementById("authRegisterForm").style.display = "none";
+    document.getElementById("authTitle").textContent = state.lang === "zh" ? "👤 登录" : "👤 Login";
+  } else {
+    tabs[1].classList.add("active");
+    document.getElementById("authLoginForm").style.display = "none";
+    document.getElementById("authRegisterForm").style.display = "block";
+    document.getElementById("authTitle").textContent = state.lang === "zh" ? "📝 注册" : "📝 Register";
+  }
+}
+
+function doLogin() {
+  var username = document.getElementById("loginUsername").value.trim();
+  var password = document.getElementById("loginPassword").value;
+  if (!username || !password) {
+    document.getElementById("authError").style.display = "block";
+    document.getElementById("authError").textContent = "请填写用户名和密码";
+    return;
+  }
+  fetch(API_BASE + "/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: username, password: password })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      authState.loggedIn = true;
+      authState.user = d.user;
+      authState.token = d.token;
+      localStorage.setItem("bible_auth", JSON.stringify({ token: d.token, user: d.user }));
+      updateLoginButton();
+      closeAuthPanel();
+      if (d.user.role === "ADMIN") {
+        showAdminFeatures();
+      }
+    } else {
+      document.getElementById("authError").style.display = "block";
+      document.getElementById("authError").textContent = d.message || "登录失败";
+    }
+  }).catch(function() {
+    document.getElementById("authError").style.display = "block";
+    document.getElementById("authError").textContent = "网络错误，请检查服务是否运行";
+  });
+}
+
+function doRegister() {
+  var username = document.getElementById("regUsername").value.trim();
+  var password = document.getElementById("regPassword").value;
+  if (!username || !password) {
+    document.getElementById("regError").style.display = "block";
+    document.getElementById("regError").textContent = "请填写用户名和密码";
+    return;
+  }
+  if (username.length < 2 || password.length < 3) {
+    document.getElementById("regError").style.display = "block";
+    document.getElementById("regError").textContent = "用户名至少2字符，密码至少3字符";
+    return;
+  }
+  fetch(API_BASE + "/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: username, password: password })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      authState.loggedIn = true;
+      authState.user = d.user;
+      authState.token = d.token;
+      localStorage.setItem("bible_auth", JSON.stringify({ token: d.token, user: d.user }));
+      updateLoginButton();
+      closeAuthPanel();
+    } else {
+      document.getElementById("regError").style.display = "block";
+      document.getElementById("regError").textContent = d.message || "注册失败";
+    }
+  }).catch(function() {
+    document.getElementById("regError").style.display = "block";
+    document.getElementById("regError").textContent = "网络错误，请检查服务是否运行";
+  });
+}
+
+function doLogout() {
+  authState.loggedIn = false;
+  authState.user = null;
+  authState.token = null;
+  localStorage.removeItem("bible_auth");
+  updateLoginButton();
+  hideAdminFeatures();
+}
+
+function showAuthMenu() {
+  var msg = authState.user
+    ? ("用户: " + authState.user.username + " (" + authState.user.role + ")\n\n点击确定退出登录")
+    : "";
+  if (confirm(msg)) {
+    doLogout();
+  }
+}
+
+// Auto-check admin on successful login
+function updateLoginButton() {
+  var btn = document.getElementById("loginBtn");
+  if (!btn) return;
+  if (authState.loggedIn && authState.user) {
+    btn.textContent = "👤 " + authState.user.username;
+    btn.className = "logged-in";
+  } else {
+    btn.textContent = state.lang === "zh" ? "👤 登录" : "👤 Login";
+    btn.className = "";
+  }
+}
+
+function showAdminFeatures() {
+  var modBtn = document.getElementById("modulesBtn");
+  if (modBtn) modBtn.style.display = "inline-block";
+}
+
+function hideAdminFeatures() {
+  var modBtn = document.getElementById("modulesBtn");
+  if (modBtn) modBtn.style.display = "none";
+}
+
