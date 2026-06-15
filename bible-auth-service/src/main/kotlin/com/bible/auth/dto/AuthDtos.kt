@@ -17,7 +17,10 @@ data class RegisterRequest(
     val username: String,
 
     @field:NotBlank @field:Size(min = 3, max = 100)
-    val password: String
+    val password: String,
+
+    val captchaToken: String? = null,
+    val captchaAnswer: Int = 0
 )
 
 // ---- Admin Requests ----

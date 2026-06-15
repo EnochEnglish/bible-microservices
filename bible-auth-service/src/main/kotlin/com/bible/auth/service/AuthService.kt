@@ -12,7 +12,8 @@ import java.time.Instant
 @Service
 class AuthService(
     private val userRepository: UserRepository,
-    private val jwtUtil: JwtUtil
+    private val jwtUtil: JwtUtil,
+    private val captchaController: com.bible.auth.controller.CaptchaController
 ) {
     private val log = LoggerFactory.getLogger(AuthService::class.java)
 
@@ -36,7 +37,11 @@ class AuthService(
     // ============ Registration & Login ============
 
     @Transactional
-    fun register(username: String, password: String): AuthResponse {
+    fun register(username: String, password: String, captchaToken: String?, captchaAnswer: Int): AuthResponse {
+        // Validate captcha
+        if (captchaToken.isNullOrBlank() || !captchaController.verifyCaptcha(captchaToken, captchaAnswer)) {
+            return AuthResponse(success = false, message = "验证码错误或已过期，请刷新后重试")
+        }
         if (userRepository.findByUsername(username) != null) {
             return AuthResponse(success = false, message = "用户名已存在")
         }

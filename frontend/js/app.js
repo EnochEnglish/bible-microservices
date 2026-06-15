@@ -1,4 +1,4 @@
-console.log('[DEBUG app.js] loaded');
+﻿console.log('[DEBUG app.js] loaded');
 // ── State ──
 var state = {
   translations: [],
@@ -279,7 +279,7 @@ var API = APP_CONFIG.apiBase;  // from config.js
 console.log('[DEBUG] API =', API, 'APP_CONFIG.apiBase =', APP_CONFIG.apiBase);
 
 function apiGet(path) {
-  return fetch(API_BASE + path).then(function(r) {
+  return fetch('/api/v1' + path).then(function(r) {
     if (!r.ok) throw new Error(r.status);
     return r.json();
   });
@@ -757,7 +757,7 @@ function fetchStrongsTooltip(sn, event) {
     return;
   }
   var eve = event;
-  fetch(API_BASE + "/sword/" + mod + "/dict/" + sn)
+  fetch('/api/v1' + "/sword/" + mod + "/dict/" + sn)
     .then(function(r) { return r.json(); })
     .then(function(d) {
       if (d && d.found && d.content) {
@@ -815,7 +815,7 @@ function fetchMorphTooltip(morph, event) {
   }
   // Fetch from sword-service
   var eve = event;
-  fetch(API_BASE + "/sword/OSHB/dict/" + morph)
+  fetch('/api/v1' + "/sword/OSHB/dict/" + morph)
     .then(function(r) { return r.json(); })
     .then(function(d) {
       if (d && d.found && d.content) {
@@ -3201,6 +3201,7 @@ function initMapDrag() {
 }
 
 // ============ Auth ============
+var AUTH_API = API + "/auth";
 var authState = {
   loggedIn: false,
   user: null,
@@ -3226,7 +3227,7 @@ function isLoggedIn() {
       var parsed = JSON.parse(saved);
       authState.token = parsed.token;
       authState.user = parsed.user;
-      fetch(API_BASE + "/auth/me", {
+      fetch(AUTH_API + "/me", {
         headers: { "Authorization": "Bearer " + authState.token }
       }).then(function(r) { return r.json(); }).then(function(d) {
         if (d.success) {
@@ -3277,6 +3278,7 @@ function switchAuthTab(tab) {
     document.getElementById("authRegisterForm").style.display = "block";
     document.getElementById("authTabs").style.display = "";
     document.getElementById("authTitle").textContent = state.lang === "zh" ? "📝 注册" : "📝 Register";
+    loadCaptcha();
   } else if (tab === "forgot") {
     document.getElementById("authForgotForm").style.display = "block";
     document.getElementById("authTabs").style.display = "none";
@@ -3297,9 +3299,16 @@ function showProfileView() {
   
   if (authState.user) {
     var u = authState.user;
-    document.getElementById("authProfileName").textContent = u.username;
-    document.getElementById("authProfileRole").textContent = (state.lang === "zh" ? "角色: " : "Role: ") + (u.role || "USER");
-    document.getElementById("authProfileEmail").textContent = u.email || "";
+    document.getElementById("profileUsername").textContent = u.username;
+    var roleLabel = u.role === "ADMIN" ? (state.lang === "zh" ? "管理员" : "Admin") : (state.lang === "zh" ? "用户" : "User");
+    var roleBadge = document.getElementById("profileRoleBadge");
+    if (roleBadge) {
+      roleBadge.textContent = roleLabel;
+      roleBadge.className = u.role === "ADMIN" ? "admin-role-admin" : "admin-role-user";
+      roleBadge.style.cssText = "display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75rem;margin-top:4px";
+    }
+    var infoEl = document.getElementById("profileInfo");
+    if (infoEl) infoEl.textContent = (u.email ? "📧 " + u.email + " " : "") + (u.phone ? "📞 " + u.phone : "");
   }
   
   // Show admin panel toggle if admin
@@ -3317,31 +3326,31 @@ function showProfileEdit() {
   views.forEach(function(id) { document.getElementById(id).style.display = "none"; });
   document.getElementById("authProfileForm").style.display = "block";
   document.getElementById("authTitle").textContent = state.lang === "zh" ? "✏️ 编辑资料" : "✏️ Edit Profile";
-  document.getElementById("profError").style.display = "none";
+  document.getElementById("profileEditError").style.display = "none";
   
   if (authState.user) {
     var u = authState.user;
-    document.getElementById("profEmail").value = u.email || "";
-    document.getElementById("profPhone").value = u.phone || "";
-    document.getElementById("profAddress").value = u.address || "";
-    document.getElementById("profAge").value = u.age || "";
-    document.getElementById("profGender").value = u.gender || "";
-    document.getElementById("profCountry").value = u.country || "";
-    document.getElementById("profCity").value = u.city || "";
+    document.getElementById("profileEmail").value = u.email || "";
+    document.getElementById("profilePhone").value = u.phone || "";
+    document.getElementById("profileAddress").value = u.address || "";
+    document.getElementById("profileAge").value = u.age || "";
+    document.getElementById("profileGender").value = u.gender || "";
+    document.getElementById("profileCountry").value = u.country || "";
+    document.getElementById("profileCity").value = u.city || "";
   }
 }
 
 function doUpdateProfile() {
   var data = {
-    email: document.getElementById("profEmail").value.trim(),
-    phone: document.getElementById("profPhone").value.trim(),
-    address: document.getElementById("profAddress").value.trim(),
-    age: parseInt(document.getElementById("profAge").value) || null,
-    gender: document.getElementById("profGender").value,
-    country: document.getElementById("profCountry").value.trim(),
-    city: document.getElementById("profCity").value.trim()
+    email: document.getElementById("profileEmail").value.trim(),
+    phone: document.getElementById("profilePhone").value.trim(),
+    address: document.getElementById("profileAddress").value.trim(),
+    age: parseInt(document.getElementById("profileAge").value) || null,
+    gender: document.getElementById("profileGender").value,
+    country: document.getElementById("profileCountry").value.trim(),
+    city: document.getElementById("profileCity").value.trim()
   };
-  fetch(API_BASE + "/auth/profile", {
+  fetch(AUTH_API + "/profile", {
     method: "PUT",
     headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
     body: JSON.stringify(data)
@@ -3351,12 +3360,12 @@ function doUpdateProfile() {
       localStorage.setItem("bible_auth", JSON.stringify({ token: authState.token, user: d.user }));
       showProfileView();
     } else {
-      document.getElementById("profError").style.display = "block";
-      document.getElementById("profError").textContent = d.message || "更新失败";
+      document.getElementById("profileEditError").style.display = "block";
+      document.getElementById("profileEditError").textContent = d.message || "更新失败";
     }
   }).catch(function() {
-    document.getElementById("profError").style.display = "block";
-    document.getElementById("profError").textContent = "网络错误";
+    document.getElementById("profileEditError").style.display = "block";
+    document.getElementById("profileEditError").textContent = "网络错误";
   });
 }
 
@@ -3391,7 +3400,7 @@ function doChangePassword() {
     document.getElementById("pwdError").textContent = "两次输入的新密码不一致";
     return;
   }
-  fetch(API_BASE + "/auth/change-password", {
+  fetch(AUTH_API + "/change-password", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
     body: JSON.stringify({ oldPassword: oldPwd, newPassword: newPwd })
@@ -3417,7 +3426,7 @@ function doForgotPassword() {
     document.getElementById("forgotMsg").textContent = "请输入用户名";
     return;
   }
-  fetch(API_BASE + "/auth/forgot-password", {
+  fetch(AUTH_API + "/forgot-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username: username })
@@ -3446,7 +3455,7 @@ function doLogin() {
     document.getElementById("authError").textContent = state.lang === "zh" ? "请填写用户名和密码" : "Please enter username and password";
     return;
   }
-  fetch(API_BASE + "/auth/login", {
+  fetch(AUTH_API + "/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username: username, password: password })
@@ -3469,12 +3478,34 @@ function doLogin() {
   });
 }
 
+// -- Captcha
+function loadCaptcha() {
+  fetch(AUTH_API + "/captcha")
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.success) {
+        document.getElementById("captchaQuestion").textContent = d.question;
+        document.getElementById("regCaptchaToken").value = d.token;
+        document.getElementById("regCaptchaAnswer").value = "";
+      }
+    }).catch(function() {
+      document.getElementById("captchaQuestion").textContent = "加载失败";
+    });
+}
+
 function doRegister() {
   var username = document.getElementById("regUsername").value.trim();
   var password = document.getElementById("regPassword").value;
+  var captchaToken = document.getElementById("regCaptchaToken").value;
+  var captchaAnswer = parseInt(document.getElementById("regCaptchaAnswer").value) || 0;
   if (!username || !password) {
     document.getElementById("regError").style.display = "block";
     document.getElementById("regError").textContent = state.lang === "zh" ? "请填写用户名和密码" : "Please enter username and password";
+    return;
+  }
+  if (!captchaToken || !captchaAnswer) {
+    document.getElementById("regError").style.display = "block";
+    document.getElementById("regError").textContent = state.lang === "zh" ? "请先加载并填写验证码" : "Please load and enter the captcha";
     return;
   }
   if (username.length < 2 || password.length < 3) {
@@ -3482,10 +3513,10 @@ function doRegister() {
     document.getElementById("regError").textContent = state.lang === "zh" ? "用户名至少2字符，密码至少3字符" : "Username min 2 chars, password min 3 chars";
     return;
   }
-  fetch(API_BASE + "/auth/register", {
+  fetch(AUTH_API + "/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: username, password: password })
+    body: JSON.stringify({ username: username, password: password, captchaToken: captchaToken, captchaAnswer: captchaAnswer })
   }).then(function(r) { return r.json(); }).then(function(d) {
     if (d.success) {
       authState.loggedIn = true;
@@ -3497,6 +3528,7 @@ function doRegister() {
     } else {
       document.getElementById("regError").style.display = "block";
       document.getElementById("regError").textContent = d.message || (state.lang === "zh" ? "注册失败" : "Registration failed");
+      loadCaptcha();
     }
   }).catch(function() {
     document.getElementById("regError").style.display = "block";
@@ -3545,7 +3577,7 @@ function hideAdminFeatures() {
 
 // -- Admin user management --
 function loadAdminUsers() {
-  fetch(API_BASE + "/auth/admin/users", {
+  fetch(AUTH_API + "/admin/users", {
     headers: { "Authorization": "Bearer " + authState.token }
   }).then(function(r) { return r.json(); }).then(function(d) {
     if (d.success) {
@@ -3588,10 +3620,10 @@ function doCreateUser() {
     document.getElementById("adminCreateError").textContent = state.lang === "zh" ? "请填写用户名和密码" : "Enter username and password";
     return;
   }
-  fetch(API_BASE + "/auth/admin/users", {
+  fetch(AUTH_API + "/admin/users", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
-    body: JSON.stringify({ username: username, password: password, role: "USER" })
+    body: JSON.stringify({ username: username, password: password, role: document.getElementById("adminNewRole").value })
   }).then(function(r) { return r.json(); }).then(function(d) {
     if (d.success) {
       document.getElementById("adminNewUsername").value = "";
@@ -3610,7 +3642,7 @@ function doCreateUser() {
 
 function doChangeRole(id, currentRole) {
   var newRole = currentRole === "ADMIN" ? "USER" : "ADMIN";
-  fetch(API_BASE + "/auth/admin/users/" + id + "/role", {
+  fetch(AUTH_API + "/admin/users/" + id + "/role", {
     method: "PUT",
     headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
     body: JSON.stringify({ role: newRole })
@@ -3621,7 +3653,7 @@ function doChangeRole(id, currentRole) {
 }
 
 function doToggleUser(id) {
-  fetch(API_BASE + "/auth/admin/users/" + id + "/toggle", {
+  fetch(AUTH_API + "/admin/users/" + id + "/toggle", {
     method: "POST",
     headers: { "Authorization": "Bearer " + authState.token }
   }).then(function(r) { return r.json(); }).then(function(d) {
@@ -3632,7 +3664,7 @@ function doToggleUser(id) {
 
 function doAdminResetPwd(id, username) {
   if (!confirm((state.lang === "zh" ? "确定重置用户 " : "Reset password for ") + username + "?")) return;
-  fetch(API_BASE + "/auth/admin/users/" + id + "/reset-password", {
+  fetch(AUTH_API + "/admin/users/" + id + "/reset-password", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
     body: JSON.stringify({ newPassword: "reset123" })

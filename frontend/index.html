@@ -296,6 +296,11 @@
       <div id="authRegisterForm" class="auth-form" style="display:none">
         <input type="text" id="regUsername" placeholder="用户名 (2-50字符)" autocomplete="username">
         <input type="password" id="regPassword" placeholder="密码 (3-100字符)" autocomplete="new-password">
+        <div class="captcha-row">
+          <input type="text" id="regCaptchaAnswer" placeholder="验证码答案" autocomplete="off" style="flex:1">
+          <span id="captchaQuestion" class="captcha-question" onclick="loadCaptcha()">点击加载</span>
+        </div>
+        <input type="hidden" id="regCaptchaToken">
         <div id="regError" class="auth-error" style="display:none"></div>
         <button class="auth-submit-btn" onclick="doRegister()">注册</button>
       </div>
@@ -352,20 +357,31 @@
       <div id="adminUserPanel" class="admin-user-panel" style="display:none">
         <div class="strongs-popup-header" style="margin-top:12px">
           <span>⚙️ 用户管理</span>
+          <span class="strongs-popup-close" onclick="document.getElementById('adminUserPanel').style.display='none'">✕</span>
         </div>
-        <div style="padding:8px 0;display:flex;gap:6px" id="adminCreateForm">
-          <input type="text" id="adminNewUsername" placeholder="新用户名" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem">
-          <input type="password" id="adminNewPassword" placeholder="密码" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem">
+        <div style="padding:8px 0;display:flex;gap:6px;flex-wrap:wrap" id="adminCreateForm">
+          <input type="text" id="adminNewUsername" placeholder="新用户名" style="flex:1;min-width:100px;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem">
+          <input type="password" id="adminNewPassword" placeholder="密码" style="flex:1;min-width:100px;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem">
+          <select id="adminNewRole" style="width:80px;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem">
+            <option value="USER">用户</option>
+            <option value="ADMIN">管理员</option>
+          </select>
           <button onclick="doCreateUser()" style="padding:8px 12px;background:#1a73e8;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;white-space:nowrap">创建</button>
         </div>
         <div id="adminCreateError" class="auth-error" style="display:none;margin-bottom:6px"></div>
+        <div class="admin-user-list-header">
+          <span style="width:100px">用户名</span>
+          <span style="width:60px">角色</span>
+          <span style="width:50px">状态</span>
+          <span style="flex:1">操作</span>
+        </div>
         <div id="adminUserList" class="admin-user-list"></div>
       </div>
     </div>
   </div>
 
-  <script src="js/config.js?v=20260616a"></script>
-  <script src="js/api.js?v=20260616a"></script>
-  <script src="js/app.js?v=20260616a"></script>
+  <script src="js/config.js?v=20260616b"></script>
+  <script src="js/api.js?v=20260616b"></script>
+  <script src="js/app.js?v=20260616b"></script>
 </body>
 </html>

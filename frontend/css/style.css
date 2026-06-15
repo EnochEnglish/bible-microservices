@@ -1494,6 +1494,57 @@ body {
 .admin-user-info { display: flex; align-items: center; gap: 8px; }
 .admin-user-name { font-weight: 600; }
 .admin-user-actions { display: flex; gap: 4px; flex-wrap: wrap; }
+/* Captcha */
+.captcha-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.captcha-question {
+  background: #f0f4ff;
+  border: 1px dashed #90a4ae;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: monospace;
+  color: #1a73e8;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.captcha-question:hover { background: #e3edff; }
+
+/* Admin user list header */
+.admin-user-list-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 0;
+  border-bottom: 2px solid #e0e0e0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-btn-sm {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: all 0.15s;
+}
+.admin-btn-sm:hover { border-color: #1a73e8; color: #1a73e8; }
+.admin-btn-sm.danger { color: #d32f2f; border-color: #ffcdd2; }
+.admin-btn-sm.danger:hover { background: #ffebee; }
+.admin-btn-sm.success { color: #2e7d32; border-color: #c8e6c9; }
+.admin-btn-sm.success:hover { background: #e8f5e9; }
+
 #loginBtn.logged-in {
   color: #2e7d32;
   font-weight: 600;

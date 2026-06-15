@@ -14,7 +14,7 @@ class AuthController(
 ) {
     @PostMapping("/register")
     fun register(@Valid @RequestBody req: RegisterRequest): ResponseEntity<AuthResponse> {
-        val resp = authService.register(req.username, req.password)
+        val resp = authService.register(req.username, req.password, req.captchaToken, req.captchaAnswer)
         return if (resp.success) ResponseEntity.ok(resp)
         else ResponseEntity.badRequest().body(resp)
     }
