@@ -1331,6 +1331,26 @@ body {
 .maps-image-nav button:disabled { opacity: 0.3; cursor: default; }
 #mapsImageTitle { font-size: 1rem; font-weight: 500; flex: 1; text-align: center; }
 .maps-img-close { font-size: 1.2rem !important; padding: 6px 12px !important; }
+.maps-toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 0;
+  background: rgba(0,0,0,0.03);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.maps-toolbar button {
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.maps-toolbar button:hover {
+  background: rgba(0,0,0,0.12);
+}
 .maps-toolbar-spacer { width: 8px; }
 .maps-image-container {
   flex: 1;
