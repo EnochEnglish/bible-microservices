@@ -28,7 +28,8 @@
       <button id="mapsBtn" title="Bible Maps" data-zh="🗺️ 地图" data-en="🗺️ Maps" onclick="openMapsPanel()">🗺️ 地图</button>
       <button id="bookmarksBtn" title="Bookmarks" data-zh="🔖 书签" data-en="🔖 Bookmarks" onclick="openBookmarksPanel()" style="display:none">🔖 书签</button>
       <button id="notesBtn" title="Notes" data-zh="📝 笔记" data-en="📝 Notes" onclick="openNotesPanel()" style="display:none">📝 笔记</button>
-      <button id="modulesBtn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" onclick="openModulesPanel()" style="display:none">📦 模块</button>
+      <a id="modulesBtn" href="modules.html" target="_blank" class="topbar-btn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" style="display:none;text-decoration:none;">📦 模块</a>
+      <a id="adminBtn" href="admin.html" target="_blank" class="topbar-btn" title="Admin / User Management" style="display:none;text-decoration:none;">⚙️</a>
       <button id="loginBtn" title="Login / Register" data-zh="👤 登录" data-en="👤 Login" onclick="openAuthPanel()">👤 登录</button>
     </div>
 
@@ -104,43 +105,6 @@
     </div>
     <!-- Strong's hover tooltip -->
     <div id="strongsTooltip" class="strongs-tooltip" style="display:none"></div>
-
-    <!-- Module Manager Panel -->
-    <div class="strongs-overlay" id="modulesOverlay" style="display:none" onclick="closeModulesPanel()">
-      <div class="modules-panel" onclick="event.stopPropagation()">
-        <div class="strongs-popup-header">
-          <span id="modulesPanelTitle">📦 模块管理</span>
-          <span class="strongs-popup-close" onclick="closeModulesPanel()">✕</span>
-        </div>
-        <div class="modules-toolbar">
-          <div class="modules-tabs">
-            <button class="modules-tab active" data-tab="installed" onclick="switchModulesTab('installed')">📋 已安装</button>
-            <button class="modules-tab" data-tab="browse" onclick="switchModulesTab('browse')">🔍 可安装</button>
-          </div>
-          <div class="modules-source">
-            <label>数据源:</label>
-            <select id="modulesSourceSelect" onchange="switchSource(this.value)"></select>
-            <button class="repo-mgr-btn" onclick="openReposPanel()" title="管理仓库">⚙</button>
-          </div>
-          <div class="modules-search">
-            <input type="text" id="modulesSearchInput" placeholder="搜索模块..." oninput="filterModuleList()">
-            <select id="modulesCategoryFilter" onchange="filterModuleList()">
-              <option value="">全部类型</option>
-              <option value="BIBLE">📖 圣经</option>
-              <option value="COMMENTARY">💬 注释</option>
-              <option value="DICTIONARY">📚 词典</option>
-              <option value="GENERAL_BOOK">📔 通用</option>
-              <option value="DAILY_DEVOTION">📅 灵修</option>
-              <option value="CULT">🏛 异教</option>
-            </select>
-          </div>
-        </div>
-        <div id="modulesListContainer">
-          <div class="loading">加载中...</div>
-        </div>
-        <div id="modulesStatus" class="modules-status"></div>
-      </div>
-    </div>
 
     <!-- Daily Devotion Panel -->
     <div class="strongs-overlay" id="devotionOverlay" style="display:none" onclick="closeDevotionPanel()">
@@ -250,32 +214,7 @@
       </div>
       <div id="noteList" class="bm-list"></div>
     </div>
-  </div>
-
-  <!-- Repository Management Panel -->
-  <div class="strongs-overlay" id="reposOverlay" style="display:none" onclick="closeReposPanel()">
-    <div class="bm-panel" onclick="event.stopPropagation()">
-      <div class="strongs-popup-header">
-        <span id="reposPanelTitle">⚙ 仓库管理</span>
-        <span class="strongs-popup-close" onclick="closeReposPanel()">✕</span>
-      </div>
-      <div id="repoListContainer" class="bm-list"></div>
-      <div class="repo-add-form" style="display:none" id="repoAddForm">
-        <input type="text" id="repoAddName" placeholder="仓库名称（如：我的镜像站）">
-        <input type="text" id="repoAddUrl" placeholder="仓库地址（如：https://example.com/sword）">
-        <div class="repo-add-hint">只需提供网址。系统会自动找到 mods.d.tar.gz 和模块包。</div>
-        <div class="repo-add-actions">
-          <button onclick="saveCustomRepo()">💾 保存</button>
-          <button class="btn-cancel" onclick="cancelAddRepo()">取消</button>
-        </div>
-      </div>
-      <div class="repo-footer">
-        <button onclick="showAddRepoForm()">➕ 添加仓库</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Auth Overlay -->
+  </div><!-- Auth Overlay -->
   <div class="strongs-overlay" id="authOverlay" style="display:none" onclick="closeAuthPanel()">
     <div class="auth-panel" onclick="event.stopPropagation()">
       <div class="strongs-popup-header">
@@ -352,36 +291,11 @@
           <button class="auth-submit-btn" onclick="doChangePassword()" style="flex:1">🔒 修改</button>
           <button class="auth-submit-btn" onclick="showProfileView()" style="flex:1;background:#666">取消</button>
         </div>
-      </div>
-      <!-- Admin user management (hidden by default) -->
-      <div id="adminUserPanel" class="admin-user-panel" style="display:none">
-        <div class="strongs-popup-header" style="margin-top:12px">
-          <span>⚙️ 用户管理</span>
-          <span class="strongs-popup-close" onclick="document.getElementById('adminUserPanel').style.display='none'">✕</span>
-        </div>
-        <div style="padding:8px 0;display:flex;gap:6px;flex-wrap:wrap" id="adminCreateForm">
-          <input type="text" id="adminNewUsername" placeholder="新用户名" style="flex:1;min-width:100px;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem">
-          <input type="password" id="adminNewPassword" placeholder="密码" style="flex:1;min-width:100px;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem">
-          <select id="adminNewRole" style="width:80px;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem">
-            <option value="USER">用户</option>
-            <option value="ADMIN">管理员</option>
-          </select>
-          <button onclick="doCreateUser()" style="padding:8px 12px;background:#1a73e8;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;white-space:nowrap">创建</button>
-        </div>
-        <div id="adminCreateError" class="auth-error" style="display:none;margin-bottom:6px"></div>
-        <div class="admin-user-list-header">
-          <span style="width:100px">用户名</span>
-          <span style="width:60px">角色</span>
-          <span style="width:50px">状态</span>
-          <span style="flex:1">操作</span>
-        </div>
-        <div id="adminUserList" class="admin-user-list"></div>
-      </div>
-    </div>
+      </div></div>
   </div>
 
-  <script src="js/config.js?v=20260616b"></script>
-  <script src="js/api.js?v=20260616b"></script>
-  <script src="js/app.js?v=20260616b"></script>
+  <script src="js/config.js?v=20260616c"></script>
+  <script src="js/api.js?v=20260616c"></script>
+  <script src="js/app.js?v=20260616c"></script>
 </body>
 </html>

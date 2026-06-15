@@ -1,4 +1,4 @@
-* { margin:0; padding:0; box-sizing:border-box; }
+﻿* { margin:0; padding:0; box-sizing:border-box; }
 :root {
   --bg:#0f1117; --bg2:#1a1d27; --bg3:#242836;
   --text:#e4e6f0; --text2:#9499b3; --accent:#5b8af5;
@@ -1551,3 +1551,11 @@ body {
 }
 
 
+
+/* topbar link buttons (modules, admin) */
+.topbar-btn {
+  display: inline-block; padding: 8px 12px; background: var(--btn-bg, #e8eaed);
+  border: none; border-radius: 4px; font-size: 0.9rem; color: var(--text, #333);
+  cursor: pointer; text-decoration: none; line-height: 1;
+}
+.topbar-btn:hover { background: #d2d5d8; }

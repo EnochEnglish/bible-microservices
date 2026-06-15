@@ -3551,6 +3551,7 @@ function updateLoginButton() {
   var btn = document.getElementById("loginBtn");
   if (!btn) return;
   var loggedIn = authState.loggedIn && authState.user;
+  var isAdmin = loggedIn && authState.user.role === "ADMIN";
   if (loggedIn) {
     btn.textContent = "👤 " + authState.user.username;
     btn.className = "logged-in";
@@ -3563,16 +3564,11 @@ function updateLoginButton() {
   var ntBtn = document.getElementById("notesBtn");
   if (bmBtn) bmBtn.style.display = loggedIn ? "inline-block" : "none";
   if (ntBtn) ntBtn.style.display = loggedIn ? "inline-block" : "none";
-}
-
-function showAdminFeatures() {
+  // Module button always visible; admin button only for admins
   var modBtn = document.getElementById("modulesBtn");
+  var adBtn = document.getElementById("adminBtn");
   if (modBtn) modBtn.style.display = "inline-block";
-}
-
-function hideAdminFeatures() {
-  var modBtn = document.getElementById("modulesBtn");
-  if (modBtn) modBtn.style.display = "none";
+  if (adBtn) adBtn.style.display = isAdmin ? "inline-block" : "none";
 }
 
 // -- Admin user management --
