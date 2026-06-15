@@ -22,15 +22,16 @@ class AnnotationService(
 
     // ==================== 笔记 ====================
 
-    fun getNotesByVerse(verseRef: String): List<Note> =
-        noteRepository.findByVerseRefOrderByUpdatedAtDesc(verseRef)
+    fun getNotesByVerse(userId: String, verseRef: String): List<Note> =
+        noteRepository.findByUserIdAndVerseRefOrderByUpdatedAtDesc(userId, verseRef)
 
-    fun getAllNotes(): List<Note> =
-        noteRepository.findAllByOrderByUpdatedAtDesc()
+    fun getAllNotes(userId: String): List<Note> =
+        noteRepository.findByUserIdOrderByUpdatedAtDesc(userId)
 
     @Transactional
-    fun createNote(verseRef: String, content: String, title: String?): Note {
+    fun createNote(userId: String, verseRef: String, content: String, title: String?): Note {
         val note = Note(
+            userId = userId,
             verseRef = verseRef,
             title = title,
             content = content
@@ -39,43 +40,30 @@ class AnnotationService(
     }
 
     @Transactional
-    fun updateNote(id: Long, content: String, title: String?): Note? {
-        val note = noteRepository.findById(id).orElse(null) ?: return null
-        val updated = note.copy(
-            content = content,
-            title = title ?: note.title,
-            updatedAt = Instant.now()
-        )
-        return noteRepository.save(updated)
-    }
-
-    @Transactional
-    fun deleteNote(id: Long): Boolean {
-        return if (noteRepository.existsById(id)) {
-            noteRepository.deleteById(id)
-            true
-        } else false
+    fun deleteNote(userId: String, id: Long): Boolean {
+        noteRepository.deleteByIdAndUserId(id, userId)
+        return true // deleteById doesn't throw if not found
     }
 
     // ==================== 书签/高亮 ====================
 
-    fun getBookmarksByVerse(verseRef: String): List<Bookmark> =
-        bookmarkRepository.findByVerseRef(verseRef)
+    fun getBookmarksByVerse(userId: String, verseRef: String): List<Bookmark> =
+        bookmarkRepository.findByUserIdAndVerseRef(userId, verseRef)
 
-    fun getAllBookmarks(): List<Bookmark> =
-        bookmarkRepository.findAllByOrderByCreatedAtDesc()
+    fun getAllBookmarks(userId: String): List<Bookmark> =
+        bookmarkRepository.findByUserIdOrderByCreatedAtDesc(userId)
 
-    fun getBookmarksForVerses(verseRefs: List<String>): List<Bookmark> =
-        bookmarkRepository.findDistinctByVerseRefIn(verseRefs)
+    fun getBookmarksForVerses(userId: String, verseRefs: List<String>): List<Bookmark> =
+        bookmarkRepository.findDistinctByUserIdAndVerseRefIn(userId, verseRefs)
 
     @Transactional
-    fun createBookmark(verseRef: String, color: String?, note: String?): Bookmark {
-        // 同一经文同颜色不重复创建
-        val existing = bookmarkRepository.findByVerseRef(verseRef)
+    fun createBookmark(userId: String, verseRef: String, color: String?, note: String?): Bookmark {
+        val existing = bookmarkRepository.findByUserIdAndVerseRef(userId, verseRef)
             .firstOrNull { it.color == color }
         if (existing != null) return existing
 
         return bookmarkRepository.save(Bookmark(
+            userId = userId,
             verseRef = verseRef,
             color = color,
             note = note
@@ -83,16 +71,8 @@ class AnnotationService(
     }
 
     @Transactional
-    fun deleteBookmark(id: Long): Boolean {
-        return if (bookmarkRepository.existsById(id)) {
-            bookmarkRepository.deleteById(id)
-            true
-        } else false
-    }
-
-    @Transactional
-    fun deleteBookmarkByVerse(verseRef: String) {
-        bookmarkRepository.deleteByVerseRef(verseRef)
+    fun deleteBookmarkByVerse(userId: String, verseRef: String) {
+        bookmarkRepository.deleteByUserIdAndVerseRef(userId, verseRef)
     }
 
     // ==================== 字典 ====================

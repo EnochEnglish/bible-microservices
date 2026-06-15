@@ -131,7 +131,7 @@ class AnnotationController(
     @GetMapping("/notes/{verseRef}")
     fun getNotes(@PathVariable verseRef: String): ResponseEntity<Map<String, Any>> {
         val decoded = URLDecoder.decode(verseRef, StandardCharsets.UTF_8)
-        val notes = annotationService.getNotesByVerse(decoded)
+        val notes = annotationService.getNotesByVerse("system", decoded)
         return ResponseEntity.ok(mapOf(
             "notes" to notes.map { n ->
                 mapOf(
@@ -149,6 +149,7 @@ class AnnotationController(
     @PostMapping("/notes")
     fun createNote(@RequestBody request: CreateNoteRequest): ResponseEntity<Map<String, Any>> {
         val note = annotationService.createNote(
+            userId = "system",
             verseRef = request.verseRef,
             content = request.content,
             title = request.title
@@ -160,23 +161,10 @@ class AnnotationController(
         ))
     }
 
-    @PutMapping("/notes/{id}")
-    fun updateNote(
-        @PathVariable id: Long,
-        @RequestBody request: UpdateNoteRequest
-    ): ResponseEntity<Map<String, Any>> {
-        val note = annotationService.updateNote(id, request.content ?: "", request.title)
-        return if (note != null) {
-            ResponseEntity.ok(mapOf("status" to "ok", "id" to (note.id ?: 0L)))
-        } else {
-            ResponseEntity.notFound().build()
-        }
-    }
-
     @DeleteMapping("/notes/{id}")
     fun deleteNote(@PathVariable id: Long): ResponseEntity<Map<String, Any>> {
-        val ok = annotationService.deleteNote(id)
-        return ResponseEntity.ok(mapOf("status" to if (ok) "ok" else "not_found"))
+        annotationService.deleteNote("system", id)
+        return ResponseEntity.ok(mapOf("status" to "ok"))
     }
 
     // ==================== 书签/高亮 ====================
@@ -184,7 +172,7 @@ class AnnotationController(
     @GetMapping("/bookmarks/{verseRef}")
     fun getBookmarks(@PathVariable verseRef: String): ResponseEntity<Map<String, Any>> {
         val decoded = URLDecoder.decode(verseRef, StandardCharsets.UTF_8)
-        val bms = annotationService.getBookmarksByVerse(decoded)
+        val bms = annotationService.getBookmarksByVerse("system", decoded)
         return ResponseEntity.ok(mapOf(
             "bookmarks" to bms.map { b ->
                 mapOf<String, Any>(
@@ -201,6 +189,7 @@ class AnnotationController(
     @PostMapping("/bookmarks")
     fun createBookmark(@RequestBody request: CreateBookmarkRequest): ResponseEntity<Map<String, Any>> {
         val bm = annotationService.createBookmark(
+            userId = "system",
             verseRef = request.verseRef,
             color = request.color ?: "yellow",
             note = request.note ?: ""
@@ -212,10 +201,11 @@ class AnnotationController(
         ))
     }
 
-    @DeleteMapping("/bookmarks/{id}")
-    fun deleteBookmark(@PathVariable id: Long): ResponseEntity<Map<String, Any>> {
-        val ok = annotationService.deleteBookmark(id)
-        return ResponseEntity.ok(mapOf("status" to if (ok) "ok" else "not_found"))
+    @DeleteMapping("/bookmarks/{verseRef}")
+    fun deleteBookmark(@PathVariable verseRef: String): ResponseEntity<Map<String, Any>> {
+        val decoded = URLDecoder.decode(verseRef, StandardCharsets.UTF_8)
+        annotationService.deleteBookmarkByVerse("system", decoded)
+        return ResponseEntity.ok(mapOf("status" to "ok"))
     }
 
     // ==================== 交叉引用 ====================

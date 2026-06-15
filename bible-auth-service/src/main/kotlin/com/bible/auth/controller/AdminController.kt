@@ -1,11 +1,10 @@
 package com.bible.auth.controller
 
-import com.bible.auth.dto.AuthResponse
-import com.bible.auth.dto.RoleUpdateRequest
-import com.bible.auth.dto.UserListResponse
+import com.bible.auth.dto.*
 import com.bible.auth.service.AuthService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -18,12 +17,46 @@ class AdminController(
         return ResponseEntity.ok(authService.listUsers())
     }
 
+    @PostMapping("/users")
+    fun createUser(
+        auth: Authentication,
+        @Valid @RequestBody req: CreateUserRequest
+    ): ResponseEntity<AuthResponse> {
+        val adminId = auth.principal as Long
+        val resp = authService.createUser(adminId, req)
+        return if (resp.success) ResponseEntity.ok(resp)
+        else ResponseEntity.badRequest().body(resp)
+    }
+
     @PutMapping("/users/{id}/role")
     fun updateRole(
         @PathVariable id: Long,
         @Valid @RequestBody req: RoleUpdateRequest
     ): ResponseEntity<AuthResponse> {
         val resp = authService.updateRole(id, req.role)
+        return if (resp.success) ResponseEntity.ok(resp)
+        else ResponseEntity.badRequest().body(resp)
+    }
+
+    @PostMapping("/users/{id}/reset-password")
+    fun resetPassword(
+        auth: Authentication,
+        @PathVariable id: Long,
+        @Valid @RequestBody req: AdminResetPasswordRequest
+    ): ResponseEntity<AuthResponse> {
+        val adminId = auth.principal as Long
+        val resp = authService.adminResetPassword(adminId, id, req.newPassword)
+        return if (resp.success) ResponseEntity.ok(resp)
+        else ResponseEntity.badRequest().body(resp)
+    }
+
+    @PostMapping("/users/{id}/toggle")
+    fun toggleEnabled(
+        auth: Authentication,
+        @PathVariable id: Long
+    ): ResponseEntity<AuthResponse> {
+        val adminId = auth.principal as Long
+        val resp = authService.toggleEnabled(adminId, id)
         return if (resp.success) ResponseEntity.ok(resp)
         else ResponseEntity.badRequest().body(resp)
     }

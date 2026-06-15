@@ -26,8 +26,8 @@
       <button id="devotionBtn" title="Daily Devotion" data-zh="🔔 灵修" data-en="🔔 Devotion" onclick="openDevotionPanel()">🔔 灵修</button>
       <button id="genbookBtn" title="General Books" data-zh="📖 阅读" data-en="📖 Read" onclick="openGenBookPanel()">📖 阅读</button>
       <button id="mapsBtn" title="Bible Maps" data-zh="🗺️ 地图" data-en="🗺️ Maps" onclick="openMapsPanel()">🗺️ 地图</button>
-      <button id="bookmarksBtn" title="Bookmarks" data-zh="🔖 书签" data-en="🔖 Bookmarks" onclick="openBookmarksPanel()">🔖 书签</button>
-      <button id="notesBtn" title="Notes" data-zh="📝 笔记" data-en="📝 Notes" onclick="openNotesPanel()">📝 笔记</button>
+      <button id="bookmarksBtn" title="Bookmarks" data-zh="🔖 书签" data-en="🔖 Bookmarks" onclick="openBookmarksPanel()" style="display:none">🔖 书签</button>
+      <button id="notesBtn" title="Notes" data-zh="📝 笔记" data-en="📝 Notes" onclick="openNotesPanel()" style="display:none">📝 笔记</button>
       <button id="modulesBtn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" onclick="openModulesPanel()" style="display:none">📦 模块</button>
       <button id="loginBtn" title="Login / Register" data-zh="👤 登录" data-en="👤 Login" onclick="openAuthPanel()">👤 登录</button>
     </div>
@@ -285,6 +285,7 @@
         <input type="password" id="loginPassword" placeholder="密码" autocomplete="current-password">
         <div id="authError" class="auth-error" style="display:none"></div>
         <button class="auth-submit-btn" onclick="doLogin()">登录</button>
+        <a href="javascript:switchAuthTab('forgot')" style="display:block;text-align:center;font-size:0.85rem;color:var(--accent-light);margin-top:6px;cursor:pointer">忘记密码？</a>
       </div>
       <div id="authRegisterForm" class="auth-form" style="display:none">
         <input type="text" id="regUsername" placeholder="用户名 (2-50字符)" autocomplete="username">
@@ -292,18 +293,73 @@
         <div id="regError" class="auth-error" style="display:none"></div>
         <button class="auth-submit-btn" onclick="doRegister()">注册</button>
       </div>
+      <!-- Forgot Password Form -->
+      <div id="authForgotForm" class="auth-form" style="display:none">
+        <p style="text-align:center;color:var(--muted);font-size:0.9rem;margin-bottom:8px">请输入用户名，系统将显示密码并重置登录</p>
+        <input type="text" id="forgotUsername" placeholder="用户名">
+        <div id="forgotMsg" class="auth-error" style="display:none"></div>
+        <div id="forgotResult" style="display:none;background:#e8f5e9;color:#2e7d32;padding:10px;border-radius:6px;text-align:center;margin-bottom:8px"></div>
+        <button class="auth-submit-btn" onclick="doForgotPassword()">🔑 重置密码</button>
+        <button class="auth-submit-btn" onclick="switchAuthTab('login')" style="background:#666;margin-top:4px">🔙 返回登录</button>
+      </div>
+      <!-- Profile View (when logged in) -->
+      <div id="authProfileView" class="auth-form" style="display:none">
+        <div style="text-align:center;padding:10px 0">
+          <div style="font-size:2rem">👤</div>
+          <div id="profileUsername" style="font-weight:bold;font-size:1.1rem;margin-top:4px"></div>
+          <div id="profileRoleBadge" style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75rem;margin-top:4px"></div>
+        </div>
+        <div id="profileInfo" style="font-size:0.85rem;margin-top:6px"></div>
+        <div style="display:flex;gap:6px;margin-top:10px">
+          <button class="auth-submit-btn" onclick="showProfileEdit()" style="flex:1">✏️ 编辑资料</button>
+          <button class="auth-submit-btn" onclick="showPasswordChange()" style="flex:1">🔒 修改密码</button>
+        </div>
+        <button class="auth-submit-btn" onclick="doLogout()" style="background:#d32f2f;margin-top:6px">🚪 退出登录</button>
+      </div>
+      <!-- Profile Edit Form -->
+      <div id="authProfileForm" class="auth-form" style="display:none">
+        <input type="email" id="profileEmail" placeholder="邮箱">
+        <input type="text" id="profilePhone" placeholder="电话">
+        <input type="text" id="profileAddress" placeholder="地址">
+        <input type="number" id="profileAge" placeholder="年龄" min="0" max="150">
+        <select id="profileGender"><option value="">性别</option><option value="男">男</option><option value="女">女</option></select>
+        <input type="text" id="profileCountry" placeholder="国家">
+        <input type="text" id="profileCity" placeholder="城市">
+        <div id="profileEditError" class="auth-error" style="display:none"></div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="auth-submit-btn" onclick="doUpdateProfile()" style="flex:1">💾 保存</button>
+          <button class="auth-submit-btn" onclick="showProfileView()" style="flex:1;background:#666">取消</button>
+        </div>
+      </div>
+      <!-- Password Change Form -->
+      <div id="authPwdForm" class="auth-form" style="display:none">
+        <input type="password" id="pwdOld" placeholder="当前密码">
+        <input type="password" id="pwdNew" placeholder="新密码">
+        <input type="password" id="pwdConfirm" placeholder="确认新密码">
+        <div id="pwdError" class="auth-error" style="display:none"></div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="auth-submit-btn" onclick="doChangePassword()" style="flex:1">🔒 修改</button>
+          <button class="auth-submit-btn" onclick="showProfileView()" style="flex:1;background:#666">取消</button>
+        </div>
+      </div>
       <!-- Admin user management (hidden by default) -->
       <div id="adminUserPanel" class="admin-user-panel" style="display:none">
         <div class="strongs-popup-header" style="margin-top:12px">
           <span>⚙️ 用户管理</span>
         </div>
+        <div style="padding:8px 0;display:flex;gap:6px" id="adminCreateForm">
+          <input type="text" id="adminNewUsername" placeholder="新用户名" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem">
+          <input type="password" id="adminNewPassword" placeholder="密码" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem">
+          <button onclick="doCreateUser()" style="padding:8px 12px;background:#1a73e8;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;white-space:nowrap">创建</button>
+        </div>
+        <div id="adminCreateError" class="auth-error" style="display:none;margin-bottom:6px"></div>
         <div id="adminUserList" class="admin-user-list"></div>
       </div>
     </div>
   </div>
 
-  <script src="js/config.js?v=20260614c"></script>
-  <script src="js/api.js?v=20260614c"></script>
-  <script src="js/app.js?v=20260614c"></script>
+  <script src="js/config.js?v=20260615f"></script>
+  <script src="js/api.js?v=20260615f"></script>
+  <script src="js/app.js?v=20260615f"></script>
 </body>
 </html>

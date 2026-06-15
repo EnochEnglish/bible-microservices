@@ -1,8 +1,6 @@
 package com.bible.auth.controller
 
-import com.bible.auth.dto.AuthResponse
-import com.bible.auth.dto.LoginRequest
-import com.bible.auth.dto.RegisterRequest
+import com.bible.auth.dto.*
 import com.bible.auth.service.AuthService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -34,5 +32,48 @@ class AuthController(
         val resp = authService.getCurrentUser(userId)
         return if (resp.success) ResponseEntity.ok(resp)
         else ResponseEntity.status(404).body(resp)
+    }
+
+    // ============ Profile ============
+
+    @GetMapping("/profile")
+    fun getProfile(auth: Authentication): ResponseEntity<AuthResponse> {
+        val userId = auth.principal as Long
+        val resp = authService.getCurrentUser(userId)
+        return if (resp.success) ResponseEntity.ok(resp)
+        else ResponseEntity.status(404).body(resp)
+    }
+
+    @PutMapping("/profile")
+    fun updateProfile(
+        auth: Authentication,
+        @Valid @RequestBody req: UpdateProfileRequest
+    ): ResponseEntity<AuthResponse> {
+        val userId = auth.principal as Long
+        val resp = authService.updateProfile(userId, req)
+        return if (resp.success) ResponseEntity.ok(resp)
+        else ResponseEntity.badRequest().body(resp)
+    }
+
+    // ============ Change Password ============
+
+    @PostMapping("/change-password")
+    fun changePassword(
+        auth: Authentication,
+        @Valid @RequestBody req: ChangePasswordRequest
+    ): ResponseEntity<AuthResponse> {
+        val userId = auth.principal as Long
+        val resp = authService.changePassword(userId, req.oldPassword, req.newPassword)
+        return if (resp.success) ResponseEntity.ok(resp)
+        else ResponseEntity.badRequest().body(resp)
+    }
+
+    // ============ Forgot Password ============
+
+    @PostMapping("/forgot-password")
+    fun forgotPassword(@Valid @RequestBody req: ForgotPasswordRequest): ResponseEntity<AuthResponse> {
+        val resp = authService.forgotPassword(req.username)
+        return if (resp.success) ResponseEntity.ok(resp)
+        else ResponseEntity.badRequest().body(resp)
     }
 }

@@ -4,20 +4,23 @@ import jakarta.persistence.*
 import java.time.Instant
 
 /**
- * 个人学习笔记
- *
- * 用户对特定经文添加的个人注释/笔记
+ * 个人学习笔记 — 用户绑定
  */
 @Entity
 @Table(name = "notes", indexes = [
-    Index(name = "idx_notes_verse", columnList = "verse_ref")
+    Index(name = "idx_notes_verse", columnList = "verse_ref"),
+    Index(name = "idx_notes_user", columnList = "user_id")
 ])
 data class Note(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    /** 经文引用，格式: "kjv:GEN:1:1" */
+    /** User identifier (JWT "sub" claim / username) */
+    @Column(name = "user_id", nullable = false, length = 50)
+    val userId: String,
+
+    /** 经文引用 */
     @Column(name = "verse_ref", nullable = false, length = 50)
     val verseRef: String,
 

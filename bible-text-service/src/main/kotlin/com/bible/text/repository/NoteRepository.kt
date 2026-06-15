@@ -7,9 +7,15 @@ import org.springframework.stereotype.Repository
 @Repository
 interface NoteRepository : JpaRepository<Note, Long> {
 
-    fun findByVerseRefOrderByUpdatedAtDesc(verseRef: String): List<Note>
+    /** List all notes for a user */
+    fun findByUserIdOrderByUpdatedAtDesc(userId: String): List<Note>
 
-    fun findAllByOrderByUpdatedAtDesc(): List<Note>
+    /** Get notes for a specific verse (user-scoped) */
+    fun findByUserIdAndVerseRefOrderByUpdatedAtDesc(userId: String, verseRef: String): List<Note>
 
-    fun deleteByVerseRef(verseRef: String)
+    /** Delete notes by user and verseRef */
+    fun deleteByUserIdAndVerseRef(userId: String, verseRef: String)
+
+    /** Delete by id (user-scoped) */
+    fun deleteByIdAndUserId(id: Long, userId: String)
 }

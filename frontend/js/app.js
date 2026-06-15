@@ -1,4 +1,5 @@
-﻿// ── State ──
+console.log('[DEBUG app.js] loaded');
+// ── State ──
 var state = {
   translations: [],
   currentTranslation: "kjv",
@@ -275,9 +276,10 @@ var BOOK_ORDER = [
 var OT_BOOKS = BOOK_ORDER.slice(0, 39);
 var NT_BOOKS = BOOK_ORDER.slice(39);
 var API = APP_CONFIG.apiBase;  // from config.js
+console.log('[DEBUG] API =', API, 'APP_CONFIG.apiBase =', APP_CONFIG.apiBase);
 
 function apiGet(path) {
-  return fetch(API + path).then(function(r) {
+  return fetch(API_BASE + path).then(function(r) {
     if (!r.ok) throw new Error(r.status);
     return r.json();
   });
@@ -639,8 +641,8 @@ function renderVerses() {
         '<span class="verse-text">' + makeWordsClickable(v.text || "") + '</span>' +
         '</div>' +
         '<div class="verse-tools">' +
-        '<button class="vt-btn vt-bookmark" title="' + (t("bookmark")||"Bookmark") + '" onclick="event.stopPropagation();toggleBookmark(\'' + ref + '\',this)">🔖</button>' +
-        '<button class="vt-btn vt-note" title="' + (t("note")||"Note") + '" onclick="event.stopPropagation();openNoteEditor(\'' + ref + '\')">📝</button>' +
+        '<button class="vt-btn vt-bookmark" title="' + (t("bookmark")||"Bookmark") + '" onclick="event.stopPropagation();toggleBookmark(\'' + ref + '\',this)" style="' + (isLoggedIn() ? '' : 'display:none') + '">🔖</button>' +
+        '<button class="vt-btn vt-note" title="' + (t("note")||"Note") + '" onclick="event.stopPropagation();openNoteEditor(\'' + ref + '\')" style="' + (isLoggedIn() ? '' : 'display:none') + '">📝</button>' +
         '<button class="vt-btn vt-xref" title="' + (t("crossRefs")||"Cross Refs") + '" onclick="event.stopPropagation();toggleCrossRefs(\'' + ref + '\',this)">🔗</button>' +
         '</div></div>';
     });
@@ -1864,13 +1866,17 @@ function closeMorphHelp() {
 //  INIT
 // ═══════════════════════════════════════════
 document.addEventListener("DOMContentLoaded", function() {
+  console.log('[DEBUG] DOMContentLoaded fired');
   setupLanguage();
   refreshLabels();
   setupDictPopup();
   initTTS();
+  console.log('[DEBUG] calling loadTranslations...');
   loadTranslations().then(function() {
+    console.log('[DEBUG] loadTranslations OK');
     return loadBooks();
   }).then(function() {
+    console.log('[DEBUG] loadBooks OK');
     renderBookList();
     renderChapterGrid();
     renderCommentaryTabs();
@@ -2535,7 +2541,7 @@ function parseThMLContent(raw) {
 var verseTools = { bookmarks: {}, notes: {}, xrefEl: null };
 
 function loadBookmarks() {
-  fetch('/api/v1/text/bookmarks/' + (state.currentBook ? state.currentBook.id : 'gen') + '.' + state.currentChapter + '.1')
+  fetch('/api/v1/text/bookmarks/' + (state.currentBook ? state.currentBook.id : 'gen') + '.' + state.currentChapter + '.1', { headers: authHeader() })
     .then(function(r) { return r.json(); })
     .then(function(data) {
       verseTools.bookmarks = {};
@@ -2547,15 +2553,17 @@ function loadBookmarks() {
 function isBookmarked(ref) { return !!verseTools.bookmarks[ref]; }
 
 function toggleBookmark(ref, btn) {
+  if (!isLoggedIn()) { showVerseToast(t('loginRequired') || '请先登录', true); return; }
+  var hdrs = Object.assign({ 'Content-Type': 'application/json' }, authHeader());
   if (isBookmarked(ref)) {
-    fetch('/api/v1/text/bookmarks/' + encodeURIComponent(ref), { method: 'DELETE' })
+    fetch('/api/v1/text/bookmarks/' + encodeURIComponent(ref), { method: 'DELETE', headers: authHeader() })
       .then(function() { delete verseTools.bookmarks[ref]; updateVerseToolUI(); showVerseToast('🔖 书签已移除'); })
       .catch(function() { showVerseToast('删除失败', true); });
   } else {
     fetch('/api/v1/text/bookmarks', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ verseRef: ref, label: ref })
+      headers: hdrs,
+      body: JSON.stringify({ verseRef: ref })
     }).then(function() { verseTools.bookmarks[ref] = true; updateVerseToolUI(); showVerseToast('🔖 已添加书签'); })
       .catch(function() { showVerseToast('添加失败', true); });
   }
@@ -2581,7 +2589,7 @@ function updateVerseToolUI() {
 // ── Notes ──
 
 function loadNote(ref) {
-  return fetch('/api/v1/text/notes/' + encodeURIComponent(ref))
+  return fetch('/api/v1/text/notes/' + encodeURIComponent(ref), { headers: authHeader() })
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data && (Array.isArray(data) ? data.length > 0 : data)) {
@@ -2634,7 +2642,7 @@ function saveNote() {
   if (!content) { deleteNote(ref); return; }
   fetch('/api/v1/text/notes', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: Object.assign({ 'Content-Type': 'application/json' }, authHeader()),
     body: JSON.stringify({ verseRef: ref, content: content })
   }).then(function() {
     verseTools.notes[ref] = content;
@@ -2645,7 +2653,7 @@ function saveNote() {
 }
 
 function deleteNote(ref) {
-  fetch('/api/v1/text/notes/' + encodeURIComponent(ref), { method: 'DELETE' })
+  fetch('/api/v1/text/notes/' + encodeURIComponent(ref), { method: 'DELETE', headers: authHeader() })
     .then(function() {
       delete verseTools.notes[ref];
       updateVerseToolUI();
@@ -2783,7 +2791,7 @@ function loadBookmarkList() {
 }
 
 function deleteBookmarkItem(ref) {
-  fetch('/api/v1/text/bookmarks/' + encodeURIComponent(ref), { method: 'DELETE' })
+  fetch('/api/v1/text/bookmarks/' + encodeURIComponent(ref), { method: 'DELETE', headers: authHeader() })
     .then(function() {
       delete verseTools.bookmarks[ref];
       updateVerseToolUI();
@@ -2839,7 +2847,7 @@ function loadNoteList() {
 }
 
 function deleteNoteItem(ref) {
-  fetch('/api/v1/text/notes/' + encodeURIComponent(ref), { method: 'DELETE' })
+  fetch('/api/v1/text/notes/' + encodeURIComponent(ref), { method: 'DELETE', headers: authHeader() })
     .then(function() {
       delete verseTools.notes[ref];
       updateVerseToolUI();
@@ -2973,7 +2981,16 @@ var mapsState = {
   modules: [],
   currentModule: '',
   maps: [],
-  currentIndex: 0
+  currentIndex: 0,
+  zoom: 1,
+  panX: 0,
+  panY: 0,
+  dragging: false,
+  dragStartX: 0,
+  dragStartY: 0,
+  panStartX: 0,
+  panStartY: 0,
+  fullscreen: false
 };
 
 function openMapsPanel() {
@@ -3055,15 +3072,31 @@ function openMapImage(index) {
   var title = document.getElementById("mapsImageTitle");
   if (!viewer || !img || !title) return;
   img.src = API + "/sword/genbook/" + mapsState.currentModule + "/image?key=" + encodeURIComponent(m.osisRef);
-  img.classList.remove("zoomed");
+  mapsState.zoom = 1;
+  mapsState.panX = 0;
+  mapsState.panY = 0;
   title.textContent = m.name;
   viewer.style.display = "flex";
   updateMapNavButtons();
+  setTimeout(function() {
+    applyMapTransform(1, 0, 0);
+    initMapDrag();
+  }, 100);
 }
 
 function closeMapImageViewer() {
   var viewer = document.getElementById("mapsImageViewer");
-  if (viewer) viewer.style.display = "none";
+  if (viewer) {
+    viewer.style.display = "none";
+    mapsState.zoom = 1;
+    mapsState.panX = 0;
+    mapsState.panY = 0;
+    mapsState.dragging = false;
+  }
+  // Exit fullscreen if active
+  if (mapsState.fullscreen) {
+    toggleMapFullscreen();
+  }
 }
 
 function navigateMap(delta) {
@@ -3080,9 +3113,91 @@ function updateMapNavButtons() {
   if (nextBtn) nextBtn.disabled = mapsState.currentIndex >= mapsState.maps.length - 1;
 }
 
-function toggleMapZoom() {
+function mapZoomIn() {
+  var newZoom = Math.min(mapsState.zoom * 1.4, 8);
+  applyMapTransform(newZoom, mapsState.panX, mapsState.panY);
+}
+function mapZoomOut() {
+  var newZoom = Math.max(mapsState.zoom / 1.4, 0.3);
+  applyMapTransform(newZoom, mapsState.panX, mapsState.panY);
+}
+function mapZoomReset() {
+  mapsState.panX = 0;
+  mapsState.panY = 0;
+  applyMapTransform(1, 0, 0);
+}
+function applyMapTransform(zoom, panX, panY) {
+  mapsState.zoom = zoom;
+  mapsState.panX = panX;
+  mapsState.panY = panY;
   var img = document.getElementById("mapsFullImage");
-  if (img) img.classList.toggle("zoomed");
+  if (img) {
+    img.style.transform = "translate(" + panX + "px, " + panY + "px) scale(" + zoom + ")";
+  }
+}
+function toggleMapFullscreen() {
+  var panel = document.querySelector(".maps-panel");
+  if (!panel) return;
+  mapsState.fullscreen = !mapsState.fullscreen;
+  panel.classList.toggle("fullscreen", mapsState.fullscreen);
+  var btn = document.getElementById("mapsFullscreenBtn");
+  if (btn) btn.textContent = mapsState.fullscreen ? "⛶" : "⛶";
+}
+
+// Drag-to-pan support
+function initMapDrag() {
+  var container = document.getElementById("mapsImageContainer");
+  if (!container || container._dragInit) return;
+  container._dragInit = true;
+
+  function startDrag(e) {
+    if (mapsState.zoom <= 1) return;
+    e.preventDefault();
+    mapsState.dragging = true;
+    var pt = e.touches ? e.touches[0] : e;
+    mapsState.dragStartX = pt.clientX;
+    mapsState.dragStartY = pt.clientY;
+    mapsState.panStartX = mapsState.panX;
+    mapsState.panStartY = mapsState.panY;
+    container.classList.add("grabbing");
+  }
+
+  function moveDrag(e) {
+    if (!mapsState.dragging) return;
+    e.preventDefault();
+    var pt = e.touches ? e.touches[0] : e;
+    var dx = pt.clientX - mapsState.dragStartX;
+    var dy = pt.clientY - mapsState.dragStartY;
+    applyMapTransform(mapsState.zoom, mapsState.panStartX + dx, mapsState.panStartY + dy);
+  }
+
+  function endDrag(e) {
+    mapsState.dragging = false;
+    container.classList.remove("grabbing");
+  }
+
+  container.addEventListener("mousedown", startDrag);
+  container.addEventListener("mousemove", moveDrag);
+  container.addEventListener("mouseup", endDrag);
+  container.addEventListener("mouseleave", endDrag);
+  container.addEventListener("touchstart", startDrag, {passive: false});
+  container.addEventListener("touchmove", moveDrag, {passive: false});
+  container.addEventListener("touchend", endDrag);
+
+  // Mouse wheel zoom
+  container.addEventListener("wheel", function(e) {
+    e.preventDefault();
+    var delta = e.deltaY > 0 ? 0.9 : 1.1;
+    var newZoom = Math.max(0.3, Math.min(8, mapsState.zoom * delta));
+    // Zoom toward cursor position
+    var rect = container.getBoundingClientRect();
+    var cx = e.clientX - rect.left - rect.width / 2;
+    var cy = e.clientY - rect.top - rect.height / 2;
+    var scale = newZoom / mapsState.zoom;
+    var newPanX = cx - scale * (cx - mapsState.panX);
+    var newPanY = cy - scale * (cy - mapsState.panY);
+    applyMapTransform(newZoom, newPanX, newPanY);
+  }, {passive: false});
 }
 
 // ============ Auth ============
@@ -3092,6 +3207,17 @@ var authState = {
   token: null
 };
 
+/** Get auth header object (with Bearer token if logged in, empty otherwise) */
+function authHeader() {
+  if (authState.token) return { "Authorization": "Bearer " + authState.token };
+  return {};
+}
+
+/** Check if user is authenticated */
+function isLoggedIn() {
+  return authState.loggedIn && !!authState.token;
+}
+
 // Load token on startup
 (function() {
   try {
@@ -3100,12 +3226,9 @@ var authState = {
       var parsed = JSON.parse(saved);
       authState.token = parsed.token;
       authState.user = parsed.user;
-      // Validate token
       fetch(API_BASE + "/auth/me", {
         headers: { "Authorization": "Bearer " + authState.token }
-      }).then(function(r) {
-        return r.json();
-      }).then(function(d) {
+      }).then(function(r) { return r.json(); }).then(function(d) {
         if (d.success) {
           authState.loggedIn = true;
           authState.user = d.user;
@@ -3122,14 +3245,14 @@ var authState = {
 })();
 
 function openAuthPanel() {
-  if (authState.loggedIn) {
-    showAuthMenu();
-    return;
-  }
   document.getElementById("authOverlay").style.display = "flex";
-  switchAuthTab("login");
-  document.getElementById("authError").style.display = "none";
-  document.getElementById("regError").style.display = "none";
+  if (authState.loggedIn) {
+    showProfileView();
+  } else {
+    switchAuthTab("login");
+    document.getElementById("authError").style.display = "none";
+    document.getElementById("regError").style.display = "none";
+  }
 }
 
 function closeAuthPanel() {
@@ -3137,19 +3260,182 @@ function closeAuthPanel() {
 }
 
 function switchAuthTab(tab) {
+  // Hide all auth sub-views
+  var views = ["authLoginForm", "authRegisterForm", "authProfileView", "authProfileForm", "authPwdForm", "authForgotForm", "adminUserPanel"];
+  views.forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = "none"; });
+  
   var tabs = document.querySelectorAll(".auth-tab");
   tabs.forEach(function(t) { t.classList.remove("active"); });
+  
   if (tab === "login") {
     tabs[0].classList.add("active");
     document.getElementById("authLoginForm").style.display = "block";
-    document.getElementById("authRegisterForm").style.display = "none";
+    document.getElementById("authTabs").style.display = "";
     document.getElementById("authTitle").textContent = state.lang === "zh" ? "👤 登录" : "👤 Login";
-  } else {
+  } else if (tab === "register") {
     tabs[1].classList.add("active");
-    document.getElementById("authLoginForm").style.display = "none";
     document.getElementById("authRegisterForm").style.display = "block";
+    document.getElementById("authTabs").style.display = "";
     document.getElementById("authTitle").textContent = state.lang === "zh" ? "📝 注册" : "📝 Register";
+  } else if (tab === "forgot") {
+    document.getElementById("authForgotForm").style.display = "block";
+    document.getElementById("authTabs").style.display = "none";
+    document.getElementById("authTitle").textContent = state.lang === "zh" ? "🔑 忘记密码" : "🔑 Forgot Password";
+    document.getElementById("forgotMsg").style.display = "none";
+    document.getElementById("forgotResult").style.display = "none";
+    document.getElementById("forgotUsername").value = "";
   }
+}
+
+// -- Profile view (when logged in) --
+function showProfileView() {
+  var views = ["authLoginForm", "authRegisterForm", "authProfileForm", "authPwdForm", "authForgotForm"];
+  views.forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = "none"; });
+  document.getElementById("authTabs").style.display = "none";
+  document.getElementById("authProfileView").style.display = "block";
+  document.getElementById("authTitle").textContent = "👤 " + (state.lang === "zh" ? "个人中心" : "Profile");
+  
+  if (authState.user) {
+    var u = authState.user;
+    document.getElementById("authProfileName").textContent = u.username;
+    document.getElementById("authProfileRole").textContent = (state.lang === "zh" ? "角色: " : "Role: ") + (u.role || "USER");
+    document.getElementById("authProfileEmail").textContent = u.email || "";
+  }
+  
+  // Show admin panel toggle if admin
+  if (authState.user && authState.user.role === "ADMIN") {
+    document.getElementById("adminUserPanel").style.display = "block";
+    loadAdminUsers();
+  } else {
+    document.getElementById("adminUserPanel").style.display = "none";
+  }
+}
+
+// -- Profile edit --
+function showProfileEdit() {
+  var views = ["authProfileView", "authPwdForm"];
+  views.forEach(function(id) { document.getElementById(id).style.display = "none"; });
+  document.getElementById("authProfileForm").style.display = "block";
+  document.getElementById("authTitle").textContent = state.lang === "zh" ? "✏️ 编辑资料" : "✏️ Edit Profile";
+  document.getElementById("profError").style.display = "none";
+  
+  if (authState.user) {
+    var u = authState.user;
+    document.getElementById("profEmail").value = u.email || "";
+    document.getElementById("profPhone").value = u.phone || "";
+    document.getElementById("profAddress").value = u.address || "";
+    document.getElementById("profAge").value = u.age || "";
+    document.getElementById("profGender").value = u.gender || "";
+    document.getElementById("profCountry").value = u.country || "";
+    document.getElementById("profCity").value = u.city || "";
+  }
+}
+
+function doUpdateProfile() {
+  var data = {
+    email: document.getElementById("profEmail").value.trim(),
+    phone: document.getElementById("profPhone").value.trim(),
+    address: document.getElementById("profAddress").value.trim(),
+    age: parseInt(document.getElementById("profAge").value) || null,
+    gender: document.getElementById("profGender").value,
+    country: document.getElementById("profCountry").value.trim(),
+    city: document.getElementById("profCity").value.trim()
+  };
+  fetch(API_BASE + "/auth/profile", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
+    body: JSON.stringify(data)
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      authState.user = d.user;
+      localStorage.setItem("bible_auth", JSON.stringify({ token: authState.token, user: d.user }));
+      showProfileView();
+    } else {
+      document.getElementById("profError").style.display = "block";
+      document.getElementById("profError").textContent = d.message || "更新失败";
+    }
+  }).catch(function() {
+    document.getElementById("profError").style.display = "block";
+    document.getElementById("profError").textContent = "网络错误";
+  });
+}
+
+// -- Password change --
+function showPasswordChange() {
+  var views = ["authProfileView", "authProfileForm"];
+  views.forEach(function(id) { document.getElementById(id).style.display = "none"; });
+  document.getElementById("authPwdForm").style.display = "block";
+  document.getElementById("authTitle").textContent = state.lang === "zh" ? "🔒 修改密码" : "🔒 Change Password";
+  document.getElementById("pwdError").style.display = "none";
+  document.getElementById("pwdOld").value = "";
+  document.getElementById("pwdNew").value = "";
+  document.getElementById("pwdConfirm").value = "";
+}
+
+function doChangePassword() {
+  var oldPwd = document.getElementById("pwdOld").value;
+  var newPwd = document.getElementById("pwdNew").value;
+  var confirm = document.getElementById("pwdConfirm").value;
+  if (!oldPwd || !newPwd) {
+    document.getElementById("pwdError").style.display = "block";
+    document.getElementById("pwdError").textContent = "请填写所有密码字段";
+    return;
+  }
+  if (newPwd.length < 3) {
+    document.getElementById("pwdError").style.display = "block";
+    document.getElementById("pwdError").textContent = "新密码至少3字符";
+    return;
+  }
+  if (newPwd !== confirm) {
+    document.getElementById("pwdError").style.display = "block";
+    document.getElementById("pwdError").textContent = "两次输入的新密码不一致";
+    return;
+  }
+  fetch(API_BASE + "/auth/change-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
+    body: JSON.stringify({ oldPassword: oldPwd, newPassword: newPwd })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      showProfileView();
+      alert(state.lang === "zh" ? "密码修改成功" : "Password changed successfully");
+    } else {
+      document.getElementById("pwdError").style.display = "block";
+      document.getElementById("pwdError").textContent = d.message || "修改失败";
+    }
+  }).catch(function() {
+    document.getElementById("pwdError").style.display = "block";
+    document.getElementById("pwdError").textContent = "网络错误";
+  });
+}
+
+// -- Forgot password --
+function doForgotPassword() {
+  var username = document.getElementById("forgotUsername").value.trim();
+  if (!username) {
+    document.getElementById("forgotMsg").style.display = "block";
+    document.getElementById("forgotMsg").textContent = "请输入用户名";
+    return;
+  }
+  fetch(API_BASE + "/auth/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: username })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      document.getElementById("forgotResult").style.display = "block";
+      document.getElementById("forgotResult").innerHTML = 
+        (state.lang === "zh" ? "密码已重置<br>新密码: <strong>" : "Password reset<br>New password: <strong>") 
+        + d.newPassword + "</strong><br><small>" + (state.lang === "zh" ? "请登录后修改密码" : "Please login and change it") + "</small>";
+      document.getElementById("forgotMsg").style.display = "none";
+    } else {
+      document.getElementById("forgotMsg").style.display = "block";
+      document.getElementById("forgotMsg").textContent = d.message || "重置失败";
+    }
+  }).catch(function() {
+    document.getElementById("forgotMsg").style.display = "block";
+    document.getElementById("forgotMsg").textContent = "网络错误";
+  });
 }
 
 function doLogin() {
@@ -3157,7 +3443,7 @@ function doLogin() {
   var password = document.getElementById("loginPassword").value;
   if (!username || !password) {
     document.getElementById("authError").style.display = "block";
-    document.getElementById("authError").textContent = "请填写用户名和密码";
+    document.getElementById("authError").textContent = state.lang === "zh" ? "请填写用户名和密码" : "Please enter username and password";
     return;
   }
   fetch(API_BASE + "/auth/login", {
@@ -3172,16 +3458,14 @@ function doLogin() {
       localStorage.setItem("bible_auth", JSON.stringify({ token: d.token, user: d.user }));
       updateLoginButton();
       closeAuthPanel();
-      if (d.user.role === "ADMIN") {
-        showAdminFeatures();
-      }
+      if (d.user.role === "ADMIN") showAdminFeatures();
     } else {
       document.getElementById("authError").style.display = "block";
-      document.getElementById("authError").textContent = d.message || "登录失败";
+      document.getElementById("authError").textContent = d.message || (state.lang === "zh" ? "登录失败" : "Login failed");
     }
   }).catch(function() {
     document.getElementById("authError").style.display = "block";
-    document.getElementById("authError").textContent = "网络错误，请检查服务是否运行";
+    document.getElementById("authError").textContent = state.lang === "zh" ? "网络错误，请检查服务是否运行" : "Network error, check services";
   });
 }
 
@@ -3190,12 +3474,12 @@ function doRegister() {
   var password = document.getElementById("regPassword").value;
   if (!username || !password) {
     document.getElementById("regError").style.display = "block";
-    document.getElementById("regError").textContent = "请填写用户名和密码";
+    document.getElementById("regError").textContent = state.lang === "zh" ? "请填写用户名和密码" : "Please enter username and password";
     return;
   }
   if (username.length < 2 || password.length < 3) {
     document.getElementById("regError").style.display = "block";
-    document.getElementById("regError").textContent = "用户名至少2字符，密码至少3字符";
+    document.getElementById("regError").textContent = state.lang === "zh" ? "用户名至少2字符，密码至少3字符" : "Username min 2 chars, password min 3 chars";
     return;
   }
   fetch(API_BASE + "/auth/register", {
@@ -3212,11 +3496,11 @@ function doRegister() {
       closeAuthPanel();
     } else {
       document.getElementById("regError").style.display = "block";
-      document.getElementById("regError").textContent = d.message || "注册失败";
+      document.getElementById("regError").textContent = d.message || (state.lang === "zh" ? "注册失败" : "Registration failed");
     }
   }).catch(function() {
     document.getElementById("regError").style.display = "block";
-    document.getElementById("regError").textContent = "网络错误，请检查服务是否运行";
+    document.getElementById("regError").textContent = state.lang === "zh" ? "网络错误，请检查服务是否运行" : "Network error, check services";
   });
 }
 
@@ -3227,28 +3511,26 @@ function doLogout() {
   localStorage.removeItem("bible_auth");
   updateLoginButton();
   hideAdminFeatures();
-}
-
-function showAuthMenu() {
-  var msg = authState.user
-    ? ("用户: " + authState.user.username + " (" + authState.user.role + ")\n\n点击确定退出登录")
-    : "";
-  if (confirm(msg)) {
-    doLogout();
-  }
+  closeAuthPanel();
 }
 
 // Auto-check admin on successful login
 function updateLoginButton() {
   var btn = document.getElementById("loginBtn");
   if (!btn) return;
-  if (authState.loggedIn && authState.user) {
+  var loggedIn = authState.loggedIn && authState.user;
+  if (loggedIn) {
     btn.textContent = "👤 " + authState.user.username;
     btn.className = "logged-in";
   } else {
     btn.textContent = state.lang === "zh" ? "👤 登录" : "👤 Login";
     btn.className = "";
   }
+  // Toggle bookmark/note topbar buttons
+  var bmBtn = document.getElementById("bookmarksBtn");
+  var ntBtn = document.getElementById("notesBtn");
+  if (bmBtn) bmBtn.style.display = loggedIn ? "inline-block" : "none";
+  if (ntBtn) ntBtn.style.display = loggedIn ? "inline-block" : "none";
 }
 
 function showAdminFeatures() {
@@ -3259,5 +3541,104 @@ function showAdminFeatures() {
 function hideAdminFeatures() {
   var modBtn = document.getElementById("modulesBtn");
   if (modBtn) modBtn.style.display = "none";
+}
+
+// -- Admin user management --
+function loadAdminUsers() {
+  fetch(API_BASE + "/auth/admin/users", {
+    headers: { "Authorization": "Bearer " + authState.token }
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      renderAdminUsers(d.users || []);
+    }
+  }).catch(function() {});
+}
+
+function renderAdminUsers(users) {
+  var container = document.getElementById("adminUserList");
+  if (!container) return;
+  var h = "";
+  users.forEach(function(u) {
+    var roleLabel = u.role === "ADMIN" ? (state.lang === "zh" ? "管理员" : "Admin") : (state.lang === "zh" ? "用户" : "User");
+    var roleBadgeClass = u.role === "ADMIN" ? "admin-role-admin" : "admin-role-user";
+    var enabledClass = u.enabled === false ? " style=\"opacity:0.5\"" : "";
+    h += "<div class=\"admin-user-row\"" + enabledClass + ">";
+    h += "<div class=\"admin-user-info\">";
+    h += "<span class=\"admin-user-name\">" + u.username + "</span>";
+    h += "<span class=\"admin-role-badge " + roleBadgeClass + "\">" + roleLabel + "</span>";
+    if (u.enabled === false) h += "<span style=\"color:red;font-size:0.7rem;margin-left:4px\">" + (state.lang === "zh" ? "已禁用" : "Disabled") + "</span>";
+    h += "</div>";
+    if (u.id !== authState.user.id) {
+      h += "<div class=\"admin-user-actions\">";
+      h += "<button onclick=\"doChangeRole(" + u.id + ", '" + u.role + "')\" class=\"admin-role-toggle\">" + (u.role === "ADMIN" ? (state.lang === "zh" ? "↓ 降为普通用户" : "↓ Demote") : (state.lang === "zh" ? "↑ 提升为管理员" : "↑ Promote")) + "</button>";
+      h += "<button onclick=\"doToggleUser(" + u.id + ")\" class=\"admin-role-toggle\">" + (u.enabled !== false ? (state.lang === "zh" ? "禁用" : "Disable") : (state.lang === "zh" ? "启用" : "Enable")) + "</button>";
+      h += "<button onclick=\"doAdminResetPwd(" + u.id + ", '" + u.username.replace(/'/g, "\\'") + "')\" class=\"admin-role-toggle\">" + (state.lang === "zh" ? "重置密码" : "Reset Pwd") + "</button>";
+      h += "</div>";
+    }
+    h += "</div>";
+  });
+  container.innerHTML = h || ("<div style=\"padding:12px;color:var(--muted)\">" + (state.lang === "zh" ? "暂无用户" : "No users") + "</div>");
+}
+
+function doCreateUser() {
+  var username = document.getElementById("adminNewUsername").value.trim();
+  var password = document.getElementById("adminNewPassword").value;
+  if (!username || !password) {
+    document.getElementById("adminCreateError").style.display = "block";
+    document.getElementById("adminCreateError").textContent = state.lang === "zh" ? "请填写用户名和密码" : "Enter username and password";
+    return;
+  }
+  fetch(API_BASE + "/auth/admin/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
+    body: JSON.stringify({ username: username, password: password, role: "USER" })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      document.getElementById("adminNewUsername").value = "";
+      document.getElementById("adminNewPassword").value = "";
+      document.getElementById("adminCreateError").style.display = "none";
+      loadAdminUsers();
+    } else {
+      document.getElementById("adminCreateError").style.display = "block";
+      document.getElementById("adminCreateError").textContent = d.message || (state.lang === "zh" ? "创建失败" : "Failed");
+    }
+  }).catch(function() {
+    document.getElementById("adminCreateError").style.display = "block";
+    document.getElementById("adminCreateError").textContent = state.lang === "zh" ? "网络错误" : "Network error";
+  });
+}
+
+function doChangeRole(id, currentRole) {
+  var newRole = currentRole === "ADMIN" ? "USER" : "ADMIN";
+  fetch(API_BASE + "/auth/admin/users/" + id + "/role", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
+    body: JSON.stringify({ role: newRole })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) loadAdminUsers();
+    else alert(d.message || "Failed");
+  }).catch(function() {});
+}
+
+function doToggleUser(id) {
+  fetch(API_BASE + "/auth/admin/users/" + id + "/toggle", {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + authState.token }
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) loadAdminUsers();
+    else alert(d.message || "Failed");
+  }).catch(function() {});
+}
+
+function doAdminResetPwd(id, username) {
+  if (!confirm((state.lang === "zh" ? "确定重置用户 " : "Reset password for ") + username + "?")) return;
+  fetch(API_BASE + "/auth/admin/users/" + id + "/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
+    body: JSON.stringify({ newPassword: "reset123" })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) alert((state.lang === "zh" ? "新密码: " : "New password: ") + d.newPassword);
+    else alert(d.message || "Failed");
+  }).catch(function() {});
 }
 
