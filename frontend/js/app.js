@@ -1871,6 +1871,7 @@ document.addEventListener("DOMContentLoaded", function() {
   refreshLabels();
   setupDictPopup();
   initTTS();
+  updateLoginButton();
   console.log('[DEBUG] calling loadTranslations...');
   loadTranslations().then(function() {
     console.log('[DEBUG] loadTranslations OK');
@@ -3547,6 +3548,8 @@ function doLogout() {
 }
 
 // Auto-check admin on successful login
+function showAdminFeatures() {}
+function hideAdminFeatures() {}
 function updateLoginButton() {
   var btn = document.getElementById("loginBtn");
   if (!btn) return;
