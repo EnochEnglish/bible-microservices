@@ -44,22 +44,50 @@ h.createServer(function(rq, rs) {
     proxy(SWORD, rq, rs); return;
   }
 
-  // Proxy /api/v1/text/repos (save custom repos) — write to local repos.json
-  if (url === '/api/v1/text/repos' && rq.method === 'POST') {
-    var body = [];
-    rq.on('data', function(c){body.push(c)});
-    rq.on('end', function(){
+  // Proxy /api/v1/text/repos — read/write repos.json
+  if (url === '/api/v1/text/repos') {
+    // GET: return repos list
+    if (rq.method === 'GET') {
       try {
-        var data = JSON.parse(Buffer.concat(body).toString());
-        fs.writeFileSync(p.join(dir, 'repos.json'), JSON.stringify(data, null, 2), 'utf8');
+        var defaults = [
+          { id:'crosswire', name:'CrossWire 主仓', url:'https://crosswire.org/ftpmirror/pub/sword' },
+          { id:'crosswire-beta', name:'CrossWire Beta', url:'https://crosswire.org/ftpmirror/pub/sword/beta' },
+          { id:'crosswire-av11n', name:'CrossWire Av11n', url:'https://crosswire.org/ftpmirror/pub/sword/av11n' },
+          { id:'xmission', name:'XMission', url:'http://ftp.xmission.com/pub/crosswire' }
+        ];
+        var reposPath = p.join(dir, 'repos.json');
+        if (fs.existsSync(reposPath)) {
+          var raw = fs.readFileSync(reposPath, 'utf8');
+          if (raw.charCodeAt(0) === 0xFEFF) raw = raw.slice(1);
+          var reposData = JSON.parse(raw);
+          var customs = (reposData.customRepositories || []).map(function(r,i){ return { id:'custom-'+i, name: r.name, url: r.baseUrl }; });
+          defaults = defaults.concat(customs);
+        }
         rs.writeHead(200, {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
-        rs.end(JSON.stringify({success:true}));
+        rs.end(JSON.stringify({repos:defaults}));
       } catch(e) {
-        rs.writeHead(400, {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
-        rs.end(JSON.stringify({success:false,error:e.message}));
+        rs.writeHead(500, {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+        rs.end(JSON.stringify({repos:[], error:e.message}));
       }
-    });
-    return;
+      return;
+    }
+    // POST: save custom repos
+    if (rq.method === 'POST') {
+      var body = [];
+      rq.on('data', function(c){body.push(c)});
+      rq.on('end', function(){
+        try {
+          var data = JSON.parse(Buffer.concat(body).toString());
+          fs.writeFileSync(p.join(dir, 'repos.json'), JSON.stringify(data, null, 2), 'utf8');
+          rs.writeHead(200, {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+          rs.end(JSON.stringify({success:true}));
+        } catch(e) {
+          rs.writeHead(400, {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+          rs.end(JSON.stringify({success:false,error:e.message}));
+        }
+      });
+      return;
+    }
   }
 
   // Proxy /api/v1/text/* to Text service (:8081) — bookmarks/notes

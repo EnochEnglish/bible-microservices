@@ -46,7 +46,6 @@
   .status-err { background:#ffebee; color:#c62828; }
   .status-info { background:#e3f2fd; color:#1565c0; }
   .loading { text-align:center; padding:20px; color:#999; }
-  /* Repo panel */
   .repo-panel { margin-top:16px; padding:12px; background:#fff; border:1px solid #e0e0e0; border-radius:6px; display:none; }
   .repo-panel.show { display:block; }
   .repo-item { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid #f0f0f0; }
@@ -71,73 +70,101 @@
 </div>
 
 <div class="mgmt-body">
-  <div class="modules-toolbar">
-    <div class="modules-tabs">
-      <button class="modules-tab active" onclick="switchTab('installed')">📋 已安装</button>
-      <button class="modules-tab" onclick="switchTab('browse')">🔍 可安装</button>
-    </div>
-    <div class="modules-source">
-      <label>数据源:</label>
-      <select id="sourceSelect" onchange="switchSource(this.value)"></select>
-      <button class="repo-mgr-btn" onclick="toggleRepoPanel()">⚙</button>
-    </div>
-    <div class="modules-search">
-      <input type="text" id="searchInput" placeholder="搜索模块..." oninput="filterList()">
-      <select id="categoryFilter" onchange="filterList()">
-        <option value="">全部类型</option>
-        <option value="BIBLE">📖 圣经</option>
-        <option value="COMMENTARY">💬 注释</option>
-        <option value="DICTIONARY">📚 词典</option>
-        <option value="GENERAL_BOOK">📔 通用</option>
-        <option value="DAILY_DEVOTION">📅 灵修</option>
-        <option value="CULT">🏛 异教</option>
-      </select>
-    </div>
+  <!-- No access prompt -->
+  <div id="noAccess" style="text-align:center;padding:40px;color:#999;display:none">
+    <p id="noAccessMsg"></p>
+    <p><a href="index.html">返回阅读器登录</a></p>
   </div>
 
-  <div id="listContainer"><div class="loading">加载中...</div></div>
-  <div id="statusBar" class="modules-status"></div>
-
-  <!-- Repo Manager -->
-  <div class="repo-panel" id="repoPanel">
-    <h3 style="margin:0 0 8px 0;font-size:0.95rem">⚙ 仓库管理</h3>
-    <div id="repoList"></div>
-    <div class="repo-add-form" id="repoAddForm">
-      <input type="text" id="repoAddName" placeholder="仓库名称（如：我的镜像站）">
-      <input type="text" id="repoAddUrl" placeholder="仓库地址（如：https://example.com/sword）">
-      <div class="repo-add-hint">只需提供网址。系统会自动找到 mods.d.tar.gz 和模块包。</div>
-      <div style="margin-top:6px;display:flex;gap:6px">
-        <button onclick="saveRepo()" style="padding:6px 14px;background:#1a73e8;color:#fff;border:none;border-radius:4px;cursor:pointer">💾 保存</button>
-        <button onclick="cancelAddRepo()" style="padding:6px 14px;background:#666;color:#fff;border:none;border-radius:4px;cursor:pointer">取消</button>
+  <!-- Module content (admin only) -->
+  <div id="moduleContent" style="display:none">
+    <div class="modules-toolbar">
+      <div class="modules-tabs">
+        <button class="modules-tab active" onclick="switchTab('installed')">📋 已安装</button>
+        <button class="modules-tab" onclick="switchTab('browse')">🔍 可安装</button>
+      </div>
+      <div class="modules-source">
+        <label>数据源:</label>
+        <select id="sourceSelect" onchange="switchSource(this.value)"></select>
+        <button class="repo-mgr-btn" onclick="toggleRepoPanel()">⚙</button>
+      </div>
+      <div class="modules-search">
+        <input type="text" id="searchInput" placeholder="搜索模块..." oninput="filterList()">
+        <select id="categoryFilter" onchange="filterList()">
+          <option value="">全部类型</option>
+          <option value="BIBLE">📖 圣经</option>
+          <option value="COMMENTARY">💬 注释</option>
+          <option value="DICTIONARY">📚 词典</option>
+          <option value="GENERAL_BOOK">📔 通用</option>
+          <option value="DAILY_DEVOTION">📅 灵修</option>
+        </select>
       </div>
     </div>
-    <div class="repo-footer"><button onclick="showAddRepo()" style="padding:6px 14px;background:#f0f0f0;border:1px solid #ccc;border-radius:4px;cursor:pointer">➕ 添加仓库</button></div>
-  </div>
-</div>
+
+    <div id="listContainer"><div class="loading">加载中...</div></div>
+    <div id="statusBar" class="modules-status"></div>
+
+    <!-- Repo Manager -->
+    <div class="repo-panel" id="repoPanel">
+      <h3 style="margin:0 0 8px 0;font-size:0.95rem">⚙ 仓库管理</h3>
+      <div id="repoList"></div>
+      <div class="repo-add-form" id="repoAddForm">
+        <input type="text" id="repoAddName" placeholder="仓库名称（如：我的镜像站）">
+        <input type="text" id="repoAddUrl" placeholder="仓库地址（如：https://example.com/sword）">
+        <div class="repo-add-hint">只需提供网址。系统会自动找到 mods.d.tar.gz 和模块包。</div>
+        <div style="margin-top:6px;display:flex;gap:6px">
+          <button onclick="saveRepo()" style="padding:6px 14px;background:#1a73e8;color:#fff;border:none;border-radius:4px;cursor:pointer">💾 保存</button>
+          <button onclick="cancelAddRepo()" style="padding:6px 14px;background:#666;color:#fff;border:none;border-radius:4px;cursor:pointer">取消</button>
+        </div>
+      </div>
+      <div class="repo-footer"><button onclick="showAddRepo()" style="padding:6px 14px;background:#f0f0f0;border:1px solid #ccc;border-radius:4px;cursor:pointer">➕ 添加仓库</button></div>
+    </div>
+  </div><!-- end moduleContent -->
+</div><!-- end mgmt-body -->
 
 <script src="js/config.js?v=20260616b"></script>
 <script>
+// ── Init: auth check ──
+var token='', isAdmin=false;
+(function init(){
+  try {
+    var a = JSON.parse(localStorage.getItem('bible_auth'));
+    if (a && a.token) {
+      token = a.token;
+      if (a.user && a.user.role === 'ADMIN') isAdmin = true;
+    }
+  } catch(e) {}
+
+  if (!isAdmin) {
+    document.getElementById('noAccess').style.display = 'block';
+    document.getElementById('noAccessMsg').textContent = token ?
+      '需要管理员权限才能访问此页面。' :
+      '请先登录管理员账户。';
+    return;
+  }
+  document.getElementById('moduleContent').style.display = 'block';
+  loadSources();
+})();
+
 // ── Config ──
 var API = APP_CONFIG.apiBase;
 var state = { tab: 'installed', sourceId: 'crosswire', category: '', search: '', installed: [], available: [] };
 
-// ── Auth helper ──
 function authHeader() {
-  try { var a = JSON.parse(localStorage.getItem("bible_auth")); if (a && a.token) return {"Authorization":"Bearer "+a.token}; }
-  catch(e) {} return {};
+  return token ? {'Authorization':'Bearer '+token} : {};
 }
 
 // ── Source list ──
 function loadSources() {
   fetch(API + '/text/repos').then(function(r){return r.json()}).then(function(d){
-    var repos = d.repos || d;
+    var repos = d.repos || [];
     var sel = document.getElementById('sourceSelect');
     sel.innerHTML = '';
     for (var i=0; i<repos.length; i++) {
       var r = repos[i];
       var opt = document.createElement('option');
       opt.value = r.id || r.name;
-      opt.textContent = (r.name || r.id);
+      opt.textContent = r.name || r.id;
       sel.appendChild(opt);
     }
     if (repos.length>0) { state.sourceId = repos[0].id || repos[0].name; sel.value = state.sourceId; }
@@ -155,15 +182,14 @@ function loadModules() {
     .then(function(r){return r.json()}).then(function(d){
       state.available = d.modules || d;
       loadInstalled();
-  }).catch(function(e){
-    mc.innerHTML = '<div class="loading">加载失败: ' + e.message + '</div>';
+  }).catch(function(){
     loadInstalled();
   });
 }
 
 function loadInstalled() {
   fetch(API + '/sword/modules').then(function(r){return r.json()}).then(function(d){
-    state.installed = d.modules || d;
+    state.installed = d.modules || [];
     renderList();
   }).catch(function(){ renderList(); });
 }
@@ -174,7 +200,6 @@ function renderList() {
   var list = state.tab === 'installed' ? state.installed : state.available;
   if (!list || !list.length) { container.innerHTML = '<div class="loading">暂无模块</div>'; return; }
 
-  // Merge with installed status
   var installedNames = {};
   for (var i=0;i<state.installed.length;i++) { installedNames[state.installed[i].name||state.installed[i].initials] = true; }
 
@@ -189,11 +214,8 @@ function renderList() {
     var category = m.category||'';
     var isInstalled = !!installedNames[name];
 
-    // Filters
     if (cat && category !== cat) continue;
     if (q && name.toLowerCase().indexOf(q)<0 && desc.toLowerCase().indexOf(q)<0) continue;
-
-    // Tab filter
     if (state.tab==='installed' && !isInstalled) continue;
 
     var badgeClass = 'badge-other';
@@ -243,19 +265,17 @@ function installModule(name) {
   showStatus('正在安装 ' + name + '...', 'info');
 
   fetch(API + '/sword/modules/install/' + encodeURIComponent(name) + '?source=' + encodeURIComponent(state.sourceId), {
-    method: 'POST', headers: Object.assign({}, authHeader())
+    method: 'POST', headers: authHeader()
   }).then(function(r){return r.json()}).then(function(d){
     if (d.success) {
       showStatus(name + ' 安装成功!', 'ok');
       state.installed.push({name:name, category: d.category||''});
       renderList();
-      // Try to reload modules on main page if open
       try { if (window.opener && window.opener.__reloadModules) window.opener.__reloadModules(); } catch(e){}
     } else {
       showStatus('安装失败: ' + (d.message||d.error||''), 'err');
     }
     if (btn) { btn.className = 'btn-install'; btn.disabled = false; btn.textContent = '安装'; }
-    // Retry loading after delay (JSword scans asynchronously)
     setTimeout(loadInstalled, 2500);
   }).catch(function(e){
     showStatus('安装出错: ' + e.message, 'err');
@@ -267,7 +287,7 @@ function removeModule(name) {
   if (!confirm('确定要卸载 ' + name + ' 吗?')) return;
   showStatus('正在卸载 ' + name + '...', 'info');
   fetch(API + '/sword/modules/uninstall/' + encodeURIComponent(name), {
-    method: 'DELETE', headers: Object.assign({}, authHeader())
+    method: 'DELETE', headers: authHeader()
   }).then(function(r){return r.json()}).then(function(d){
     if (d.success) {
       showStatus(name + ' 已卸载', 'ok');
@@ -295,14 +315,14 @@ function toggleRepoPanel() {
 
 function loadRepos() {
   fetch(API + '/text/repos').then(function(r){return r.json()}).then(function(d){
-    var repos = d.repos || d;
+    var repos = d.repos || [];
     var html = '';
     for (var i=0;i<repos.length;i++) {
       var r = repos[i];
       html += '<div class="repo-item">'
         + '<div class="repo-name">' + (r.name||r.id) + '</div>'
         + '<div class="repo-url">' + (r.url||'') + '</div>'
-        + (i>3 ? '<button onclick="deleteRepo(\'' + (r.id||r.name) + '\')">删除</button>' : '')
+        + (String(r.id).indexOf('custom-')===0 ? '<button onclick="deleteRepo(\'' + (r.id||r.name) + '\')">删除</button>' : '')
         + '</div>';
     }
     document.getElementById('repoList').innerHTML = html || '<div style="color:#999">暂无仓库</div>';
@@ -319,28 +339,38 @@ function saveRepo() {
   var name = document.getElementById('repoAddName').value.trim();
   var url = document.getElementById('repoAddUrl').value.trim();
   if (!name||!url) { alert('请填写名称和地址'); return; }
-  fetch(API + '/text/repos', {
-    method:'POST', headers:{'Content-Type':'application/json', 'Accept':'application/json'},
-    body: JSON.stringify({name:name, url:url})
+  // Get current repos, add new one
+  fetch(API + '/text/repos').then(function(r){return r.json()}).then(function(d){
+    var repos = d.repos || [];
+    var customs = [];
+    for (var i=0;i<repos.length;i++) { if (String(repos[i].id).indexOf('custom-')===0) { customs.push({name:repos[i].name, baseUrl:repos[i].url}); } }
+    customs.push({name:name, baseUrl:url});
+    return fetch(API + '/text/repos', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({customRepositories:customs})
+    });
   }).then(function(r){return r.json()}).then(function(d){
-    if (d.success||d.ok) {
+    if (d.success) {
       showStatus('仓库已添加', 'ok');
-      cancelAddRepo();
-      loadRepos(); loadSources();
-    } else { showStatus('添加失败: '+(d.message||''), 'err'); }
+      cancelAddRepo(); loadRepos(); loadSources();
+    } else { showStatus('添加失败', 'err'); }
   }).catch(function(e){ showStatus('出错: '+e.message, 'err'); });
 }
 function deleteRepo(id) {
   if (!confirm('确定删除仓库 ' + id + '?')) return;
-  fetch(API + '/text/repos/' + encodeURIComponent(id), {method:'DELETE'})
-    .then(function(r){return r.json()}).then(function(d){
-      if (d.success) { loadRepos(); loadSources(); showStatus('已删除', 'ok'); }
-      else showStatus('删除失败', 'err');
-    }).catch(function(e){ showStatus('出错: '+e.message, 'err'); });
+  fetch(API + '/text/repos').then(function(r){return r.json()}).then(function(d){
+    var repos = d.repos || [];
+    var customs = [];
+    for (var i=0;i<repos.length;i++) { if (String(repos[i].id).indexOf('custom-')===0 && repos[i].id!==id) { customs.push({name:repos[i].name, baseUrl:repos[i].url}); } }
+    return fetch(API + '/text/repos', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({customRepositories:customs})
+    });
+  }).then(function(r){return r.json()}).then(function(d){
+    if (d.success) { loadRepos(); loadSources(); showStatus('已删除', 'ok'); }
+    else showStatus('删除失败', 'err');
+  }).catch(function(e){ showStatus('出错: '+e.message, 'err'); });
 }
-
-// ── Start ──
-loadSources();
 </script>
 </body>
 </html>

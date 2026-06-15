@@ -3564,10 +3564,10 @@ function updateLoginButton() {
   var ntBtn = document.getElementById("notesBtn");
   if (bmBtn) bmBtn.style.display = loggedIn ? "inline-block" : "none";
   if (ntBtn) ntBtn.style.display = loggedIn ? "inline-block" : "none";
-  // Module button always visible; admin button only for admins
+  // Module + admin buttons: admin-only
   var modBtn = document.getElementById("modulesBtn");
   var adBtn = document.getElementById("adminBtn");
-  if (modBtn) modBtn.style.display = "inline-block";
+  if (modBtn) modBtn.style.display = isAdmin ? "inline-block" : "none";
   if (adBtn) adBtn.style.display = isAdmin ? "inline-block" : "none";
 }
 
