@@ -1,0 +1,70 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <rect width="800" height="600" fill="#fdf6e3"/>
+  <text x="400" y="28" text-anchor="middle" font-family="serif" font-size="20" font-weight="bold" fill="#333">Paul's First Missionary Journey / 保罗第一次宣教旅程</text>
+  <text x="400" y="48" text-anchor="middle" font-family="serif" font-size="12" fill="#666">Acts 13–14 · c. AD 46–48 · with Barnabas</text>
+  <!-- Mediterranean -->
+  <polygon points="0,60 800,60 800,600 0,600" fill="#4a90d9" opacity="0.15"/>
+  <!-- Land regions -->
+  <polygon points="100,150 250,150 280,180 260,220 200,240 120,230" fill="#e8d5a3" stroke="#b8960c" stroke-width="1"/>
+  <text x="180" y="200" font-family="serif" font-size="13" font-weight="bold" fill="#8b6914">Asia Minor</text>
+  <text x="180" y="215" font-family="serif" font-size="9" fill="#8b6914">小亚细亚</text>
+  <polygon points="250,180 400,160 420,190 380,230 300,240" fill="#d4c37a" stroke="#999" stroke-width="0.8"/>
+  <text x="330" y="210" font-family="serif" font-size="10" fill="#666">Galatia</text>
+  <!-- Mediterranean islands -->
+  <ellipse cx="450" cy="350" rx="35" ry="15" fill="#a8d87a" stroke="#5a9830" stroke-width="1" transform="rotate(-10,450,350)"/>
+  <text x="450" y="355" font-family="serif" font-size="9" fill="#2d5e0a">Cyprus</text>
+  <!-- Pamphylia -->
+  <polygon points="350,230 420,230 430,260 380,270" fill="#e8c860" stroke="#b8960c" stroke-width="0.8"/>
+  <text x="390" y="252" font-family="serif" font-size="8" fill="#8b6914">Pamphylia</text>
+  <!-- Antioch (Syria) -->
+  <polygon points="520,180 600,170 620,210 540,220" fill="#d5e8d4" stroke="#5a9830" stroke-width="0.8"/>
+  <text x="570" y="200" font-family="serif" font-size="11" font-weight="bold" fill="#2d5e0a">Syria</text>
+  <circle cx="560" cy="190" r="6" fill="#c0392b"/>
+  <text x="570" y="185" font-family="serif" font-size="9" fill="#333">Antioch</text>
+  <text x="570" y="196" font-family="serif" font-size="7" fill="#666">安提阿</text>
+  <!-- Seleucia -->
+  <circle cx="530" cy="205" r="4" fill="#c0392b"/>
+  <text x="538" y="209" font-family="serif" font-size="8" fill="#333">Seleucia</text>
+  <!-- Cyprus cities -->
+  <circle cx="435" cy="345" r="4" fill="#c0392b"/>
+  <text x="420" y="340" font-family="serif" font-size="8" fill="#333">Salamis</text>
+  <circle cx="465" cy="358" r="4" fill="#c0392b"/>
+  <text x="472" y="362" font-family="serif" font-size="8" fill="#333">Paphos</text>
+  <!-- Perga -->
+  <circle cx="390" cy="248" r="4" fill="#c0392b"/>
+  <text x="398" y="252" font-family="serif" font-size="8" fill="#333">Perga</text>
+  <!-- Antioch Pisidia -->
+  <circle cx="340" cy="195" r="4" fill="#c0392b"/>
+  <text x="348" y="199" font-family="serif" font-size="8" fill="#333">Antioch Pisidia</text>
+  <!-- Iconium -->
+  <circle cx="380" cy="210" r="3" fill="#c0392b"/>
+  <text x="388" y="214" font-family="serif" font-size="8" fill="#333">Iconium</text>
+  <!-- Lystra -->
+  <circle cx="395" cy="225" r="3" fill="#c0392b"/>
+  <text x="403" y="229" font-family="serif" font-size="8" fill="#333">Lystra</text>
+  <!-- Derbe -->
+  <circle cx="415" cy="220" r="3" fill="#c0392b"/>
+  <text x="423" y="224" font-family="serif" font-size="8" fill="#333">Derbe</text>
+  <!-- Attalia -->
+  <circle cx="380" cy="262" r="3" fill="#c0392b"/>
+  <text x="388" y="266" font-family="serif" font-size="8" fill="#333">Attalia</text>
+  <!-- Route sea: Antioch -> Seleucia -> Cyprus (Salamis) -->
+  <path d="M560,190 L530,205 L460,260 L435,345" fill="none" stroke="#e74c3c" stroke-width="2" stroke-dasharray="6,3"/>
+  <!-- Route: Salamis -> Paphos -->
+  <path d="M435,345 L465,358" fill="none" stroke="#e74c3c" stroke-width="2" stroke-dasharray="6,3"/>
+  <!-- Route sea: Paphos -> Perga -->
+  <path d="M465,358 L430,300 L390,248" fill="none" stroke="#e74c3c" stroke-width="2" stroke-dasharray="6,3"/>
+  <!-- Route land: Perga -> Antioch Pisidia -> Iconium -> Lystra -> Derbe -->
+  <path d="M390,248 L340,195" fill="none" stroke="#e74c3c" stroke-width="2"/>
+  <path d="M340,195 L380,210" fill="none" stroke="#e74c3c" stroke-width="2"/>
+  <path d="M380,210 L395,225" fill="none" stroke="#e74c3c" stroke-width="2"/>
+  <path d="M395,225 L415,220" fill="none" stroke="#e74c3c" stroke-width="2"/>
+  <!-- Return: Derbe -> Lystra -> Iconium -> Antioch Pisidia -> Perga -> Attalia -->
+  <path d="M415,220 L395,225 L380,210 L340,195 L390,248 L380,262" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <!-- Return sea: Attalia -> Antioch -->
+  <path d="M380,262 L450,250 L560,190" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <rect x="10" y="520" width="260" height="70" rx="4" fill="white" stroke="#ccc"/>
+  <text x="20" y="540" font-family="serif" font-size="9" fill="#333">Route: Antioch → Cyprus → Perga → Antioch Pisidia →</text>
+  <text x="20" y="555" font-family="serif" font-size="9" fill="#333">Iconium → Lystra → Derbe → Back to Antioch</text>
+  <text x="20" y="575" font-family="serif" font-size="8" fill="#666">Acts 13:1–14:28 · ═ Sea voyage — Land journey - - Return</text>
+</svg>

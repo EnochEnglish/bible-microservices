@@ -1,0 +1,73 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <rect width="800" height="600" fill="#fdf6e3"/>
+  <text x="400" y="28" text-anchor="middle" font-family="serif" font-size="20" font-weight="bold" fill="#333">Jerusalem in the Time of Jesus / 耶稣时代的耶路撒冷</text>
+  <text x="400" y="48" text-anchor="middle" font-family="serif" font-size="12" fill="#666">Herodian City · c. AD 30 · Site of Jesus' Crucifixion &amp; Resurrection</text>
+  <!-- City walls (Herodian expansion) -->
+  <ellipse cx="400" cy="380" rx="180" ry="160" fill="#e8d5a3" stroke="#8b6914" stroke-width="2.5"/>
+  <!-- Old city core (City of David) -->
+  <ellipse cx="400" cy="440" rx="70" ry="50" fill="#d4c37a" stroke="#999" stroke-width="1"/>
+  <text x="400" y="445" font-family="serif" font-size="10" fill="#666">City of David</text>
+  <!-- Temple Mount -->
+  <rect x="350" y="280" width="100" height="80" rx="5" fill="#fff3e0" stroke="#e65100" stroke-width="2.5"/>
+  <text x="400" y="315" font-family="serif" font-size="12" font-weight="bold" fill="#bf360c">Temple</text>
+  <text x="400" y="330" font-family="serif" font-size="12" fill="#bf360c">圣殿</text>
+  <!-- Temple detail -->
+  <rect x="375" y="285" width="50" height="70" rx="3" fill="#ffe0b2" stroke="#e65100" stroke-width="1"/>
+  <text x="400" y="305" font-family="serif" font-size="8" fill="#bf360c">Holy Place</text>
+  <text x="400" y="335" font-family="serif" font-size="8" fill="#bf360c">Holy of Holies</text>
+  <!-- Court of the Gentiles -->
+  <rect x="340" y="270" width="120" height="100" rx="8" fill="none" stroke="#e65100" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="400" y="368" font-family="serif" font-size="8" fill="#e65100">Court of the Gentiles</text>
+  <!-- Antonia Fortress -->
+  <rect x="345" y="250" width="60" height="30" rx="3" fill="#bdbdbd" stroke="#666" stroke-width="1.5"/>
+  <text x="375" y="270" font-family="serif" font-size="9" fill="#333">Antonia</text>
+  <text x="375" y="282" font-family="serif" font-size="7" fill="#666">Fortress</text>
+  <!-- Upper City -->
+  <polygon points="320,280 370,280 370,380 320,380" fill="#e8f5e9" stroke="#43a047" stroke-width="1"/>
+  <text x="345" y="340" font-family="serif" font-size="9" fill="#2e7d32">Upper City</text>
+  <text x="345" y="355" font-family="serif" font-size="7" fill="#2e7d32">(上城)</text>
+  <!-- Lower City -->
+  <polygon points="370,360 440,360 440,420 370,420" fill="#f1f8e9" stroke="#7cb342" stroke-width="1"/>
+  <text x="405" y="395" font-family="serif" font-size="9" fill="#558b2f">Lower City</text>
+  <!-- Herod's Palace -->
+  <rect x="310" y="300" width="30" height="40" rx="3" fill="#ffccbc" stroke="#e64a19" stroke-width="1.5"/>
+  <text x="285" y="315" font-family="serif" font-size="8" fill="#333">Herod's</text>
+  <text x="285" y="327" font-family="serif" font-size="8" fill="#333">Palace</text>
+  <!-- Golgotha (traditional) -->
+  <circle cx="320" cy="250" r="8" fill="#c0392b" opacity="0.6"/>
+  <text x="310" y="242" font-family="serif" font-size="10" font-weight="bold" fill="#c0392b">Golgotha</text>
+  <text x="310" y="254" font-family="serif" font-size="7" fill="#666">髑髅地</text>
+  <!-- Garden Tomb (alternative) -->
+  <circle cx="345" cy="240" r="5" fill="#666" opacity="0.4"/>
+  <text x="300" y="235" font-family="serif" font-size="7" fill="#666">Garden Tomb(?)</text>
+  <!-- Kidron Valley -->
+  <path d="M440,300 L440,450 L400,500" fill="none" stroke="#4a90d9" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="448" y="380" font-family="serif" font-size="7" fill="#2c5f9e">Kidron</text>
+  <text x="448" y="390" font-family="serif" font-size="7" fill="#2c5f9e">Valley</text>
+  <!-- Hinnom Valley -->
+  <path d="M320,380 L280,450" fill="none" stroke="#4a90d9" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="275" y="435" font-family="serif" font-size="7" fill="#2c5f9e">Hinnom</text>
+  <!-- Mount of Olives -->
+  <ellipse cx="470" cy="310" rx="30" ry="40" fill="#a8d87a" opacity="0.5" stroke="#5a9830" stroke-width="1"/>
+  <text x="478" y="305" font-family="serif" font-size="9" fill="#2d5e0a">Mount of</text>
+  <text x="478" y="318" font-family="serif" font-size="9" fill="#2d5e0a">Olives</text>
+  <text x="478" y="331" font-family="serif" font-size="7" fill="#2d5e0a">橄榄山</text>
+  <!-- Gethsemane -->
+  <circle cx="460" cy="340" r="4" fill="#2e7d32"/>
+  <text x="468" y="344" font-family="serif" font-size="8" fill="#2e7d32">Gethsemane</text>
+  <!-- Pool of Siloam -->
+  <circle cx="430" cy="470" r="5" fill="#4a90d9" opacity="0.4"/>
+  <text x="440" y="474" font-family="serif" font-size="8" fill="#1565c0">Pool of Siloam</text>
+  <!-- Pool of Bethesda -->
+  <circle cx="370" cy="330" r="4" fill="#4a90d9" opacity="0.4"/>
+  <text x="378" y="334" font-family="serif" font-size="7" fill="#1565c0">Bethesda</text>
+  <!-- City Gates -->
+  <line x1="350" y1="360" x2="350" y2="380" stroke="#8b6914" stroke-width="2"/>
+  <text x="340" y="355" font-family="serif" font-size="7" fill="#333">Essene Gate</text>
+  <!-- Legend -->
+  <rect x="10" y="500" width="220" height="90" rx="4" fill="white" stroke="#ccc"/>
+  <text x="20" y="520" font-family="serif" font-size="9" fill="#333">Herodian Jerusalem — 希律王时期的耶路撒冷</text>
+  <text x="20" y="540" font-family="serif" font-size="8" fill="#666">City expanded greatly under Herod the Great</text>
+  <text x="20" y="560" font-family="serif" font-size="8" fill="#666">Temple rebuilt for 46 years (John 2:20)</text>
+  <text x="20" y="580" font-family="serif" font-size="8" fill="#c0392b">● Crucifixion site  · John 19:17-18 · Mark 15:22</text>
+</svg>

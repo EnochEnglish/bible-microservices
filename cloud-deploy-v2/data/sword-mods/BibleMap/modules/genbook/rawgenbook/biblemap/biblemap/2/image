@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#f5e6c8"/>
+  <!-- Mediterranean Sea -->
+  <rect x="100" y="100" width="500" height="250" rx="125" fill="#6bb5d0" opacity="0.6"/>
+  <!-- Asia Minor -->
+  <ellipse cx="450" cy="140" rx="120" ry="60" fill="#c8b060" stroke="#8b6914" stroke-width="2"/>
+  <!-- Greece -->
+  <ellipse cx="300" cy="110" rx="50" ry="40" fill="#c8b060" stroke="#8b6914" stroke-width="2"/>
+  <!-- Italy -->
+  <path d="M180,80 L250,80 L280,120 L250,180 L180,200 Z" fill="#c8b060" stroke="#8b6914" stroke-width="2"/>
+  <!-- Palestine -->
+  <path d="M500,280 L550,260 L580,300 L550,340 L500,330 Z" fill="#c8b060" stroke="#8b6914" stroke-width="2"/>
+  <!-- First Journey Route -->
+  <path d="M540,300 L530,250 L480,200 L420,160 L370,160" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="6,4"/>
+  <!-- Second Journey Route -->
+  <path d="M540,300 L510,200 L450,140 L380,120 L320,120 L280,140" fill="none" stroke="#2980b9" stroke-width="2" stroke-dasharray="6,4"/>
+  <!-- Labels -->
+  <text x="540" y="310" font-size="14" font-weight="bold" fill="#5c3a0a" text-anchor="middle">Jerusalem</text>
+  <text x="450" y="140" font-size="14" font-weight="bold" fill="#5c3a0a" text-anchor="middle">Asia Minor</text>
+  <text x="300" y="115" font-size="14" font-weight="bold" fill="#5c3a0a" text-anchor="middle">Greece</text>
+  <text x="215" y="145" font-size="14" font-weight="bold" fill="#5c3a0a" text-anchor="middle">Italy</text>
+  <text x="400" y="260" font-size="12" fill="#2a6496" text-anchor="middle">Mediterranean Sea</text>
+  <!-- Title -->
+  <text x="400" y="40" font-size="24" font-weight="bold" fill="#3d2000" text-anchor="middle">Paul's Missionary Journeys</text>
+  <text x="400" y="65" font-size="14" fill="#666" text-anchor="middle">c. AD 46-62</text>
+  <!-- Legend -->
+  <rect x="50" y="500" width="12" height="3" fill="#c0392b"/>
+  <text x="70" y="504" font-size="12" fill="#555">First Journey</text>
+  <rect x="160" y="500" width="12" height="3" fill="#2980b9"/>
+  <text x="180" y="504" font-size="12" fill="#555">Second Journey</text>
+</svg>

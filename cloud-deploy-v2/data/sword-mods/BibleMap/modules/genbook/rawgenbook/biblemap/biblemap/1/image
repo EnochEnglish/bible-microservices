@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#f5e6c8"/>
+  <!-- Mediterranean Sea -->
+  <ellipse cx="250" cy="200" rx="200" ry="80" fill="#6bb5d0" opacity="0.6"/>
+  <!-- Egypt -->
+  <path d="M150,400 L250,350 L300,380 L280,450 L180,470 Z" fill="#d4a76a" stroke="#8b6914" stroke-width="2"/>
+  <!-- Canaan/Palestine -->
+  <path d="M280,200 L350,180 L380,220 L360,280 L300,270 Z" fill="#c8b060" stroke="#8b6914" stroke-width="2"/>
+  <!-- Mesopotamia -->
+  <path d="M450,150 L600,120 L650,180 L600,250 L480,220 Z" fill="#c8b060" stroke="#8b6914" stroke-width="2"/>
+  <!-- Labels -->
+  <text x="300" y="240" font-size="18" font-weight="bold" fill="#5c3a0a" text-anchor="middle">Canaan</text>
+  <text x="530" y="190" font-size="18" font-weight="bold" fill="#5c3a0a" text-anchor="middle">Mesopotamia</text>
+  <text x="230" y="430" font-size="18" font-weight="bold" fill="#5c3a0a" text-anchor="middle">Egypt</text>
+  <text x="250" y="200" font-size="14" fill="#2a6496" text-anchor="middle">Mediterranean Sea</text>
+  <!-- Title -->
+  <text x="400" y="40" font-size="24" font-weight="bold" fill="#3d2000" text-anchor="middle">The World of the Patriarchs</text>
+  <text x="400" y="65" font-size="14" fill="#666" text-anchor="middle">c. 2000-1700 BC</text>
+  <!-- Route from Ur to Canaan -->
+  <path d="M530,180 L450,190 L400,210 L350,210" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="440" y="205" font-size="12" fill="#c0392b">Abraham's Journey</text>
+</svg>

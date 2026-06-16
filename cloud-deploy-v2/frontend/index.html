@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bible Reader / 圣经阅读器</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="logo">📖 Bible / 圣经</div>
+      <select id="translationSelect"></select>
+      <span id="interlinearBtn" style="display:none"></span>
+      <select id="langToggle">
+        <option value="bilingual">🌐 双语</option>
+        <option value="zh">🇨🇳 中文</option>
+        <option value="en">🇺🇸 English</option>
+      </select>
+      <select id="compareSelect">
+        <option value="">📐 对照模式</option>
+      </select>
+      <div class="search-box"><input type="text" id="searchBox" placeholder="搜索经文..."></div>
+      <button id="dictBtn" title="Bible Dictionary" onclick="openDictPopup()">📚</button>
+      <button id="devotionBtn" title="Daily Devotion" data-zh="🔔 灵修" data-en="🔔 Devotion" onclick="openDevotionPanel()">🔔 灵修</button>
+      <button id="genbookBtn" title="General Books" data-zh="📖 阅读" data-en="📖 Read" onclick="openGenBookPanel()">📖 阅读</button>
+      <button id="mapsBtn" title="Bible Maps" data-zh="🗺️ 地图" data-en="🗺️ Maps" onclick="openMapsPanel()">🗺️ 地图</button>
+      <button id="bookmarksBtn" title="Bookmarks" data-zh="🔖 书签" data-en="🔖 Bookmarks" onclick="openBookmarksPanel()" style="display:none">🔖 书签</button>
+      <button id="notesBtn" title="Notes" data-zh="📝 笔记" data-en="📝 Notes" onclick="openNotesPanel()" style="display:none">📝 笔记</button>
+      <a id="modulesBtn" href="modules.html" target="_blank" class="topbar-btn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" style="display:none;text-decoration:none;">📦 模块</a>
+      <a id="adminBtn" href="admin.html" target="_blank" class="topbar-btn" title="Admin / User Management" style="display:none;text-decoration:none;">⚙️</a>
+      <button id="loginBtn" title="Login / Register" data-zh="👤 登录" data-en="👤 Login" onclick="openAuthPanel()">👤 登录</button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div id="chapterGrid" class="chapters"></div>
+      <div id="bookList"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <div id="readerView">
+        <div class="chapter-header" id="chapterHeader"></div>
+        <!-- Compare bar shows when bilingual comparison is active -->
+        <div id="compareBar" class="compare-bar" style="display:none">
+          <label>📐 对照:</label>
+          <select id="compareTrans2"></select>
+          <div class="close-btn" id="compareClose" title="关闭对照">✕</div>
+        </div>
+        <div class="chapter-nav-top" id="chapterNavTop"></div>
+        <div id="verseContent" class="loading">加载中...</div>
+        <div class="chapter-nav" id="chapterNav"></div>
+      </div>
+      <div id="searchResults" style="display:none"></div>
+    </div>
+
+    <!-- Commentary Panel -->
+    <div class="tsk-panel" id="tskContent">
+      <div class="commentary-tabs" id="commentaryTabs"></div>
+      <div id="commentaryBody">
+        <div class="loading">加载中...</div>
+      </div>
+    </div>
+
+    <!-- Dictionary Panel (Easton/ISBE/Nave) -->
+    <div class="strongs-overlay" id="dictOverlay" style="display:none" onclick="closeDictPopup()">
+      <div class="strongs-popup" id="dictPopup" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="dictPopupTitle">📚 Bible Dictionary</span>
+          <span class="strongs-popup-close" onclick="closeDictPopup()">✕</span>
+        </div>
+        <div class="dict-search-area">
+          <select id="dictSourceSelect"></select>
+          <input type="text" id="dictSearchInput" placeholder="Search dictionary..." onkeyup="if(event.key==='Enter')searchDictionary()">
+          <button onclick="searchDictionary()">🔍</button>
+        </div>
+        <div id="dictPopupBody">
+          <div style="padding:2rem;text-align:center;color:var(--muted)">Select a dictionary and search for a term</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strong's Dictionary Popup -->
+    <div class="strongs-overlay" id="strongsOverlay" style="display:none" onclick="closeStrongsPopup()">
+      <div class="strongs-popup" id="strongsPopup" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="strongsPopupTitle">📖 Strong's Dictionary</span>
+          <span class="strongs-popup-close" onclick="closeStrongsPopup()">✕</span>
+        </div>
+        <div id="strongsPopupBody"></div>
+      </div>
+    </div>
+
+    <!-- Morphology Code Help Popup -->
+    <div class="strongs-overlay" id="morphHelpOverlay" style="display:none" onclick="closeMorphHelp()">
+      <div class="strongs-popup morph-help-popup" id="morphHelpPopup" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="morphHelpTitle">📘 Morphology Codes / 语法编码对照表</span>
+          <span class="strongs-popup-close" onclick="closeMorphHelp()">✕</span>
+        </div>
+        <div id="morphHelpBody"></div>
+      </div>
+    </div>
+    <!-- Strong's hover tooltip -->
+    <div id="strongsTooltip" class="strongs-tooltip" style="display:none"></div>
+
+    <!-- Daily Devotion Panel -->
+    <div class="strongs-overlay" id="devotionOverlay" style="display:none" onclick="closeDevotionPanel()">
+      <div class="devotion-panel" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="devotionTitle">📅 今日灵修</span>
+          <span class="strongs-popup-close" onclick="closeDevotionPanel()">✕</span>
+        </div>
+        <div class="devotion-toolbar">
+          <select id="devotionModule" onchange="switchDevotionModule()">
+            <option value="SME" data-zh="Spurgeon 清晨甘露" data-en="Spurgeon M&amp;E">Spurgeon M&amp;E</option>
+            <option value="Daily" data-zh="Daily Light 日粮" data-en="Daily Light">Daily Light</option>
+          </select>
+          <button onclick="goToToday()" data-zh="📅 今天" data-en="📅 Today">📅 今天</button>
+        </div>
+        <div id="devotionKeyList" class="book-key-list"></div>
+        <div id="devotionCheckBar">
+          <label><input type="checkbox" id="devotionReadCheck" onchange="toggleDevotionRead()"> <span id="devotionCheckLabel"></span></label>
+          <button id="devotionNoteBtn" onclick="toggleDevotionNote()"></button>
+        </div>
+        <div id="devotionNoteArea" style="display:none">
+          <textarea id="devotionNoteText" placeholder="记录灵修心得..." oninput="saveDevotionNote()"></textarea>
+        </div>
+        <div id="devotionContent" class="devotion-content"></div>
+      </div>
+    </div>
+
+    <!-- Maps Panel -->
+    <div class="strongs-overlay" id="mapsOverlay" style="display:none" onclick="closeMapsPanel()">
+      <div class="maps-panel" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="mapsTitle">🗺️ 圣经地图</span>
+          <span class="strongs-popup-close" onclick="closeMapsPanel()">✕</span>
+        </div>
+        <div class="devotion-toolbar">
+          <select id="mapsModule" onchange="switchMapsModule()">
+            <option value="">-- 选择地图集 --</option>
+          </select>
+        </div>
+        <div id="mapsThumbnailGrid" class="maps-thumbnail-grid"></div>
+        <!-- Full-size image viewer -->
+        <div id="mapsImageViewer" class="maps-image-viewer" style="display:none">
+          <div class="maps-image-nav">
+            <button onclick="navigateMap(-1)" id="mapsPrevBtn">◀</button>
+            <span id="mapsImageTitle"></span>
+            <button onclick="navigateMap(1)" id="mapsNextBtn">▶</button>
+            <button onclick="closeMapImageViewer()" class="maps-img-close">✕</button>
+          </div>
+          <div class="maps-toolbar">
+            <button onclick="mapZoomIn()" title="放大">🔍+</button>
+            <button onclick="mapZoomOut()" title="缩小">🔍−</button>
+            <button onclick="mapZoomReset()" title="重置">↺</button>
+            <button onclick="toggleMapFullscreen()" id="mapsFullscreenBtn" title="全屏">⛶</button>
+          </div>
+          <div id="mapsImageContainer" class="maps-image-container">
+            <img id="mapsFullImage" src="" alt="Map">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- General Book Panel -->
+    <div class="strongs-overlay" id="genbookOverlay" style="display:none" onclick="closeGenBookPanel()">
+      <div class="devotion-panel" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="genbookTitle">📖 通用书</span>
+          <span class="strongs-popup-close" onclick="closeGenBookPanel()">✕</span>
+        </div>
+        <div class="devotion-toolbar">
+          <select id="genbookModule" onchange="switchGenBookModule()">
+            <option value="Pilgrim" data-zh="天路历程" data-en="Pilgrim's Progress">Pilgrim's Progress</option>
+          </select>
+        </div>
+        <div class="book-keys-bar">
+          <div class="book-keys-search">
+            <input type="text" id="genbookKeySearch" placeholder="搜索章节..." onkeydown="if(event.key==='Enter')searchGenBookKeys()">
+            <button onclick="searchGenBookKeys()" data-zh="搜索" data-en="Search">搜索</button>
+          </div>
+          <div class="book-keys-nav">
+            <span id="genbookKeyPage">0/0</span>
+            <button onclick="loadGenBookKeys('prev')" id="genbookKeyPrev" disabled>◀</button>
+            <button onclick="loadGenBookKeys('next')" id="genbookKeyNext" disabled>▶</button>
+          </div>
+        </div>
+        <div id="genbookKeyList" class="book-key-list"></div>
+        <div id="genbookContent" class="devotion-content"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Bookmarks Management Panel -->
+  <div class="strongs-overlay" id="bookmarksOverlay" style="display:none" onclick="closeBookmarksPanel()">
+    <div class="bm-panel" onclick="event.stopPropagation()">
+      <div class="strongs-popup-header">
+        <span id="bookmarksPanelTitle">🔖 书签管理</span>
+        <span class="strongs-popup-close" onclick="closeBookmarksPanel()">✕</span>
+      </div>
+      <div id="bookmarkList" class="bm-list"></div>
+    </div>
+  </div>
+
+  <!-- Notes Management Panel -->
+  <div class="strongs-overlay" id="notesOverlay" style="display:none" onclick="closeNotesPanel()">
+    <div class="bm-panel" onclick="event.stopPropagation()">
+      <div class="strongs-popup-header">
+        <span id="notesPanelTitle">📝 笔记管理</span>
+        <span class="strongs-popup-close" onclick="closeNotesPanel()">✕</span>
+      </div>
+      <div id="noteList" class="bm-list"></div>
+    </div>
+  </div><!-- Auth Overlay -->
+  <div class="strongs-overlay" id="authOverlay" style="display:none" onclick="closeAuthPanel()">
+    <div class="auth-panel" onclick="event.stopPropagation()">
+      <div class="strongs-popup-header">
+        <span id="authTitle">👤 登录</span>
+        <span class="strongs-popup-close" onclick="closeAuthPanel()">✕</span>
+      </div>
+      <div id="authTabs" class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
+        <button class="auth-tab" onclick="switchAuthTab('register')">注册</button>
+      </div>
+      <div id="authLoginForm" class="auth-form">
+        <input type="text" id="loginUsername" placeholder="用户名" autocomplete="username">
+        <input type="password" id="loginPassword" placeholder="密码" autocomplete="current-password">
+        <div id="authError" class="auth-error" style="display:none"></div>
+        <button class="auth-submit-btn" onclick="doLogin()">登录</button>
+        <a href="javascript:switchAuthTab('forgot')" style="display:block;text-align:center;font-size:0.85rem;color:var(--accent-light);margin-top:6px;cursor:pointer">忘记密码？</a>
+      </div>
+      <div id="authRegisterForm" class="auth-form" style="display:none">
+        <input type="text" id="regUsername" placeholder="用户名 (2-50字符)" autocomplete="username">
+        <input type="password" id="regPassword" placeholder="密码 (3-100字符)" autocomplete="new-password">
+        <div class="captcha-row">
+          <input type="text" id="regCaptchaAnswer" placeholder="验证码答案" autocomplete="off" style="flex:1">
+          <span id="captchaQuestion" class="captcha-question" onclick="loadCaptcha()">点击加载</span>
+        </div>
+        <input type="hidden" id="regCaptchaToken">
+        <div id="regError" class="auth-error" style="display:none"></div>
+        <button class="auth-submit-btn" onclick="doRegister()">注册</button>
+      </div>
+      <!-- Forgot Password Form -->
+      <div id="authForgotForm" class="auth-form" style="display:none">
+        <p style="text-align:center;color:var(--muted);font-size:0.9rem;margin-bottom:8px">请输入用户名，系统将显示密码并重置登录</p>
+        <input type="text" id="forgotUsername" placeholder="用户名">
+        <div id="forgotMsg" class="auth-error" style="display:none"></div>
+        <div id="forgotResult" style="display:none;background:#e8f5e9;color:#2e7d32;padding:10px;border-radius:6px;text-align:center;margin-bottom:8px"></div>
+        <button class="auth-submit-btn" onclick="doForgotPassword()">🔑 重置密码</button>
+        <button class="auth-submit-btn" onclick="switchAuthTab('login')" style="background:#666;margin-top:4px">🔙 返回登录</button>
+      </div>
+      <!-- Profile View (when logged in) -->
+      <div id="authProfileView" class="auth-form" style="display:none">
+        <div style="text-align:center;padding:10px 0">
+          <div style="font-size:2rem">👤</div>
+          <div id="profileUsername" style="font-weight:bold;font-size:1.1rem;margin-top:4px"></div>
+          <div id="profileRoleBadge" style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75rem;margin-top:4px"></div>
+        </div>
+        <div id="profileInfo" style="font-size:0.85rem;margin-top:6px"></div>
+        <div style="display:flex;gap:6px;margin-top:10px">
+          <button class="auth-submit-btn" onclick="showProfileEdit()" style="flex:1">✏️ 编辑资料</button>
+          <button class="auth-submit-btn" onclick="showPasswordChange()" style="flex:1">🔒 修改密码</button>
+        </div>
+        <button class="auth-submit-btn" onclick="doLogout()" style="background:#d32f2f;margin-top:6px">🚪 退出登录</button>
+      </div>
+      <!-- Profile Edit Form -->
+      <div id="authProfileForm" class="auth-form" style="display:none">
+        <input type="email" id="profileEmail" placeholder="邮箱">
+        <input type="text" id="profilePhone" placeholder="电话">
+        <input type="text" id="profileAddress" placeholder="地址">
+        <input type="number" id="profileAge" placeholder="年龄" min="0" max="150">
+        <select id="profileGender"><option value="">性别</option><option value="男">男</option><option value="女">女</option></select>
+        <input type="text" id="profileCountry" placeholder="国家">
+        <input type="text" id="profileCity" placeholder="城市">
+        <div id="profileEditError" class="auth-error" style="display:none"></div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="auth-submit-btn" onclick="doUpdateProfile()" style="flex:1">💾 保存</button>
+          <button class="auth-submit-btn" onclick="showProfileView()" style="flex:1;background:#666">取消</button>
+        </div>
+      </div>
+      <!-- Password Change Form -->
+      <div id="authPwdForm" class="auth-form" style="display:none">
+        <input type="password" id="pwdOld" placeholder="当前密码">
+        <input type="password" id="pwdNew" placeholder="新密码">
+        <input type="password" id="pwdConfirm" placeholder="确认新密码">
+        <div id="pwdError" class="auth-error" style="display:none"></div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="auth-submit-btn" onclick="doChangePassword()" style="flex:1">🔒 修改</button>
+          <button class="auth-submit-btn" onclick="showProfileView()" style="flex:1;background:#666">取消</button>
+        </div>
+      </div></div>
+  </div>
+
+  <script src="js/config.js?v=20260616c"></script>
+  <script src="js/api.js?v=20260616c"></script>
+  <script src="js/app.js?v=20260616c"></script>
+</body>
+</html>

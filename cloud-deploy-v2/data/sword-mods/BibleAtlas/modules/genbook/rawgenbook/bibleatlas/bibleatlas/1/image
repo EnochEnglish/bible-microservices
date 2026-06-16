@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4a90d9"/><stop offset="100%" stop-color="#2c5f9e"/></linearGradient>
+    <linearGradient id="land" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8d5a3"/><stop offset="100%" stop-color="#d4c090"/></linearGradient>
+    <linearGradient id="fertile" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a8d87a"/><stop offset="100%" stop-color="#7ab648"/></linearGradient>
+    <linearGradient id="desert" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#eddea4"/><stop offset="100%" stop-color="#d4c37a"/></linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="#fdf6e3"/>
+  <text x="400" y="28" text-anchor="middle" font-family="serif" font-size="20" font-weight="bold" fill="#333">The Ancient Near East / 古近东</text>
+  <text x="400" y="48" text-anchor="middle" font-family="serif" font-size="12" fill="#666">Fertile Crescent &amp; Major Nations · c. 2000–500 BC</text>
+  <!-- Mediterranean Sea -->
+  <polygon points="0,60 140,60 160,100 150,150 120,200 90,240 60,280 0,280" fill="url(#sea)" opacity="0.7"/>
+  <ellipse cx="70" cy="160" rx="50" ry="80" fill="url(#sea)" opacity="0.3"/>
+  <text x="50" y="170" font-family="serif" font-size="11" fill="#2c5f9e" font-style="italic">Mediterranean</text>
+  <text x="50" y="185" font-family="serif" font-size="11" fill="#2c5f9e" font-style="italic">Sea</text>
+  <!-- Persian Gulf -->
+  <polygon points="680,380 800,350 800,600 680,600 650,550 640,480" fill="url(#sea)" opacity="0.7"/>
+  <text x="710" y="430" font-family="serif" font-size="10" fill="#2c5f9e" font-style="italic">Persian Gulf</text>
+  <!-- Red Sea -->
+  <polygon points="140,500 200,470 210,600 140,600" fill="url(#sea)" opacity="0.5"/>
+  <!-- Egypt -->
+  <polygon points="140,280 60,280 90,240 140,200 170,220 180,260 190,300 200,400 140,500" fill="#e8c860" stroke="#b8960c" stroke-width="1"/>
+  <text x="115" y="340" font-family="serif" font-size="15" font-weight="bold" fill="#8b6914">Egypt</text>
+  <text x="115" y="356" font-family="serif" font-size="10" fill="#8b6914">埃及</text>
+  <circle cx="130" cy="310" r="4" fill="#c0392b"/>
+  <text x="138" y="313" font-family="serif" font-size="9" fill="#333">Memphis</text>
+  <!-- Sinai -->
+  <polygon points="200,400 140,500 190,470 200,400" fill="#d4c37a" stroke="#b8960c" stroke-width="1"/>
+  <text x="165" y="460" font-family="serif" font-size="9" fill="#8b6914">Sinai</text>
+  <!-- Nile -->
+  <line x1="130" y1="290" x2="130" y2="420" stroke="#4a90d9" stroke-width="2"/>
+  <text x="105" y="370" font-family="serif" font-size="8" fill="#2c5f9e" transform="rotate(-5,105,370)">Nile</text>
+  <!-- Canaan / Israel -->
+  <rect x="200" y="170" width="70" height="100" rx="5" fill="#a8d87a" stroke="#5a9830" stroke-width="1.5"/>
+  <text x="235" y="210" font-family="serif" font-size="13" font-weight="bold" fill="#2d5e0a">Canaan</text>
+  <text x="235" y="225" font-family="serif" font-size="10" fill="#2d5e0a">迦南</text>
+  <!-- Jerusalem -->
+  <circle cx="238" cy="200" r="4" fill="#c0392b"/>
+  <text x="246" y="204" font-family="serif" font-size="9" fill="#333">Jerusalem</text>
+  <!-- Syria / Aram -->
+  <rect x="270" y="140" width="80" height="60" rx="5" fill="#a8d87a" stroke="#5a9830" stroke-width="1"/>
+  <text x="310" y="175" font-family="serif" font-size="12" font-weight="bold" fill="#2d5e0a">Aram (Syria)</text>
+  <text x="310" y="190" font-family="serif" font-size="10" fill="#2d5e0a">亚兰</text>
+  <circle cx="290" cy="160" r="4" fill="#c0392b"/>
+  <text x="298" y="164" font-family="serif" font-size="9" fill="#333">Damascus</text>
+  <!-- Phoenicia -->
+  <rect x="200" y="130" width="65" height="40" rx="3" fill="#8ecb5e" stroke="#5a9830" stroke-width="0.8"/>
+  <text x="232" y="148" font-family="serif" font-size="9" fill="#2d5e0a">Phoenicia</text>
+  <circle cx="210" cy="148" r="3" fill="#c0392b"/>
+  <text x="180" y="152" font-family="serif" font-size="8" fill="#333">Tyre</text>
+  <!-- Mesopotamia / Fertile Crescent -->
+  <path d="M340,120 Q450,100 550,130 L600,180 Q620,220 600,280 Q580,340 520,360 Q440,380 380,360 Q340,340 340,300 Z" fill="url(#fertile)" opacity="0.6" stroke="#5a9830" stroke-width="1"/>
+  <!-- Euphrates & Tigris -->
+  <path d="M500,100 Q540,200 520,300 Q500,380 550,450" fill="none" stroke="#4a90d9" stroke-width="2"/>
+  <text x="505" y="225" font-family="serif" font-size="8" fill="#2c5f9e">Euphrates</text>
+  <path d="M530,105 Q570,210 550,310 Q540,390 580,460" fill="none" stroke="#4a90d9" stroke-width="1.5"/>
+  <text x="560" y="235" font-family="serif" font-size="8" fill="#2c5f9e">Tigris</text>
+  <!-- Assyria -->
+  <rect x="450" y="100" width="130" height="90" rx="5" fill="#e8d5a3" stroke="#b8960c" stroke-width="1"/>
+  <text x="515" y="140" font-family="serif" font-size="13" font-weight="bold" fill="#8b6914">Assyria</text>
+  <text x="515" y="155" font-family="serif" font-size="10" fill="#8b6914">亚述</text>
+  <circle cx="500" cy="120" r="4" fill="#c0392b"/>
+  <text x="508" y="124" font-family="serif" font-size="9" fill="#333">Nineveh</text>
+  <!-- Babylonia -->
+  <rect x="480" y="280" width="120" height="100" rx="5" fill="#e8d5a3" stroke="#b8960c" stroke-width="1"/>
+  <text x="540" y="320" font-family="serif" font-size="13" font-weight="bold" fill="#8b6914">Babylonia</text>
+  <text x="540" y="335" font-family="serif" font-size="10" fill="#8b6914">巴比伦</text>
+  <circle cx="520" cy="300" r="4" fill="#c0392b"/>
+  <text x="528" y="304" font-family="serif" font-size="9" fill="#333">Babylon</text>
+  <!-- Persia / Elam -->
+  <rect x="600" y="250" width="180" height="120" rx="5" fill="#e8c860" stroke="#b8960c" stroke-width="1"/>
+  <text x="690" y="310" font-family="serif" font-size="13" font-weight="bold" fill="#8b6914">Persia</text>
+  <text x="690" y="325" font-family="serif" font-size="10" fill="#8b6914">波斯</text>
+  <circle cx="640" cy="280" r="4" fill="#c0392b"/>
+  <text x="648" y="284" font-family="serif" font-size="9" fill="#333">Susa</text>
+  <!-- Asia Minor -->
+  <rect x="340" y="70" width="100" height="80" rx="5" fill="#e8d5a3" stroke="#b8960c" stroke-width="0.8"/>
+  <text x="390" y="108" font-family="serif" font-size="10" fill="#8b6914">Asia Minor</text>
+  <text x="390" y="120" font-family="serif" font-size="9" fill="#8b6914">小亚细亚</text>
+  <!-- Ur -->
+  <circle cx="555" cy="360" r="4" fill="#c0392b"/>
+  <text x="563" y="364" font-family="serif" font-size="9" fill="#333">Ur</text>
+  <text x="563" y="374" font-family="serif" font-size="7" fill="#666">(Abraham's home)</text>
+  <!-- Haran -->
+  <circle cx="430" cy="130" r="4" fill="#c0392b"/>
+  <text x="438" y="134" font-family="serif" font-size="9" fill="#333">Haran</text>
+  <!-- Legend -->
+  <rect x="10" y="510" width="200" height="80" rx="4" fill="white" stroke="#ccc" stroke-width="1"/>
+  <circle cx="25" cy="530" r="4" fill="#c0392b"/><text x="35" y="534" font-family="serif" font-size="9" fill="#333">Major City</text>
+  <line x1="15" y1="550" x2="35" y2="550" stroke="#4a90d9" stroke-width="1.5"/><text x="40" y="554" font-family="serif" font-size="9" fill="#333">River</text>
+  <rect x="15" y="565" width="20" height="10" fill="#a8d87a" opacity="0.7"/><text x="40" y="574" font-family="serif" font-size="9" fill="#333">Fertile Crescent</text>
+</svg>

@@ -1,0 +1,19 @@
+[Unit]
+Description=Bible Microservices - 7-service Bible Study Platform
+After=network.target
+
+[Service]
+Type=forking
+WorkingDirectory=/opt/bible-microservices
+ExecStart=/bin/bash /opt/bible-microservices/start.sh
+ExecStop=/bin/bash /opt/bible-microservices/stop.sh
+Restart=on-failure
+RestartSec=15
+User=root
+
+# Resource limits
+LimitNOFILE=65535
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target
