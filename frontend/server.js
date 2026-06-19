@@ -1,9 +1,6 @@
 var h=require('http'),fs=require('fs'),p=require('path');
 var dir=__dirname;
-var BACKEND = 'http://localhost:8080';
-var TEXT    = 'http://localhost:8081';
-var SWORD   = 'http://localhost:8086';
-var AUTH    = 'http://localhost:8084';
+var MONOLITH = 'http://localhost:8080';  // Single backend for monolith
 
 // Proxy helper
 function proxy(target, rq, rs) {
@@ -34,19 +31,8 @@ function proxy(target, rq, rs) {
 h.createServer(function(rq, rs) {
   var url = rq.url.replace(/[?#].*/,'');
 
-  // Proxy /api/v1/auth/* to Auth service (:8084)
-  if (url.startsWith('/api/v1/auth/')) {
-    proxy(AUTH, rq, rs); return;
-  }
-
-  // Proxy /api/v1/sword/* to Sword service (:8086)
-  if (url.startsWith('/api/v1/sword/') || url.startsWith('/api/v1/strongs/sword/')) {
-    proxy(SWORD, rq, rs); return;
-  }
-
-  // Proxy /api/v1/text/repos — read/write repos.json
+  // /api/v1/text/repos — read/write repos.json (local)
   if (url === '/api/v1/text/repos') {
-    // GET: return repos list
     if (rq.method === 'GET') {
       try {
         var defaults = [
@@ -71,7 +57,6 @@ h.createServer(function(rq, rs) {
       }
       return;
     }
-    // POST: save custom repos
     if (rq.method === 'POST') {
       var body = [];
       rq.on('data', function(c){body.push(c)});
@@ -90,14 +75,9 @@ h.createServer(function(rq, rs) {
     }
   }
 
-  // Proxy /api/v1/text/* to Text service (:8081) — bookmarks/notes
-  if (url.startsWith('/api/v1/text/')) {
-    proxy(TEXT, rq, rs); return;
-  }
-
-  // Proxy ALL other /api/* requests to Gateway (:8080)
+  // Proxy ALL /api/* requests to monolith (:8080)
   if (url.startsWith('/api/')) {
-    proxy(BACKEND, rq, rs); return;
+    proxy(MONOLITH, rq, rs); return;
   }
 
   // Static files
@@ -108,10 +88,10 @@ h.createServer(function(rq, rs) {
     var ct = f.endsWith('.js') ? 'text/javascript;charset=utf-8' :
              f.endsWith('.css') ? 'text/css;charset=utf-8' :
              'text/html;charset=utf-8';
-    rs.writeHead(200, {'Content-Type': ct});
+    rs.writeHead(200, {'Content-Type': ct, 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0'});
     rs.end(c);
   } catch(e) {
     rs.writeHead(404);
     rs.end('Not Found');
   }
-}).listen(3000, '127.0.0.1', function(){console.log('FE on 3000 (full API proxy)')});
+}).listen(3000, '127.0.0.1', function(){console.log('bible-monolith FE on :3000')});

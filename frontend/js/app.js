@@ -1,4 +1,4 @@
-﻿console.log('[DEBUG app.js] loaded');
+console.log('[DEBUG app.js] loaded');
 // ── State ──
 var state = {
   translations: [],
@@ -506,9 +506,9 @@ function loadChapter() {
     if (state.interlinear) swordUrl += "?strongs=true";
 
     fetch(swordUrl).then(function(r) { return r.json(); }).then(function(data) {
-      // Normalize sword response to text-service format
+      // Normalize sword response to text-service format, strip OSIS tags
       var verses = (data.verses || []).map(function(v) {
-        return { chapter: v.chapter, verse: v.verse, text: v.text };
+        return { chapter: v.chapter, verse: v.verse, text: stripOsisTags(v.text) };
       });
       state.verses = { verses: verses };
       state.hasStrongs = !!(data.verses && data.verses.length > 0 && data.verses[0].words);
@@ -661,8 +661,14 @@ function renderVerses() {
   });
 }
 
+// Strip OSIS/ThML/HTML tags from SWORD passage text (e.g. <divineName>Lord</divineName>)
+function stripOsisTags(text) {
+  if (!text) return text;
+  return text.replace(/<\/?[a-zA-Z_:][^>]*>/g, '');
+}
+
 function makeWordsClickable(text) {
-  return text.replace(/([a-zA-ZΑ-ω]{3,})/g, '<span class="verse-word">$1</span>');
+  return stripOsisTags(text).replace(/([a-zA-ZΑ-ω]{3,})/g, '<span class="verse-word">$1</span>');
 }
 
 // ── Interlinear Data Loader (from sword-service :8086, via proxy) ──
@@ -675,9 +681,11 @@ function loadInterlinear() {
   }
   var key = state.currentBook.id.toLowerCase() + "." + state.currentChapter;
   state.interlinearData = null; // reset while loading
-  return fetch("/api/v1/sword/" + mod + "/passage/" + key)
+  console.log('[IL] fetching interlinear data:', mod, key);
+  return fetch("/api/v1/sword/" + mod + "/passage/" + key + "?strongs=true")
     .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(data) {
+      console.log('[IL] data loaded:', data.verses ? data.verses.length : 0, 'verses, first:', data.verses && data.verses[1] ? data.verses[1].words && data.verses[1].words.length : 0);
       state.interlinearData = data;
       renderVerses();
     }).catch(function(e) {
@@ -797,48 +805,51 @@ function fetchMorphTooltip(morph, event) {
     if (morphCache[morph]) showStrongsTooltip(event, morphCache[morph]);
     return;
   }
-  // Try local MORPH_QUICK table
-  if (MORPH_QUICK[morph]) {
-    var desc = MORPH_QUICK[morph];
-    var html = '<div class="st-head">' + escHtml(morph) + '</div><div class="st-def">' + escHtml(desc) + '</div>';
-    morphCache[morph] = html;
-    showStrongsTooltip(event, html);
+  // Primary: describeMorph() from morphology.js parses Hebrew + Greek codes
+  var desc = describeMorph(morph, state.lang);
+  if (desc) {
+    morphCache[morph] = desc;
+    showStrongsTooltip(event, desc);
     return;
   }
-  // Try full MORPH_TABLE (Robinson format codes like V-PAI-3S)
-  var tm = MORPH_TABLE.find(function(m) { return m.code === morph; });
-  if (tm) {
-    var html2 = '<div class="st-head">' + escHtml(morph) + '</div><div class="st-def">' + escHtml(tm.desc) + '</div>';
-    morphCache[morph] = html2;
-    showStrongsTooltip(event, html2);
-    return;
+  // Fallback: unknown code — silently hide
+  morphCache[morph] = null;
+}
+
+// DEPRECATED: getMorphFallback replaced by describeMorph() in morphology.js
+function getMorphFallback(morph) { return null; }
+function getMorphFallback(morph) {
+  if (!morph) return null;
+  var upper = morph.toUpperCase();
+  if (/^H\d+$/.test(upper)) {
+    return '<div class="st-head">' + escHtml(morph) + '</div><div class="st-def"><em>' + (state.lang==='zh' ? '希伯来文形态码' : 'Hebrew Morphology') + '</em></div>';
   }
-  // Fetch from sword-service
-  var eve = event;
-  fetch('/api/v1' + "/sword/OSHB/dict/" + morph)
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      if (d && d.found && d.content) {
-        var h = parseStrongsContent(d.content, 'H');
-        morphCache[morph] = h;
-        showStrongsTooltip(eve, h);
-      } else { morphCache[morph] = null; }
-    })
-    .catch(function() { morphCache[morph] = null; });
+  if (/^G\d+$/.test(upper)) {
+    return '<div class="st-head">' + escHtml(morph) + '</div><div class="st-def"><em>' + (state.lang==='zh' ? '希腊文形态码' : 'Greek Morphology') + '</em></div>';
+  }
+  return null;
 }
 
 // ── Interlinear Rendering (word-by-word with Strong's links) ──
 // Check if a strongs-like code is actually a morphology code
 function isMorphCode(code) {
   if (!code) return false;
-  code = code.toUpperCase();
-  var m = code.match(/^([HG])(\d+)$/);
+  var upper = code.toUpperCase();
+  // JSword adds "T" prefix to morphology codes (e.g. TH8804, TG5001)
+  var clean = upper.replace(/^T([HG])/, '$1');
+  var m = clean.match(/^([HG])(\d+)$/);
   if (!m) return false;
   var num = parseInt(m[2], 10);
   // Hebrew morphology: H8685-H8999, Greek morphology: G5000-G5999
   if (m[1] === 'H' && num >= 8685) return true;
   if (m[1] === 'G' && num >= 5000) return true;
   return false;
+}
+
+// Normalize morph codes: strip JSword "T" prefix (TH8804 → H8804)
+function normalizeMorph(morph) {
+  if (!morph) return morph;
+  return morph.replace(/^T([HG])/i, '$1');
 }
 
 function renderInterlinear() {
@@ -851,6 +862,7 @@ function renderInterlinear() {
   var bookId = state.currentBook.id.toLowerCase();
   var html = "";
 
+  try {
   state.interlinearData.verses.forEach(function(v) {
     if (v.verse === 0) return; // skip chapter headings
     if (!v.words || !v.words.length) return;
@@ -862,14 +874,14 @@ function renderInterlinear() {
     v.words.forEach(function(w) {
       var strongsList = (w.strongs || "").split("+").filter(Boolean);
       var morph = w.morph || "";
-      var morphClean = morph.replace(/^robinson:/i, "").replace(/^[TVPM]/, "").trim();
+      var morphClean = normalizeMorph(morph.replace(/^robinson:/i, "").replace(/^[TVPM]/, "").trim());
 
       // Separate real Strong's numbers from morphology codes mixed in strongs field
       var realStrongs = [];
       var morphTags = [];
       strongsList.forEach(function(sn) {
         if (isMorphCode(sn)) {
-          morphTags.push(sn);
+          morphTags.push(normalizeMorph(sn));
         } else {
           realStrongs.push(sn);
         }
@@ -897,7 +909,7 @@ function renderInterlinear() {
       }
 
       html += '<span class="il-word">';
-      html += escHtml(w.text);
+      html += escHtml(stripOsisTags(w.text));
       if (realStrongs.length > 0) {
         html += ' <sub class="il-strongs">';
         realStrongs.forEach(function(sn, si) {
@@ -907,7 +919,7 @@ function renderInterlinear() {
         html += '</sub>';
       }
       // Show morphology codes (from both strongs field and morph field)
-      var allMorph = morphTags.concat(morph ? [morph] : []);
+      var allMorph = morphTags.concat(morphClean ? [morphClean] : []);
       if (allMorph.length > 0) {
         html += ' <sup class="il-morph" title="' + escHtml(allMorph.join(', ')) + '" data-morph="' + escHtml(allMorph[0]) + '">' + escHtml(allMorph[0]) + '</sup>';
       }
@@ -971,6 +983,13 @@ function renderInterlinear() {
       hideStrongsTooltip();
     });
   });
+  } catch(e) {
+    console.error('[IL] renderInterlinear error:', e);
+    state.interlinear = false;
+    state.interlinearData = null;
+    renderVerses();
+    return;
+  }
 }
 
 function renderChapterHeader() {
