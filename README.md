@@ -1,22 +1,20 @@
-# bible-microservices — Bible Study Microservices
+# bible-microservices — Bible Study Microsystems
 
-**Last updated**: 2026-06-13 | **Commit**: ff7f94e
+**Last updated**: 2026-06-20 | **Branch**: `frontend-fixes-20260620` | **Commit**: `c0e7d64`
 
-Full-stack Bible study system inspired by AndBible. 6 Spring Boot microservices + pure HTML/CSS/JS frontend.
+Full-stack Bible study system inspired by AndBible. Merged monolith JVM app + pure HTML/CSS/JS frontend.
 Self-hosted SWORD module engine, Strong's interlinear, devotional reading, Bible maps.
 
 ---
 
-## Architecture (6 Services)
+## Architecture (Monolith)
 
-| Service | Port | Role |
-|---------|------|------|
-| **Gateway** | 8080 | API routing, CORS |
-| **Text** | 8081 | Bible verses, commentaries, Strong's, dictionaries, bookmarks/notes |
-| **Search** | 8082 | Lucene full-text search (22 indices) |
-| **Module** | 8083 | Module import, format parsing |
-| **Sword** | 8086 | JSword-native SWORD module engine (16 Bibles, 5 dictionaries, 2 commentaries, 3 GenBooks + Maps) |
-| **Frontend** | 3000 | SPA with Node.js API proxy (bilingual UI) |
+> As of 2026-06-20, 6 services merged into **bible-monolith** (single JVM) to reduce memory footprint from ~2GB to ~350MB.
+
+| Component | Port | Role |
+|-----------|------|------|
+| **bible-monolith** | 8080 | All backend: Bible verses, search, modules, SWORD engine, auth, commentary, dictionary, Strong's |
+| **Frontend** | 3000 | Node.js static server + `/api/*` proxy to monolith (bilingual UI) |
 
 ## Data Overview
 
@@ -35,8 +33,8 @@ Self-hosted SWORD module engine, Strong's interlinear, devotional reading, Bible
 
 - **Bible reader**: 29 translations, chapter navigation, verse-by-verse rendering
 - **Interlinear view**: ChiUns/ChiUn Chinese + Strong's/Morph word-level display
-- **Strong's hover tooltip**: 300ms debounce + session cache
-- **Morphology panel**: 16 common Hebrew codes, per-code popup
+- **Strong's hover tooltip**: 300ms debounce + session cache, divineName tag stripping
+- **Morphology popup**: Greek Robinson parser (V-AAI-3S→"Aorist Active Indicative") + full Hebrew OSHB table (7 stems × all tenses), covers 406+ codes
 - **Commentary system**: tab-based switching, fallback from text-service to SWORD
 - **Dictionary popup**: search across Easton/ISBE/Nave
 - **Devotional panel**: daily reading (SME 366 entries, Daily), calendar picker, reading check
@@ -47,6 +45,7 @@ Self-hosted SWORD module engine, Strong's interlinear, devotional reading, Bible
 - **TTS reading**: per-verse + full chapter, auto-language detection
 - **Bilingual UI**: Chinese/English/Bilingual modes
 - **Multi-version comparison**: up to 3 translations side-by-side
+- **Regression test**: pre-deploy encoding+BOM+syntax check (`regression-test.ps1`)
 
 ## Quick Start
 
@@ -54,19 +53,25 @@ Self-hosted SWORD module engine, Strong's interlinear, devotional reading, Bible
 # Prerequisites: JDK 17+, Node.js
 $env:JAVA_HOME = "C:\Users\PC\scoop\apps\openjdk17\current"
 
-# 1. Build & start all services
-cd D:\dev\github\bible-microservices
-.\start.ps1
+# 1. Build monolith
+cd D:\dev\github\bible-microservices\bible-monolith
+.\gradlew.bat bootJar
 
-# 2. Frontend (auto-starts with start.ps1)
-cd frontend && node server.js
+# 2. Start monolith (includes all 6 services)
+java -Xms48m -Xmx160m -jar build/libs/bible-monolith.jar --server.port=8080
+
+# 3. Frontend
+cd D:\dev\github\bible-microservices\frontend
+node server.js
 ```
 
-### Manual service start
-```powershell
-Start-Process -WindowStyle Hidden java -jar dist/bible-sword-service.jar --server.port=8086 --sword.modules-path=D:/dev/github/bible-microservices/data/sword-mods
-# Wait 15s, verify: curl http://localhost:8086/api/v1/sword/modules
-```
+## Branches
+
+| Branch | Purpose |
+|--------|---------|
+| `main` | Stable releases |
+| `merged-monolith` | 6→1 service merge, reduced memory footprint |
+| `frontend-fixes-20260620` | Morphology parser, regression test, encoding guards |
 
 ## Key APIs
 
@@ -88,21 +93,24 @@ Start-Process -WindowStyle Hidden java -jar dist/bible-sword-service.jar --serve
 
 ```
 bible-microservices/
-├── bible-gateway/              # Gateway (:8080)
-├── bible-text-service/         # Text (:8081) — core data layer
-├── bible-search-service/       # Search (:8082)
-├── bible-module-service/       # Module (:8083)
-├── bible-sword-service/        # Sword (:8086) — JSword engine
+├── bible-monolith/             # Merged monolith (:8080) — all 6 services
+│   └── src/main/kotlin/        # 48 Kotlin source files
 ├── bible-sword-reader/         # JSword library + stubs
 ├── frontend/                   # SPA (:3000)
 │   ├── index.html
-│   ├── server.js               # API proxy + static serve
-│   ├── js/app.js               # ~3000 lines
-│   └── css/style.css
+│   ├── server.js               # Monolith proxy + Cache-Control headers
+│   ├── js/
+│   │   ├── app.js              # ~3000 lines
+│   │   ├── morphology.js       # Greek Robinson + Hebrew OSHB parser
+│   │   ├── api.js
+│   │   └── config.js
+│   ├── css/style.css
+│   └── regression-test.ps1     # Encoding + syntax pre-deploy check
 ├── data/
 │   ├── text-db.mv.db           # H2 database (~231MB)
+│   ├── auth-db.mv.db           # Auth H2 database
 │   ├── lucene-index/
-│   └── sword-mods/              # SWORD module installation dir
+│   └── sword-mods/             # 25+ installed SWORD modules
 ├── dist/                       # Built JARs
 ├── scripts/                    # Import scripts + tools
 ├── tests/                      # Test suites
@@ -135,6 +143,8 @@ Copy to `data/sword-mods/MyAtlas/`, then `POST /api/v1/sword/reload`.
 
 ## Timeline (Recent)
 
+- **2026-06-20**: Monolith merge (6→1, -85% RAM), morphology.js (Greek Robinson parser + full Hebrew OSHB table — 406 codes), regression test, autocomplete fix, encoding safeguards
+- **2026-06-16**: Captcha + admin panel, DictionaryController rebuild, ECS deployment package v2.0, 7 commits pushed
 - **2026-06-10**: Module install subsystem (CrossWire mirrors), GenBook reader, devotional panel, UI refactoring
 - **2026-06-11**: Morph tooltips, calendar controls, bookmark/note controllers, repository manager
 - **2026-06-12**: TSK integration, verse hover toolbar, custom repo sources, self-hosting guide
