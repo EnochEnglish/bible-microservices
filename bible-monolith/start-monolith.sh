@@ -1,20 +1,18 @@
 #!/bin/bash
-# bible-monolith startup script
+# bible-monolith startup script for Linux (Alibaba Cloud ECS)
 # Single JVM: -Xms48m -Xmx160m, port 8080
-# All 6 services merged into one process
-
+# 1.7 GiB server — this process + nginx fit comfortably
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-LOG_DIR="$PROJECT_DIR/logs"
-DATA_DIR="$PROJECT_DIR/data"
+LOG_DIR="/tmp/bible-monolith"
+DATA_DIR="$SCRIPT_DIR/../data"
 JAR="$SCRIPT_DIR/build/libs/bible-monolith.jar"
 
 mkdir -p "$LOG_DIR" "$DATA_DIR"
 
-PID_FILE="$LOG_DIR/bible-monolith.pid"
-LOG_FILE="$LOG_DIR/bible-monolith.log"
+PID_FILE="$LOG_DIR/monolith.pid"
+LOG_FILE="$LOG_DIR/monolith.log"
 
 if [ -f "$PID_FILE" ]; then
     OLD_PID=$(cat "$PID_FILE")
@@ -28,19 +26,17 @@ fi
 echo "[$(date)] Starting bible-monolith..."
 echo "  JAR: $JAR"
 echo "  Log: $LOG_FILE"
-echo "  PID: $PID_FILE"
 
-cd "$PROJECT_DIR"
+cd "$SCRIPT_DIR/.."
 
+# CRITICAL: sword.modules-path uses hyphens (Spring Boot relaxed binding)
 nohup java \
     -Xms48m \
     -Xmx160m \
     -XX:+UseG1GC \
     -XX:MaxGCPauseMillis=200 \
     -XX:GCTimeRatio=9 \
-    -XX:+ExitOnOutOfMemoryError \
-    -Dspring.profiles.active=production \
-    -Dsword.modules.path="$DATA_DIR/sword-mods" \
+    -Dsword.modules-path="$DATA_DIR/sword-mods" \
     -jar "$JAR" \
     >> "$LOG_FILE" 2>&1 &
 
@@ -51,16 +47,21 @@ sleep 3
 if kill -0 "$(cat $PID_FILE)" 2>/dev/null; then
     echo "[$(date)] bible-monolith started successfully (PID $(cat $PID_FILE))"
     echo "[$(date)] Waiting for health check on port 8080..."
-    for i in $(seq 1 30); do
+    for i in $(seq 1 40); do
         if curl -sf http://localhost:8080/actuator/health > /dev/null 2>&1; then
-            echo "[$(date)] Health check PASSED"
+            echo "[$(date)] Health check PASSED (took $((i*2))s)"
             exit 0
+        fi
+        if ! kill -0 "$(cat $PID_FILE)" 2>/dev/null; then
+            echo "[$(date)] Process died during startup!"
+            tail -30 "$LOG_FILE"
+            exit 1
         fi
         sleep 2
     done
     echo "[$(date)] Health check TIMEOUT (process may still be starting)"
 else
     echo "[$(date)] FAILED to start bible-monolith"
-    cat "$LOG_FILE" | tail -20
+    tail -20 "$LOG_FILE"
     exit 1
 fi
