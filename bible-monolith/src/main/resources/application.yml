@@ -1,0 +1,94 @@
+# ============================================================
+# bible-monolith - Unified Configuration
+# Single JVM application on port 8080 with all services merged
+# JVM: -Xms48m -Xmx160m (1 GiB server)
+# ============================================================
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: bible-monolith
+
+  jackson:
+    default-property-inclusion: non_null
+
+  # --- Primary H2 DataSource (text-service entities) ---
+  datasource:
+    url: jdbc:h2:file:./data/text-db;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL;TRACE_LEVEL_FILE=0
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=30m
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# ===== JWT =====
+jwt:
+  secret: bWljcm9zZXJ2aWNlcy1iaWJsZS1hdXRoLWp3dC1zZWNyZXQta2V5LTIwMjYtMDYtMTQ=
+  expiration-ms: 86400000  # 24 hours
+
+# ===== Pre-seeded Admin =====
+app:
+  admin:
+    username: admin
+    password: admin123  # Should be changed on first login
+
+# ===== Bible Text Service Config =====
+bible:
+  text:
+    default-translation: web
+  search:
+    index-path: ./data/search-index
+  text-service:
+    url: http://localhost:8080
+  module-service:
+    url: http://localhost:8080
+  data:
+    sources-url: https://raw.githubusercontent.com/seven1m/open-bibles/main/
+
+# ===== SWORD Configuration =====
+sword:
+  modules-path: ${SWORD_MODULES_PATH:data/sword-mods}
+  data-path: ${SWORD_DATA_PATH:data/sword-mods}
+
+# ===== Actuator =====
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,caches
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# ===== Logging =====
+logging:
+  level:
+    com.bible.monolith: DEBUG
+    org.crosswire: WARN
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{HH:mm:ss} %-5level %logger{36} - %msg%n"

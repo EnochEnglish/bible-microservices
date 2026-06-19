@@ -3,12 +3,27 @@
 build/
 dist/
 cloud-deploy/
+cloud-deploy-v2/
 node_modules/
 out/
+*.jar
+*.class
+!gradle/wrapper/gradle-wrapper.jar
 
 # Runtime data
 **/data/
 data/
+*.mv.db
+*.trace.db
+
+# Logs
+logs/
+*.log
+
+# Deployment archives
+*.zip
+*.tar.gz
+*.tar
 
 # Temp/clones
 tmp/

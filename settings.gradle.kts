@@ -16,4 +16,5 @@ include("bible-module-service")
 include("bible-sword-service")
 include("bible-sword-reader")
 include("bible-auth-service")
+include("bible-monolith")
 
