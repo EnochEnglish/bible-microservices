@@ -122,7 +122,7 @@
   </div><!-- end moduleContent -->
 </div><!-- end mgmt-body -->
 
-<script src="js/config.js?v=20260616c"></script>
+<script src="js/config.js?v=20260622a"></script>
 <script>
 // ── Init: auth check ──
 var API = APP_CONFIG.apiBase;
@@ -157,8 +157,8 @@ function authHeader() {
 
 // ── Source list ──
 function loadSources() {
-  fetch(API + '/text/repos').then(function(r){return r.json()}).then(function(d){
-    var repos = d.repos || [];
+  fetch(API + '/sword/install/sources').then(function(r){return r.json()}).then(function(d){
+    var repos = d || [];
     var sel = document.getElementById('sourceSelect');
     sel.innerHTML = '';
     for (var i=0; i<repos.length; i++) {
@@ -179,7 +179,7 @@ function switchSource(id) { state.sourceId = id; loadModules(); }
 function loadModules() {
   var mc = document.getElementById('listContainer');
   mc.innerHTML = '<div class="loading">加载中...</div>';
-  fetch(API + '/sword/modules/available?source=' + encodeURIComponent(state.sourceId))
+  fetch(API + '/sword/install/available?source=' + encodeURIComponent(state.sourceId))
     .then(function(r){return r.json()}).then(function(d){
       state.available = d.modules || d;
       loadInstalled();
@@ -315,8 +315,8 @@ function toggleRepoPanel() {
 }
 
 function loadRepos() {
-  fetch(API + '/text/repos').then(function(r){return r.json()}).then(function(d){
-    var repos = d.repos || [];
+  fetch(API + '/sword/install/sources').then(function(r){return r.json()}).then(function(d){
+    var repos = d || [];
     var html = '';
     for (var i=0;i<repos.length;i++) {
       var r = repos[i];
@@ -337,39 +337,32 @@ function cancelAddRepo() {
   document.getElementById('repoAddUrl').value = '';
 }
 function saveRepo() {
+  // Custom repo management via repos.json (client-side)
   var name = document.getElementById('repoAddName').value.trim();
   var url = document.getElementById('repoAddUrl').value.trim();
   if (!name||!url) { alert('请填写名称和地址'); return; }
-  // Get current repos, add new one
-  fetch(API + '/text/repos').then(function(r){return r.json()}).then(function(d){
-    var repos = d.repos || [];
-    var customs = [];
-    for (var i=0;i<repos.length;i++) { if (String(repos[i].id).indexOf('custom-')===0) { customs.push({name:repos[i].name, baseUrl:repos[i].url}); } }
+  fetch('/repos.json').then(function(r){return r.json()}).then(function(d){
+    var customs = (d.customRepositories||[]);
     customs.push({name:name, baseUrl:url});
-    return fetch(API + '/text/repos', {
+    return fetch('/repos.json', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({customRepositories:customs})
     });
   }).then(function(r){return r.json()}).then(function(d){
-    if (d.success) {
-      showStatus('仓库已添加', 'ok');
-      cancelAddRepo(); loadRepos(); loadSources();
-    } else { showStatus('添加失败', 'err'); }
+    showStatus('仓库已添加（需要刷新页面生效）', 'ok');
+    cancelAddRepo(); loadRepos(); loadSources();
   }).catch(function(e){ showStatus('出错: '+e.message, 'err'); });
 }
 function deleteRepo(id) {
   if (!confirm('确定删除仓库 ' + id + '?')) return;
-  fetch(API + '/text/repos').then(function(r){return r.json()}).then(function(d){
-    var repos = d.repos || [];
-    var customs = [];
-    for (var i=0;i<repos.length;i++) { if (String(repos[i].id).indexOf('custom-')===0 && repos[i].id!==id) { customs.push({name:repos[i].name, baseUrl:repos[i].url}); } }
-    return fetch(API + '/text/repos', {
+  fetch('/repos.json').then(function(r){return r.json()}).then(function(d){
+    var customs = (d.customRepositories||[]).filter(function(r){return r.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') !== id});
+    return fetch('/repos.json', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({customRepositories:customs})
     });
   }).then(function(r){return r.json()}).then(function(d){
-    if (d.success) { loadRepos(); loadSources(); showStatus('已删除', 'ok'); }
-    else showStatus('删除失败', 'err');
+    loadRepos(); loadSources(); showStatus('已删除', 'ok');
   }).catch(function(e){ showStatus('出错: '+e.message, 'err'); });
 }
 </script>

@@ -81,17 +81,29 @@ h.createServer(function(rq, rs) {
   }
 
   // Static files
-  var f = url.replace(/\/$/,'') || '/index.html';
-  f = p.join(dir, f);
+  var f = url;
+  // Root or directory-ending-with-/ → serve index.html
+  if (f === '/' || f === '') { f = '/index.html'; }
+  else if (f.endsWith('/')) { f = f + 'index.html'; }
+  var fp = p.join(dir, f);
+  // If resolved path is a directory, serve index.html inside it
   try {
-    var c = fs.readFileSync(f);
-    var ct = f.endsWith('.js') ? 'text/javascript;charset=utf-8' :
-             f.endsWith('.css') ? 'text/css;charset=utf-8' :
+    var stats = fs.statSync(fp);
+    if (stats.isDirectory()) fp = p.join(fp, 'index.html');
+  } catch(e) {}
+  try {
+    var c = fs.readFileSync(fp);
+    var ct = fp.endsWith('.js') ? 'text/javascript;charset=utf-8' :
+             fp.endsWith('.css') ? 'text/css;charset=utf-8' :
+             fp.endsWith('.png') ? 'image/png' :
+             fp.endsWith('.svg') ? 'image/svg+xml' :
+             fp.endsWith('.json') ? 'application/json;charset=utf-8' :
+             fp.endsWith('.ico') ? 'image/x-icon' :
              'text/html;charset=utf-8';
     rs.writeHead(200, {'Content-Type': ct, 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache', 'Expires': '0'});
     rs.end(c);
   } catch(e) {
     rs.writeHead(404);
-    rs.end('Not Found');
+    rs.end('Not Found: ' + url);
   }
 }).listen(3000, '127.0.0.1', function(){console.log('bible-monolith FE on :3000')});

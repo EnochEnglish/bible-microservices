@@ -21,7 +21,7 @@ class StrongsService {
     private val wordIndex = ConcurrentHashMap<String, MutableList<StrongsRef>>()
 
     private val dataDir = System.getProperty("strongs.data.dir",
-        "C:/Users/PC/.qclaw/workspace-v733kxt9elzfv7u1/bible-microservices/data/sword-dicts")
+        "data/sword-dicts")
 
     private val greekPath = "$dataDir/strongs_greek.json"
     private val hebrewPath = "$dataDir/strongs_hebrew.json"

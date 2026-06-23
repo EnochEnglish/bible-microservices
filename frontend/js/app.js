@@ -1264,6 +1264,9 @@ function setupSearch() {
   });
 }
 
+// Translations that have full-text search indexes
+var SEARCHABLE_TRANSLATIONS = ['asv','bbe','cuv_gb','dby','kjv','wbt','web','ylt'];
+
 function doSearch(query) {
   if (!query) return;
   state.view = "search";
@@ -1273,7 +1276,14 @@ function doSearch(query) {
   document.getElementById("readerView").style.display = "none";
   ctx.innerHTML = '<div class="loading">' + t("searching") + '</div>';
 
-  apiGet("/search?query=" + encodeURIComponent(query) + "&translation=" + state.currentTranslation + "&size=30").then(function(data) {
+  // Fallback: if current translation has no search index, use KJV
+  var searchTranslation = state.currentTranslation;
+  if (SEARCHABLE_TRANSLATIONS.indexOf(searchTranslation) < 0) {
+    searchTranslation = 'kjv';
+    ctx.innerHTML = '<div class="loading" style="color:#e65100">当前译本无搜索索引，使用 KJV 搜索...</div>';
+  }
+
+  apiGet("/search?query=" + encodeURIComponent(query) + "&translation=" + searchTranslation + "&size=30").then(function(data) {
     state.searchResults = data;
     renderSearchResults(query);
   }).catch(function(e) {

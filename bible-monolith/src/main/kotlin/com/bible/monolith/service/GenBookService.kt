@@ -160,9 +160,28 @@ class GenBookService {
             }
         }
         // Self-contained: {root}/{Module}/modules/genbook/rawgenbook/{name}/{name}
-        for (modCase in listOf(module, module.lowercase())) {
-            val scDir = java.io.File(baseDir, "$modCase/modules/genbook/rawgenbook/$modCase/$modCase")
-            if (scDir.exists() && isMapTreeRoot(scDir)) return scDir
+        // Try multiple case variants for cross-platform compatibility (Windows is case-insensitive, Linux is case-sensitive)
+        val modVariants = linkedSetOf(module, module.lowercase(), module.uppercase())
+        for (outerCase in modVariants) {
+            for (innerCase in modVariants) {
+                val scDir = java.io.File(baseDir, "$outerCase/modules/genbook/rawgenbook/$innerCase/$innerCase")
+                if (scDir.exists() && isMapTreeRoot(scDir)) return scDir
+            }
+        }
+        // Fallback: search {root}/{Module}*/modules/genbook/rawgenbook/**/** (case-insensitive recursive)
+        for (modCase in modVariants) {
+            val modDir = java.io.File(baseDir, modCase)
+            if (!modDir.exists() || !modDir.isDirectory) continue
+            val rawDir = java.io.File(modDir, "modules/genbook/rawgenbook")
+            if (!rawDir.exists() || !rawDir.isDirectory) continue
+            // Search all subdirectories for a map tree root
+            val queue = ArrayDeque<java.io.File>()
+            queue.add(rawDir)
+            while (queue.isNotEmpty()) {
+                val current = queue.removeFirst()
+                if (isMapTreeRoot(current)) return current
+                current.listFiles()?.filter { it.isDirectory }?.forEach { queue.add(it) }
+            }
         }
         return null
     }
