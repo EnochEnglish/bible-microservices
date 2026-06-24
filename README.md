@@ -1,6 +1,6 @@
 # bible-microservices — Bible Study System
 
-**Last updated**: 2026-06-24 | **Branch**: `monolith-clean`
+**Last updated**: 2026-06-25 | **Branch**: `monolith-clean`
 
 Full-stack Bible study system inspired by AndBible. Single-JVM monolith backend + dual frontend (desktop + mobile).
 Self-hosted SWORD module engine, Strong's interlinear, devotional reading, Bible maps, bilingual UI.
@@ -108,7 +108,7 @@ A dedicated mobile PWA designed for phones (320px–768px). Lives in `frontend/m
 | Bible reading + chapter nav | ✅ click | ✅ swipe + buttons |
 | Translation switch | ✅ | ✅ |
 | Strong's dictionary | ✅ hover | ✅ tap word → popup |
-| Interlinear (word-by-word) | ✅ | ✅ toggle in More menu |
+| Interlinear (word-by-word) | ✅ 7 translations | ✅ toggle in More menu |
 | Search | ✅ | ✅ |
 | Commentary | ✅ sidebar | ✅ slide-up drawer |
 | Devotion (Spurgeon) | ✅ | ✅ |
@@ -116,10 +116,10 @@ A dedicated mobile PWA designed for phones (320px–768px). Lives in `frontend/m
 | TTS (read aloud) | ✅ | ✅ |
 | Font size | ✅ | ✅ pinch + A-/A+ |
 | Bookmarks & Notes | ✅ | Phase 2 |
-| Maps | ✅ | Phase 2 |
+| Maps | ✅ | ✅ |
 | Module manager | ✅ | — (use desktop) |
 | Admin panel | ✅ | — (use desktop) |
-| Multi-version compare | ✅ | Phase 2 |
+| Multi-version compare | ✅ up to 3 | ✅ |
 | PWA install | — | ✅ |
 | Offline reading | — | ✅ (Service Worker) |
 
@@ -144,7 +144,7 @@ A dedicated mobile PWA designed for phones (320px–768px). Lives in `frontend/m
 ## Features
 
 - **Bible reader**: 29 translations, chapter navigation, verse-by-verse rendering
-- **Interlinear view**: ChiUns/ChiUn Chinese + Strong's/Morph word-level display
+- **Interlinear view**: 7 translations (KJV, ChiUns, ChiUn, BSB, OSHB, SP, LXX) with Strong's/Morph word-level display
 - **Strong's hover/tap tooltip**: session cache, divineName tag stripping
 - **Morphology popup**: Greek Robinson parser + full Hebrew OSHB table (406+ codes)
 - **Commentary system**: tab-based switching, 10 commentaries
@@ -156,7 +156,7 @@ A dedicated mobile PWA designed for phones (320px–768px). Lives in `frontend/m
 - **Bookmarks & Notes**: localStorage persistence
 - **TTS reading**: per-verse + full chapter, auto-language detection
 - **Bilingual UI**: Chinese/English/Bilingual modes
-- **Multi-version comparison**: up to 3 translations side-by-side (desktop)
+- **Multi-version comparison**: up to 3 translations side-by-side (desktop + mobile)
 - **Mobile PWA**: installable, offline caching, swipe gestures
 
 ---

@@ -37,9 +37,17 @@ var TRANSLATION_NAMES = {
 var SWORD_MODULE_MAP = {
   "kjv": "KJV",
   "chiuns": "ChiUns",
-  "chiun": "ChiUn"
+  "chiun": "ChiUn",
+  "bsb": "BSB",
+  "oshb": "OSHB",
+  "sp": "SP",
+  "lxx": "LXX"
 };
 function isSwordTranslation(tid) { return tid in SWORD_MODULE_MAP; }
+
+// Translations that support interlinear (have Strong's words data)
+var INTERLINEAR_TRANSLATIONS = ['kjv', 'chiuns', 'chiun', 'bsb', 'oshb', 'sp', 'lxx'];
+function isInterlinearTranslation(tid) { return INTERLINEAR_TRANSLATIONS.indexOf(tid) >= 0; }
 
 // Sword-only translations (not in text-service H2, only in sword-service via JSword)
 function isSwordOnlyTranslation(tid) { return tid === "chiuns" || tid === "chiun"; }
@@ -539,7 +547,7 @@ function loadChapter() {
     if (state.compareTranslations.length) loadAllCompare();
 
     // Load interlinear data if applicable
-    if (state.interlinear && isSwordTranslation(state.currentTranslation)) {
+    if (state.interlinear && isInterlinearTranslation(state.currentTranslation)) {
       loadInterlinear();
     } else {
       renderVerses();
@@ -558,12 +566,12 @@ function renderVerses() {
   var container = document.getElementById("verseContent");
 
   // Interlinear mode: render word-by-word from sword data
-  if (state.interlinear && state.interlinearData && isSwordTranslation(state.currentTranslation)) {
+  if (state.interlinear && state.interlinearData && isInterlinearTranslation(state.currentTranslation)) {
     renderInterlinear();
     return;
   }
   // Interlinear pending: show loading while waiting for sword data
-  if (state.interlinear && isSwordTranslation(state.currentTranslation) && !state.interlinearData) {
+  if (state.interlinear && isInterlinearTranslation(state.currentTranslation) && !state.interlinearData) {
     container.innerHTML = '<div class="loading">' + t("loading") + '</div>';
     return;
   }
@@ -995,13 +1003,13 @@ function renderInterlinear() {
 function renderChapterHeader() {
   var hdrEl = document.getElementById("chapterHeader");
   var label = bookLabel(state.currentBook);
-  var isSword = isSwordTranslation(state.currentTranslation);
-  var ilBtn = isSword
+  var isIL = isInterlinearTranslation(state.currentTranslation);
+  var ilBtn = isIL
     ? '<button id="btnInterlinear" class="il-btn' + (state.interlinear ? ' active' : '') + '" title="' + t("interlinearTip") + '">' + t("interlinearBtn") + '</button>'
     : '';
   hdrEl.innerHTML = '<span class="book-name">' + label + '</span>' +
     '<span class="chapter-num">' + t("chapterNum") + ' ' + state.currentChapter + ' 章</span>' + ilBtn;
-  if (isSword) {
+  if (isIL) {
     setTimeout(function() {
       var btn = document.getElementById("btnInterlinear");
       if (btn) btn.addEventListener("click", toggleInterlinear);
