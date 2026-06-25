@@ -7,8 +7,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0f1117">
   <title>Bible Reader 📖</title>
+  <script>document.write('<base href="' + (location.pathname.startsWith('/bible/') ? '/bible/m/' : '/m/') + '">');</script>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="mobile.css?v=20260626a">
+  <link rel="stylesheet" href="mobile.css?v=20260626b">
 </head>
 <body>
 
@@ -171,7 +172,7 @@
     <button class="more-item" id="authBtn" onclick="openAuthPanel()">
       <span>👤</span> <span>Login</span>
     </button>
-    <a class="more-item" href="/" id="desktopLink">
+    <a class="more-item" href="../" id="desktopLink">
       <span>🖥️</span> <span>Desktop Version</span>
     </a>
   </div>
@@ -228,8 +229,8 @@
 <!-- ═══ Swipe Hint ═══ -->
 <div id="swipeHint" class="swipe-hint" style="display:none">← Swipe →</div>
 
-<script src="../js/config.js?v=20260626a"></script>
-<script src="../js/morphology.js?v=20260626a"></script>
-<script src="mobile.js?v=20260626a"></script>
+<script src="../js/config.js?v=20260626b"></script>
+<script src="../js/morphology.js?v=20260626b"></script>
+<script src="mobile.js?v=20260626b"></script>
 </body>
 </html>

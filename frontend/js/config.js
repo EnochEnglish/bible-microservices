@@ -9,6 +9,7 @@
 
 var APP_CONFIG = (function() {
   var hostname = (window.location.hostname || "localhost").toLowerCase();
+  var pathname = window.location.pathname || "/";
 
   // ── CHANGE THIS to "local", "production", or "auto" ──
   var mode = "local";
@@ -22,10 +23,16 @@ var APP_CONFIG = (function() {
     hostname.startsWith("172.16.")
   );
 
+  // Detect base path from URL: if pathname starts with /bible/, use it as prefix
+  // This handles nginx deployment where frontend is at /bible/
+  var basePath = "";
+  if (pathname.startsWith("/bible/")) {
+    basePath = "/bible";
+  }
+
   function getApiBase() {
-    if (mode === "production") return "/api/v1";
-    if (mode === "local")      return "/api/v1";
-    // auto: detect from hostname (frontend proxy handles routing to backend)
+    // API is always at /api/v1 (nginx proxies /api/ to monolith:8080)
+    // In production with /bible/ prefix, API is still at /api/v1 (not /bible/api/v1)
     return "/api/v1";
   }
 
@@ -42,6 +49,7 @@ var APP_CONFIG = (function() {
     isProduction: getIsProduction(),
     isLocal: getIsLocal(),
     apiBase: getApiBase(),
+    basePath: basePath,        // "" for local, "/bible" for production
     hostname: hostname,
 
     // Supported domains (informational; actual CORS configured server-side)
@@ -57,8 +65,9 @@ var APP_CONFIG = (function() {
 // Legacy: for backward compatibility with existing code
 var API_BASE = APP_CONFIG.apiBase;
 var DEPLOY_MODE = APP_CONFIG.deployMode;
+var BASE_PATH = APP_CONFIG.basePath;
 
 // Log config on load (only in local mode)
 if (APP_CONFIG.isLocal) {
-  console.log("[Config] Mode: " + APP_CONFIG.deployMode + " | API: " + APP_CONFIG.apiBase);
+  console.log("[Config] Mode: " + APP_CONFIG.deployMode + " | API: " + APP_CONFIG.apiBase + " | BasePath: " + APP_CONFIG.basePath);
 }

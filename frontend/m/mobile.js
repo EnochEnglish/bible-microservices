@@ -1729,9 +1729,13 @@ function loadPlanDay(day) {
       data.readings.forEach(function(r, i) {
         var done = planState.progress[day] && planState.progress[day].readCount > i;
         var cls = done ? ' plan-reading-done' : '';
-        html += '<div class="plan-reading-item' + cls + '" onclick="goToReading(\'' + r.bookId + '\',' + r.chapterStart + ',' + r.chapterEnd + ',' + i + ',' + day + ')">';
-        html += '<span class="plan-reading-check">' + (done ? '✓' : '○') + '</span>';
-        html += '<span class="plan-reading-label">' + r.label + '</span>';
+        html += '<div class="plan-reading-item' + cls + '" onclick="goToReading(\'' + r.bookId + '\',' + r.chapterStart + ',' + r.chapterEnd + ',' + i + ',' + day + ')"';
+        html += ' style="display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:6px;background:var(--bg-input,#14161e);border-radius:8px;cursor:pointer;transition:background .15s"';
+        html += ' ontouchstart="this.style.background=\'var(--bg-hover,#1f2230)\'" ontouchend="this.style.background=\'var(--bg-input,#14161e)\'"';
+        html += '>';
+        html += '<span class="plan-reading-check" style="font-size:18px;color:var(--accent,#4a9eff)">' + (done ? '✓' : '○') + '</span>';
+        html += '<span class="plan-reading-label" style="flex:1;font-size:15px">' + r.label + '</span>';
+        html += '<span style="font-size:14px;color:var(--text-dim,#888)">📖 →</span>';
         html += '</div>';
       });
       document.getElementById('planReadings').innerHTML = html;

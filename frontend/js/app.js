@@ -3816,7 +3816,9 @@ function loadDesktopPlanDay(day) {
       var done = dplanState.progress[day] && dplanState.progress[day].readCount > i;
       html += '<div class="plan-reading-item-d' + (done ? " done" : "") + '" onclick="goToDesktopReading(\'' + r.bookId + '\',' + r.chapterStart + ',' + i + ',' + day + ')" style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;border-radius:6px;margin-bottom:4px;background:var(--bg-input,#14161e)">';
       html += '<span style="font-size:1.2em;color:var(--accent,#4a9eff)">' + (done ? "✓" : "○") + "</span>";
-      html += "<span>" + r.label + "</span></div>";
+      html += '<span style="flex:1">' + r.label + "</span>";
+      html += '<span style="font-size:0.85em;color:var(--muted,#888)">📖 →</span>';
+      html += "</div>";
     });
     html += '<div style="text-align:center;margin-top:12px"><button onclick="toggleDesktopPlanComplete()" style="padding:8px 20px;font-weight:600;background:' + (isDone ? "#2d8a4e" : "#4a9eff") + ';color:#fff;border:none;border-radius:6px;cursor:pointer">' + (isDone ? "✓ Completed" : "✓ Mark Complete") + "</button></div>";
     document.getElementById("planTodayCard").innerHTML = html;
