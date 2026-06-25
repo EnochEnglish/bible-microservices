@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -26,6 +26,7 @@
       <button id="devotionBtn" title="Daily Devotion" data-zh="🔔 灵修" data-en="🔔 Devotion" onclick="openDevotionPanel()">🔔 灵修</button>
       <button id="genbookBtn" title="General Books" data-zh="📖 阅读" data-en="📖 Read" onclick="openGenBookPanel()">📖 阅读</button>
       <button id="mapsBtn" title="Bible Maps" data-zh="🗺️ 地图" data-en="🗺️ Maps" onclick="openMapsPanel()">🗺️ 地图</button>
+      <button id="planBtn" title="Reading Plan" data-zh="📅 读经" data-en="📅 Plan" onclick="openPlanPanel()">📅 读经</button>
       <button id="bookmarksBtn" title="Bookmarks" data-zh="🔖 书签" data-en="🔖 Bookmarks" onclick="openBookmarksPanel()" style="display:none">🔖 书签</button>
       <button id="notesBtn" title="Notes" data-zh="📝 笔记" data-en="📝 Notes" onclick="openNotesPanel()" style="display:none">📝 笔记</button>
       <a id="modulesBtn" href="modules.html" target="_blank" class="topbar-btn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" style="display:none;text-decoration:none;">📦 模块</a>
@@ -167,6 +168,28 @@
       </div>
     </div>
 
+    <!-- Reading Plan Panel -->
+    <div class="strongs-overlay" id="planOverlay" style="display:none" onclick="closePlanPanel()">
+      <div class="devotion-panel" style="max-width:700px" onclick="event.stopPropagation()">
+        <div class="strongs-popup-header">
+          <span id="planTitle">📅 读经计划</span>
+          <span class="strongs-popup-close" onclick="closePlanPanel()">✕</span>
+        </div>
+        <div class="devotion-toolbar">
+          <select id="planSelect" onchange="switchDesktopPlan(this.value)"></select>
+        </div>
+        <div id="planTodayCard" style="padding:12px"></div>
+        <div id="planProgressBar" style="padding:0 12px 8px"></div>
+        <div class="plan-day-nav-desktop" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:8px">
+          <button onclick="changeDesktopPlanDay(-1)">◀</button>
+          <span id="planDayDisplay">Day 1</span>
+          <button onclick="changeDesktopPlanDay(1)">▶</button>
+          <button onclick="goToDesktopToday()" style="margin-left:8px;padding:4px 12px;font-size:0.85em">Today</button>
+        </div>
+        <div id="planCalendarDesktop" style="padding:12px;max-height:300px;overflow-y:auto"></div>
+      </div>
+    </div>
+
     <!-- General Book Panel -->
     <div class="strongs-overlay" id="genbookOverlay" style="display:none" onclick="closeGenBookPanel()">
       <div class="devotion-panel" onclick="event.stopPropagation()">
@@ -295,9 +318,9 @@
       </div></div>
   </div>
 
-  <script src="js/config.js?v=20260625v9"></script>
-  <script src="js/api.js?v=20260625v9"></script>
-  <script src="js/morphology.js?v=20260625v9"></script>
-  <script src="js/app.js?v=20260625v9"></script>
+  <script src="js/config.js?v=20260626a"></script>
+  <script src="js/api.js?v=20260626a"></script>
+  <script src="js/morphology.js?v=20260626a"></script>
+  <script src="js/app.js?v=20260626a"></script>
 </body>
 </html>

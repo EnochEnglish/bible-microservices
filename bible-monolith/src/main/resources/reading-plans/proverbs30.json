@@ -1,0 +1,192 @@
+{
+    "planDescriptionZh":  "每天一章箴言，30天完成一遍",
+    "planDescription":  "Read one chapter of Proverbs each day for 30 days - one full cycle per month",
+    "planNameZh":  "30天箴言计划",
+    "days":  [
+                 {
+                     "day":  1,
+                     "readings":  [
+                                      "Prov 1"
+                                  ]
+                 },
+                 {
+                     "day":  2,
+                     "readings":  [
+                                      "Prov 2"
+                                  ]
+                 },
+                 {
+                     "day":  3,
+                     "readings":  [
+                                      "Prov 3"
+                                  ]
+                 },
+                 {
+                     "day":  4,
+                     "readings":  [
+                                      "Prov 4"
+                                  ]
+                 },
+                 {
+                     "day":  5,
+                     "readings":  [
+                                      "Prov 5"
+                                  ]
+                 },
+                 {
+                     "day":  6,
+                     "readings":  [
+                                      "Prov 6"
+                                  ]
+                 },
+                 {
+                     "day":  7,
+                     "readings":  [
+                                      "Prov 7"
+                                  ]
+                 },
+                 {
+                     "day":  8,
+                     "readings":  [
+                                      "Prov 8"
+                                  ]
+                 },
+                 {
+                     "day":  9,
+                     "readings":  [
+                                      "Prov 9"
+                                  ]
+                 },
+                 {
+                     "day":  10,
+                     "readings":  [
+                                      "Prov 10"
+                                  ]
+                 },
+                 {
+                     "day":  11,
+                     "readings":  [
+                                      "Prov 11"
+                                  ]
+                 },
+                 {
+                     "day":  12,
+                     "readings":  [
+                                      "Prov 12"
+                                  ]
+                 },
+                 {
+                     "day":  13,
+                     "readings":  [
+                                      "Prov 13"
+                                  ]
+                 },
+                 {
+                     "day":  14,
+                     "readings":  [
+                                      "Prov 14"
+                                  ]
+                 },
+                 {
+                     "day":  15,
+                     "readings":  [
+                                      "Prov 15"
+                                  ]
+                 },
+                 {
+                     "day":  16,
+                     "readings":  [
+                                      "Prov 16"
+                                  ]
+                 },
+                 {
+                     "day":  17,
+                     "readings":  [
+                                      "Prov 17"
+                                  ]
+                 },
+                 {
+                     "day":  18,
+                     "readings":  [
+                                      "Prov 18"
+                                  ]
+                 },
+                 {
+                     "day":  19,
+                     "readings":  [
+                                      "Prov 19"
+                                  ]
+                 },
+                 {
+                     "day":  20,
+                     "readings":  [
+                                      "Prov 20"
+                                  ]
+                 },
+                 {
+                     "day":  21,
+                     "readings":  [
+                                      "Prov 21"
+                                  ]
+                 },
+                 {
+                     "day":  22,
+                     "readings":  [
+                                      "Prov 22"
+                                  ]
+                 },
+                 {
+                     "day":  23,
+                     "readings":  [
+                                      "Prov 23"
+                                  ]
+                 },
+                 {
+                     "day":  24,
+                     "readings":  [
+                                      "Prov 24"
+                                  ]
+                 },
+                 {
+                     "day":  25,
+                     "readings":  [
+                                      "Prov 25"
+                                  ]
+                 },
+                 {
+                     "day":  26,
+                     "readings":  [
+                                      "Prov 26"
+                                  ]
+                 },
+                 {
+                     "day":  27,
+                     "readings":  [
+                                      "Prov 27"
+                                  ]
+                 },
+                 {
+                     "day":  28,
+                     "readings":  [
+                                      "Prov 28"
+                                  ]
+                 },
+                 {
+                     "day":  29,
+                     "readings":  [
+                                      "Prov 29"
+                                  ]
+                 },
+                 {
+                     "day":  30,
+                     "readings":  [
+                                      "Prov 30"
+                                  ]
+                 }
+             ],
+    "planName":  "30-Day Proverbs Plan",
+    "versification":  "KJV",
+    "dateBased":  true,
+    "numberOfDays":  30,
+    "planCode":  "proverbs30"
+}

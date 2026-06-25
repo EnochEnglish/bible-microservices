@@ -446,3 +446,86 @@ body {
   .search-results { max-width:720px; margin:0 auto; }
   .maps-grid { grid-template-columns:repeat(3, 1fr); max-width:720px; margin:0 auto; }
 }
+
+/* ═══ Reading Plan ═══ */
+.plan-header { padding:8px 12px; }
+.plan-select {
+  width:100%; padding:10px 12px; font-size:15px;
+  background:var(--bg-card, #1a1d28); color:var(--text, #e0e0e0);
+  border:1px solid var(--border, #333); border-radius:8px;
+  -webkit-appearance:none; appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23888' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center;
+}
+.plan-today-card {
+  margin:8px 12px; padding:16px;
+  background:var(--bg-card, #1a1d28); border-radius:12px;
+  border:1px solid var(--border, #2a2d3a);
+}
+.plan-today-header {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:12px;
+}
+.plan-day-label { font-size:18px; font-weight:700; color:var(--accent, #4a9eff); }
+.plan-date-label { font-size:13px; color:var(--text-dim, #888); }
+.plan-readings { margin-bottom:12px; }
+.plan-reading-item {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; margin-bottom:6px;
+  background:var(--bg-input, #14161e); border-radius:8px;
+  cursor:pointer; transition:background .15s;
+}
+.plan-reading-item:active { background:var(--bg-hover, #1f2230); }
+.plan-reading-done { opacity:0.5; }
+.plan-reading-check { font-size:18px; color:var(--accent, #4a9eff); }
+.plan-reading-label { font-size:15px; }
+.plan-actions { text-align:center; }
+.plan-check-btn {
+  padding:10px 24px; font-size:15px; font-weight:600;
+  background:var(--accent, #4a9eff); color:#fff;
+  border:none; border-radius:8px; cursor:pointer;
+  transition:opacity .15s;
+}
+.plan-check-btn:active { opacity:0.8; }
+.plan-check-done { background:var(--success, #2d8a4e); }
+.plan-progress-bar {
+  position:relative; margin:12px; height:32px;
+  background:var(--bg-card, #1a1d28); border-radius:16px;
+  overflow:hidden; border:1px solid var(--border, #2a2d3a);
+}
+.plan-progress-fill {
+  position:absolute; left:0; top:0; height:100%;
+  background:linear-gradient(90deg, #4a9eff, #6ab4ff);
+  transition:width .3s;
+}
+.plan-progress-text {
+  position:absolute; width:100%; text-align:center;
+  line-height:32px; font-size:13px; font-weight:600;
+  color:#fff; text-shadow:0 1px 2px rgba(0,0,0,0.5);
+}
+.plan-day-nav {
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  padding:8px 12px;
+}
+.plan-day-nav span { font-size:15px; font-weight:600; min-width:80px; text-align:center; }
+.plan-today-btn {
+  padding:6px 14px; font-size:13px;
+  background:var(--bg-card, #1a1d28); color:var(--accent, #4a9eff);
+  border:1px solid var(--accent, #4a9eff); border-radius:6px;
+  cursor:pointer;
+}
+.plan-today-btn:active { opacity:0.7; }
+.plan-calendar {
+  display:grid; gap:3px; padding:12px;
+  max-width:600px; margin:0 auto;
+}
+.plan-cal-day {
+  aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  font-size:11px; cursor:pointer; border-radius:4px;
+  background:var(--bg-card, #1a1d28); color:var(--text-dim, #888);
+  transition:all .1s;
+}
+.plan-cal-day:active { transform:scale(0.92); }
+.plan-cal-done { background:var(--success, #2d8a4e); color:#fff; }
+.plan-cal-today { border:2px solid var(--accent, #4a9eff); }
+.plan-cal-selected { background:var(--accent, #4a9eff); color:#fff; }

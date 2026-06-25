@@ -3710,3 +3710,204 @@ function doAdminResetPwd(id, username) {
   }).catch(function() {});
 }
 
+
+
+// ═══════════════════════════════════════════
+//  Reading Plan (读经计划) - Desktop
+// ═══════════════════════════════════════════
+var dplanState = {
+  plans: [],
+  currentPlan: null,
+  currentDay: 1,
+  selectedDay: 1,
+  todayReading: null,
+  progress: {}
+};
+
+var DPLAN_NAMES_ZH = {
+  mcheyne: "麦切恩一年读经计划",
+  nt90: "90天新约读经计划",
+  proverbs30: "30天箴言计划"
+};
+
+function openPlanPanel() {
+  document.getElementById("planOverlay").style.display = "flex";
+  if (!dplanState.plans.length) {
+    fetch("/api/v1/reading-plans").then(r => r.json()).then(data => {
+      dplanState.plans = data;
+      var saved = localStorage.getItem("dplan_code");
+      if (saved && data.some(p => p.planCode === saved)) {
+        dplanState.currentPlan = saved;
+      } else {
+        dplanState.currentPlan = data[0].planCode;
+      }
+      renderPlanSelector();
+      loadDesktopPlanProgress();
+    }).catch(() => {
+      document.getElementById("planTodayCard").innerHTML = "<p>Failed to load plans</p>";
+    });
+  } else {
+    renderPlanSelector();
+    renderDesktopPlanView();
+  }
+}
+
+function closePlanPanel() {
+  document.getElementById("planOverlay").style.display = "none";
+}
+
+function renderPlanSelector() {
+  var sel = document.getElementById("planSelect");
+  sel.innerHTML = dplanState.plans.map(p => {
+    var name = state.lang === "zh" ? (DPLAN_NAMES_ZH[p.planCode] || p.planName) : p.planName;
+    return '<option value="' + p.planCode + '"' + (p.planCode === dplanState.currentPlan ? " selected" : "") + ">" + name + " (" + p.numberOfDays + " days)</option>";
+  }).join("");
+}
+
+function switchDesktopPlan(code) {
+  dplanState.currentPlan = code;
+  dplanState.selectedDay = 1;
+  localStorage.setItem("dplan_code", code);
+  loadDesktopPlanProgress();
+}
+
+function loadDesktopPlanProgress() {
+  var token = authState.token;
+  if (token) {
+    fetch("/api/v1/reading-plans/" + dplanState.currentPlan + "/progress", {
+      headers: { "Authorization": "Bearer " + token }
+    }).then(r => { if (r.ok) return r.json(); throw 0; }).then(data => {
+      dplanState.progress = {};
+      (data.progress || []).forEach(p => {
+        dplanState.progress[p.day] = { readCount: p.readCount, completed: p.completed };
+      });
+      dplanState.currentDay = data.currentDay || 1;
+      dplanState.selectedDay = dplanState.currentDay;
+      renderDesktopPlanView();
+    }).catch(() => loadDesktopPlanLocal());
+  } else {
+    loadDesktopPlanLocal();
+  }
+}
+
+function loadDesktopPlanLocal() {
+  var saved = localStorage.getItem("dplan_progress_" + dplanState.currentPlan);
+  dplanState.progress = saved ? JSON.parse(saved) : {};
+  fetch("/api/v1/reading-plans/" + dplanState.currentPlan + "/today").then(r => r.json()).then(data => {
+    dplanState.currentDay = data.day || 1;
+    dplanState.selectedDay = dplanState.currentDay;
+    renderDesktopPlanView();
+  }).catch(() => renderDesktopPlanView());
+}
+
+function renderDesktopPlanView() {
+  loadDesktopPlanDay(dplanState.selectedDay);
+  renderDesktopCalendar();
+}
+
+function loadDesktopPlanDay(day) {
+  dplanState.selectedDay = day;
+  document.getElementById("planDayDisplay").textContent = "Day " + day;
+  fetch("/api/v1/reading-plans/" + dplanState.currentPlan + "/day/" + day).then(r => r.json()).then(data => {
+    dplanState.todayReading = data;
+    var isDone = dplanState.progress[day] && dplanState.progress[day].completed;
+    var html = '<div style="margin-bottom:8px;font-size:1.1em;font-weight:600">Day ' + day + '</div>';
+    data.readings.forEach((r, i) => {
+      var done = dplanState.progress[day] && dplanState.progress[day].readCount > i;
+      html += '<div class="plan-reading-item-d' + (done ? " done" : "") + '" onclick="goToDesktopReading(\'' + r.bookId + '\',' + r.chapterStart + ',' + i + ',' + day + ')" style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;border-radius:6px;margin-bottom:4px;background:var(--bg-input,#14161e)">';
+      html += '<span style="font-size:1.2em;color:var(--accent,#4a9eff)">' + (done ? "✓" : "○") + "</span>";
+      html += "<span>" + r.label + "</span></div>";
+    });
+    html += '<div style="text-align:center;margin-top:12px"><button onclick="toggleDesktopPlanComplete()" style="padding:8px 20px;font-weight:600;background:' + (isDone ? "#2d8a4e" : "#4a9eff") + ';color:#fff;border:none;border-radius:6px;cursor:pointer">' + (isDone ? "✓ Completed" : "✓ Mark Complete") + "</button></div>";
+    document.getElementById("planTodayCard").innerHTML = html;
+    
+    // Progress bar
+    var completed = 0, total = 0;
+    var plan = dplanState.plans.find(p => p.planCode === dplanState.currentPlan);
+    if (plan) {
+      total = plan.numberOfDays;
+      for (var d = 1; d <= total; d++) if (dplanState.progress[d] && dplanState.progress[d].completed) completed++;
+    }
+    var pct = total > 0 ? Math.round(completed / total * 100) : 0;
+    document.getElementById("planProgressBar").innerHTML = 
+      '<div style="position:relative;height:28px;background:var(--bg-card,#1a1d28);border-radius:14px;overflow:hidden;border:1px solid var(--border,#2a2d3a)">' +
+      '<div style="position:absolute;left:0;top:0;height:100%;width:' + pct + '%;background:linear-gradient(90deg,#4a9eff,#6ab4ff);transition:width .3s"></div>' +
+      '<span style="position:absolute;width:100%;text-align:center;line-height:28px;font-size:13px;font-weight:600;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5)">' + completed + "/" + total + " (" + pct + "%)</span>" +
+      "</div>";
+  });
+}
+
+function goToDesktopReading(bookId, chStart, readingIdx, day) {
+  if (!dplanState.progress[day]) dplanState.progress[day] = { readCount: 0, completed: false };
+  if (dplanState.progress[day].readCount <= readingIdx) dplanState.progress[day].readCount = readingIdx + 1;
+  saveDesktopPlanProgress();
+  // Navigate to chapter
+  var book = BOOK_ORDER.find(b => b.id === bookId);
+  if (book) {
+    state.currentBook = book;
+    state.currentChapter = chStart;
+    loadChapter();
+    closePlanPanel();
+  }
+  loadDesktopPlanDay(day);
+}
+
+function toggleDesktopPlanComplete() {
+  var day = dplanState.selectedDay;
+  if (!dplanState.progress[day]) dplanState.progress[day] = { readCount: 0, completed: false };
+  dplanState.progress[day].completed = !dplanState.progress[day].completed;
+  if (dplanState.progress[day].completed && dplanState.todayReading) {
+    dplanState.progress[day].readCount = dplanState.todayReading.readings.length;
+  }
+  saveDesktopPlanProgress();
+  loadDesktopPlanDay(day);
+  renderDesktopCalendar();
+}
+
+function changeDesktopPlanDay(delta) {
+  var plan = dplanState.plans.find(p => p.planCode === dplanState.currentPlan);
+  if (!plan) return;
+  var newDay = dplanState.selectedDay + delta;
+  if (newDay < 1) newDay = 1;
+  if (newDay > plan.numberOfDays) newDay = plan.numberOfDays;
+  loadDesktopPlanDay(newDay);
+  renderDesktopCalendar();
+}
+
+function goToDesktopToday() {
+  loadDesktopPlanDay(dplanState.currentDay);
+  renderDesktopCalendar();
+}
+
+function renderDesktopCalendar() {
+  var plan = dplanState.plans.find(p => p.planCode === dplanState.currentPlan);
+  if (!plan) return;
+  var cols = plan.numberOfDays > 100 ? 15 : (plan.numberOfDays > 30 ? 10 : 7);
+  var html = '<div style="display:grid;gap:3px;grid-template-columns:repeat(' + cols + ',1fr)">';
+  for (var d = 1; d <= plan.numberOfDays; d++) {
+    var isDone = dplanState.progress[d] && dplanState.progress[d].completed;
+    var isToday = d === dplanState.currentDay;
+    var isSelected = d === dplanState.selectedDay;
+    var bg = "var(--bg-card,#1a1d28)", color = "var(--muted,#888)", border = "none";
+    if (isDone) { bg = "#2d8a4e"; color = "#fff"; }
+    if (isToday) border = "2px solid #4a9eff";
+    if (isSelected && !isDone) { bg = "#4a9eff"; color = "#fff"; }
+    html += '<div onclick="loadDesktopPlanDay(' + d + ');renderDesktopCalendar()" style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;border-radius:4px;background:' + bg + ";color:" + color + ";border:" + border + '">' + d + "</div>";
+  }
+  html += "</div>";
+  document.getElementById("planCalendarDesktop").innerHTML = html;
+}
+
+function saveDesktopPlanProgress() {
+  if (authState.token) {
+    var day = dplanState.selectedDay;
+    var p = dplanState.progress[day] || { readCount: 0, completed: false };
+    fetch("/api/v1/reading-plans/" + dplanState.currentPlan + "/progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authState.token },
+      body: JSON.stringify({ planCode: dplanState.currentPlan, day: day, readCount: p.readCount, completed: p.completed })
+    }).catch(() => {});
+  } else {
+    localStorage.setItem("dplan_progress_" + dplanState.currentPlan, JSON.stringify(dplanState.progress));
+  }
+}

@@ -1538,6 +1538,8 @@ function switchView(view) {
   document.getElementById('dictView').style.display = view === 'dict' ? 'block' : 'none';
   var mapsV = document.getElementById('mapsView');
   if (mapsV) mapsV.style.display = view === 'maps' ? 'block' : 'none';
+  var planV = document.getElementById('planView');
+  if (planV) planV.style.display = view === 'plan' ? 'block' : 'none';
 
   // Commentary opens as drawer
   if (view === 'commentary') {
@@ -1554,6 +1556,7 @@ function switchView(view) {
 
   if (view === 'devotion' && !devotionState.keys.length) loadDevotion();
   if (view === 'maps') loadMaps();
+  if (view === 'plan') loadReadingPlan();
 }
 
 function openDrawer() {
@@ -1600,6 +1603,302 @@ function setupSwipeNav() {
     hint.style.display = 'block';
     setTimeout(function() { hint.style.display = 'none'; }, 4000);
     localStorage.setItem('swipe-hint-shown', '1');
+  }
+}
+
+// ═══════════════════════════════════════════
+//  Reading Plan (读经计划)
+// ═══════════════════════════════════════════
+var planState = {
+  plans: [],
+  currentPlan: null,
+  currentDay: 1,
+  todayReading: null,
+  progress: {},  // { dayNum: { readCount, completed } } from localStorage or API
+  selectedDay: 1
+};
+
+var PLAN_NAMES_ZH = {
+  mcheyne: "麦切恩一年读经计划",
+  nt90: "90天新约读经计划",
+  proverbs30: "30天箴言计划"
+};
+
+function loadReadingPlan() {
+  if (!planState.plans.length) {
+    fetch('/api/v1/reading-plans')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        planState.plans = data;
+        // Auto-select from localStorage or first plan
+        var saved = localStorage.getItem('rp_plan');
+        if (saved && data.some(function(p) { return p.planCode === saved; })) {
+          planState.currentPlan = saved;
+        } else {
+          planState.currentPlan = data[0].planCode;
+        }
+        loadPlanProgress();
+        renderPlanView();
+      })
+      .catch(function() {
+        document.getElementById('planView').innerHTML = '<div class="loading">Failed to load plans</div>';
+      });
+  } else {
+    renderPlanView();
+  }
+}
+
+function renderPlanView() {
+  var html = '';
+  
+  // Plan selector
+  html += '<div class="plan-header">';
+  html += '<select id="planSelect" class="plan-select" onchange="switchPlan(this.value)">';
+  planState.plans.forEach(function(p) {
+    var nameZh = PLAN_NAMES_ZH[p.planCode] || p.planName;
+    var sel = p.planCode === planState.currentPlan ? ' selected' : '';
+    html += '<option value="' + p.planCode + '"' + sel + '>' + nameZh + '</option>';
+  });
+  html += '</select>';
+  html += '</div>';
+  
+  // Today's reading card
+  html += '<div class="plan-today-card">';
+  html += '<div class="plan-today-header">';
+  html += '<span class="plan-day-label">Day ' + planState.currentDay + '</span>';
+  html += '<span class="plan-date-label" id="planDate"></span>';
+  html += '</div>';
+  html += '<div id="planReadings" class="plan-readings"><div class="loading">Loading...</div></div>';
+  html += '<div class="plan-actions">';
+  html += '<button class="plan-check-btn" id="planCheckBtn" onclick="togglePlanComplete()">✓ Mark Complete</button>';
+  html += '</div>';
+  html += '</div>';
+  
+  // Progress bar
+  var completed = 0;
+  var total = 0;
+  var plan = planState.plans.find(function(p) { return p.planCode === planState.currentPlan; });
+  if (plan) {
+    total = plan.numberOfDays;
+    for (var d = 1; d <= total; d++) {
+      if (planState.progress[d] && planState.progress[d].completed) completed++;
+    }
+  }
+  var pct = total > 0 ? Math.round(completed / total * 100) : 0;
+  html += '<div class="plan-progress-bar">';
+  html += '<div class="plan-progress-fill" style="width:' + pct + '%"></div>';
+  html += '<span class="plan-progress-text">' + completed + '/' + total + ' (' + pct + '%)</span>';
+  html += '</div>';
+  
+  // Day navigator
+  html += '<div class="plan-day-nav">';
+  html += '<button class="icon-btn" onclick="changePlanDay(-1)">◀</button>';
+  html += '<span id="planDayDisplay">Day ' + planState.selectedDay + '</span>';
+  html += '<button class="icon-btn" onclick="changePlanDay(1)">▶</button>';
+  html += '<button class="plan-today-btn" onclick="goToToday()">Today</button>';
+  html += '</div>';
+  
+  // Calendar grid (mini)
+  html += '<div class="plan-calendar" id="planCalendar"></div>';
+  
+  document.getElementById('planView').innerHTML = html;
+  
+  // Load today's reading
+  loadPlanDay(planState.currentDay);
+  renderPlanCalendar();
+}
+
+function switchPlan(code) {
+  planState.currentPlan = code;
+  planState.selectedDay = 1;
+  localStorage.setItem('rp_plan', code);
+  loadPlanProgress();
+  renderPlanView();
+}
+
+function loadPlanDay(day) {
+  planState.selectedDay = day;
+  var display = document.getElementById('planDayDisplay');
+  if (display) display.textContent = 'Day ' + day;
+  
+  fetch('/api/v1/reading-plans/' + planState.currentPlan + '/day/' + day)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      planState.todayReading = data;
+      var html = '';
+      data.readings.forEach(function(r, i) {
+        var done = planState.progress[day] && planState.progress[day].readCount > i;
+        var cls = done ? ' plan-reading-done' : '';
+        html += '<div class="plan-reading-item' + cls + '" onclick="goToReading(\'' + r.bookId + '\',' + r.chapterStart + ',' + r.chapterEnd + ',' + i + ',' + day + ')">';
+        html += '<span class="plan-reading-check">' + (done ? '✓' : '○') + '</span>';
+        html += '<span class="plan-reading-label">' + r.label + '</span>';
+        html += '</div>';
+      });
+      document.getElementById('planReadings').innerHTML = html;
+      
+      // Update date
+      var dateEl = document.getElementById('planDate');
+      if (dateEl) {
+        fetch('/api/v1/reading-plans/' + planState.currentPlan + '/today')
+          .then(function(r) { return r.json(); })
+          .then(function(d) { if (dateEl) dateEl.textContent = d.date || ''; })
+          .catch(function() {});
+      }
+      
+      // Update check button
+      updateCheckButton(day);
+    })
+    .catch(function() {
+      document.getElementById('planReadings').innerHTML = '<div class="loading">Failed to load</div>';
+    });
+}
+
+function goToReading(bookId, chStart, chEnd, readingIdx, day) {
+  // Mark this reading as read
+  if (!planState.progress[day]) planState.progress[day] = { readCount: 0, completed: false };
+  var currentRead = planState.progress[day].readCount;
+  if (currentRead <= readingIdx) {
+    planState.progress[day].readCount = readingIdx + 1;
+  }
+  savePlanProgress();
+  
+  // Navigate to the chapter in reader
+  var book = findBookByOsisId(bookId);
+  if (book) {
+    state.currentBook = book;
+    state.currentChapter = chStart;
+    loadChapter();
+    switchView('reader');
+  }
+  
+  // Re-render to update checkmarks
+  loadPlanDay(day);
+}
+
+function findBookByOsisId(osisId) {
+  for (var i = 0; i < BOOK_ORDER.length; i++) {
+    if (BOOK_ORDER[i].id === osisId) return BOOK_ORDER[i];
+  }
+  return null;
+}
+
+function togglePlanComplete() {
+  var day = planState.selectedDay;
+  if (!planState.progress[day]) planState.progress[day] = { readCount: 0, completed: false };
+  planState.progress[day].completed = !planState.progress[day].completed;
+  if (planState.progress[day].completed) {
+    var plan = planState.plans.find(function(p) { return p.planCode === planState.currentPlan; });
+    var reading = planState.todayReading;
+    if (reading) planState.progress[day].readCount = reading.readings.length;
+  }
+  savePlanProgress();
+  updateCheckButton(day);
+  renderPlanView();
+}
+
+function updateCheckButton(day) {
+  var btn = document.getElementById('planCheckBtn');
+  if (!btn) return;
+  var isDone = planState.progress[day] && planState.progress[day].completed;
+  btn.textContent = isDone ? '✓ Completed' : '✓ Mark Complete';
+  btn.classList.toggle('plan-check-done', isDone);
+}
+
+function changePlanDay(delta) {
+  var plan = planState.plans.find(function(p) { return p.planCode === planState.currentPlan; });
+  if (!plan) return;
+  var newDay = planState.selectedDay + delta;
+  if (newDay < 1) newDay = 1;
+  if (newDay > plan.numberOfDays) newDay = plan.numberOfDays;
+  loadPlanDay(newDay);
+  renderPlanCalendar();
+}
+
+function goToToday() {
+  loadPlanDay(planState.currentDay);
+  renderPlanCalendar();
+}
+
+function renderPlanCalendar() {
+  var cal = document.getElementById('planCalendar');
+  if (!cal) return;
+  var plan = planState.plans.find(function(p) { return p.planCode === planState.currentPlan; });
+  if (!plan) return;
+  
+  var html = '';
+  var total = plan.numberOfDays;
+  var cols = total > 100 ? 15 : (total > 30 ? 10 : 7);
+  
+  for (var d = 1; d <= total; d++) {
+    var isDone = planState.progress[d] && planState.progress[d].completed;
+    var isToday = d === planState.currentDay;
+    var isSelected = d === planState.selectedDay;
+    var cls = 'plan-cal-day';
+    if (isDone) cls += ' plan-cal-done';
+    if (isToday) cls += ' plan-cal-today';
+    if (isSelected) cls += ' plan-cal-selected';
+    html += '<div class="' + cls + '" onclick="loadPlanDay(' + d + ');renderPlanCalendar();">' + d + '</div>';
+  }
+  cal.innerHTML = html;
+  cal.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+}
+
+function loadPlanProgress() {
+  // Try loading from API if logged in
+  if (isLoggedIn()) {
+    fetch('/api/v1/reading-plans/' + planState.currentPlan + '/progress', {
+      headers: { 'Authorization': 'Bearer ' + authState.token }
+    })
+      .then(function(r) { if (r.ok) return r.json(); throw new Error('not logged in'); })
+      .then(function(data) {
+        planState.progress = {};
+        (data.progress || []).forEach(function(p) {
+          planState.progress[p.day] = { readCount: p.readCount, completed: p.completed };
+        });
+        planState.currentDay = data.currentDay || 1;
+        planState.selectedDay = planState.currentDay;
+        if (document.getElementById('planView')) renderPlanView();
+      })
+      .catch(function() {
+        // Fallback to localStorage
+        loadPlanProgressLocal();
+      });
+  } else {
+    loadPlanProgressLocal();
+  }
+}
+
+function loadPlanProgressLocal() {
+  var saved = localStorage.getItem('rp_progress_' + planState.currentPlan);
+  if (saved) {
+    try { planState.progress = JSON.parse(saved); } catch(e) { planState.progress = {}; }
+  } else {
+    planState.progress = {};
+  }
+  // Get current day from API
+  fetch('/api/v1/reading-plans/' + planState.currentPlan + '/today')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      planState.currentDay = data.day || 1;
+      planState.selectedDay = planState.currentDay;
+      if (document.getElementById('planView')) renderPlanView();
+    })
+    .catch(function() {});
+}
+
+function savePlanProgress() {
+  if (isLoggedIn()) {
+    // Save to API
+    var day = planState.selectedDay;
+    var p = planState.progress[day] || { readCount: 0, completed: false };
+    fetch('/api/v1/reading-plans/' + planState.currentPlan + '/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authState.token },
+      body: JSON.stringify({ planCode: planState.currentPlan, day: day, readCount: p.readCount, completed: p.completed })
+    }).catch(function() {});
+  } else {
+    // Save to localStorage
+    localStorage.setItem('rp_progress_' + planState.currentPlan, JSON.stringify(planState.progress));
   }
 }
 

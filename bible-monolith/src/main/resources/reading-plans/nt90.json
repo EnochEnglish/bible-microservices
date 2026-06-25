@@ -1,0 +1,722 @@
+{
+    "planDescriptionZh":  "90天读完新约全书，每天约3章",
+    "planDescription":  "Read through the entire New Testament in 90 days, approximately 3 chapters per day",
+    "planNameZh":  "90天新约读经计划",
+    "days":  [
+                 {
+                     "day":  1,
+                     "readings":  [
+                                      "Mat 1",
+                                      "Mat 2",
+                                      "Mat 3"
+                                  ]
+                 },
+                 {
+                     "day":  2,
+                     "readings":  [
+                                      "Mat 4",
+                                      "Mat 5",
+                                      "Mat 6"
+                                  ]
+                 },
+                 {
+                     "day":  3,
+                     "readings":  [
+                                      "Mat 7",
+                                      "Mat 8",
+                                      "Mat 9"
+                                  ]
+                 },
+                 {
+                     "day":  4,
+                     "readings":  [
+                                      "Mat 10",
+                                      "Mat 11",
+                                      "Mat 12"
+                                  ]
+                 },
+                 {
+                     "day":  5,
+                     "readings":  [
+                                      "Mat 13",
+                                      "Mat 14",
+                                      "Mat 15"
+                                  ]
+                 },
+                 {
+                     "day":  6,
+                     "readings":  [
+                                      "Mat 16",
+                                      "Mat 17",
+                                      "Mat 18"
+                                  ]
+                 },
+                 {
+                     "day":  7,
+                     "readings":  [
+                                      "Mat 19",
+                                      "Mat 20",
+                                      "Mat 21"
+                                  ]
+                 },
+                 {
+                     "day":  8,
+                     "readings":  [
+                                      "Mat 22",
+                                      "Mat 23",
+                                      "Mat 24"
+                                  ]
+                 },
+                 {
+                     "day":  9,
+                     "readings":  [
+                                      "Mat 25",
+                                      "Mat 26",
+                                      "Mat 27"
+                                  ]
+                 },
+                 {
+                     "day":  10,
+                     "readings":  [
+                                      "Mat 28",
+                                      "Mark 1",
+                                      "Mark 2"
+                                  ]
+                 },
+                 {
+                     "day":  11,
+                     "readings":  [
+                                      "Mark 3",
+                                      "Mark 4",
+                                      "Mark 5"
+                                  ]
+                 },
+                 {
+                     "day":  12,
+                     "readings":  [
+                                      "Mark 6",
+                                      "Mark 7",
+                                      "Mark 8"
+                                  ]
+                 },
+                 {
+                     "day":  13,
+                     "readings":  [
+                                      "Mark 9",
+                                      "Mark 10",
+                                      "Mark 11"
+                                  ]
+                 },
+                 {
+                     "day":  14,
+                     "readings":  [
+                                      "Mark 12",
+                                      "Mark 13",
+                                      "Mark 14"
+                                  ]
+                 },
+                 {
+                     "day":  15,
+                     "readings":  [
+                                      "Mark 15",
+                                      "Mark 16",
+                                      "Luke 1"
+                                  ]
+                 },
+                 {
+                     "day":  16,
+                     "readings":  [
+                                      "Luke 2",
+                                      "Luke 3",
+                                      "Luke 4"
+                                  ]
+                 },
+                 {
+                     "day":  17,
+                     "readings":  [
+                                      "Luke 5",
+                                      "Luke 6",
+                                      "Luke 7"
+                                  ]
+                 },
+                 {
+                     "day":  18,
+                     "readings":  [
+                                      "Luke 8",
+                                      "Luke 9",
+                                      "Luke 10"
+                                  ]
+                 },
+                 {
+                     "day":  19,
+                     "readings":  [
+                                      "Luke 11",
+                                      "Luke 12",
+                                      "Luke 13"
+                                  ]
+                 },
+                 {
+                     "day":  20,
+                     "readings":  [
+                                      "Luke 14",
+                                      "Luke 15",
+                                      "Luke 16"
+                                  ]
+                 },
+                 {
+                     "day":  21,
+                     "readings":  [
+                                      "Luke 17",
+                                      "Luke 18",
+                                      "Luke 19"
+                                  ]
+                 },
+                 {
+                     "day":  22,
+                     "readings":  [
+                                      "Luke 20",
+                                      "Luke 21",
+                                      "Luke 22"
+                                  ]
+                 },
+                 {
+                     "day":  23,
+                     "readings":  [
+                                      "Luke 23",
+                                      "Luke 24",
+                                      "John 1"
+                                  ]
+                 },
+                 {
+                     "day":  24,
+                     "readings":  [
+                                      "John 2",
+                                      "John 3",
+                                      "John 4"
+                                  ]
+                 },
+                 {
+                     "day":  25,
+                     "readings":  [
+                                      "John 5",
+                                      "John 6",
+                                      "John 7"
+                                  ]
+                 },
+                 {
+                     "day":  26,
+                     "readings":  [
+                                      "John 8",
+                                      "John 9",
+                                      "John 10"
+                                  ]
+                 },
+                 {
+                     "day":  27,
+                     "readings":  [
+                                      "John 11",
+                                      "John 12",
+                                      "John 13"
+                                  ]
+                 },
+                 {
+                     "day":  28,
+                     "readings":  [
+                                      "John 14",
+                                      "John 15",
+                                      "John 16"
+                                  ]
+                 },
+                 {
+                     "day":  29,
+                     "readings":  [
+                                      "John 17",
+                                      "John 18",
+                                      "John 19"
+                                  ]
+                 },
+                 {
+                     "day":  30,
+                     "readings":  [
+                                      "John 20",
+                                      "John 21",
+                                      "Acts 1"
+                                  ]
+                 },
+                 {
+                     "day":  31,
+                     "readings":  [
+                                      "Acts 2",
+                                      "Acts 3",
+                                      "Acts 4"
+                                  ]
+                 },
+                 {
+                     "day":  32,
+                     "readings":  [
+                                      "Acts 5",
+                                      "Acts 6",
+                                      "Acts 7"
+                                  ]
+                 },
+                 {
+                     "day":  33,
+                     "readings":  [
+                                      "Acts 8",
+                                      "Acts 9",
+                                      "Acts 10"
+                                  ]
+                 },
+                 {
+                     "day":  34,
+                     "readings":  [
+                                      "Acts 11",
+                                      "Acts 12",
+                                      "Acts 13"
+                                  ]
+                 },
+                 {
+                     "day":  35,
+                     "readings":  [
+                                      "Acts 14",
+                                      "Acts 15",
+                                      "Acts 16"
+                                  ]
+                 },
+                 {
+                     "day":  36,
+                     "readings":  [
+                                      "Acts 17",
+                                      "Acts 18",
+                                      "Acts 19"
+                                  ]
+                 },
+                 {
+                     "day":  37,
+                     "readings":  [
+                                      "Acts 20",
+                                      "Acts 21",
+                                      "Acts 22"
+                                  ]
+                 },
+                 {
+                     "day":  38,
+                     "readings":  [
+                                      "Acts 23",
+                                      "Acts 24",
+                                      "Acts 25"
+                                  ]
+                 },
+                 {
+                     "day":  39,
+                     "readings":  [
+                                      "Acts 26",
+                                      "Acts 27",
+                                      "Acts 28"
+                                  ]
+                 },
+                 {
+                     "day":  40,
+                     "readings":  [
+                                      "Rom 1",
+                                      "Rom 2",
+                                      "Rom 3"
+                                  ]
+                 },
+                 {
+                     "day":  41,
+                     "readings":  [
+                                      "Rom 4",
+                                      "Rom 5",
+                                      "Rom 6"
+                                  ]
+                 },
+                 {
+                     "day":  42,
+                     "readings":  [
+                                      "Rom 7",
+                                      "Rom 8",
+                                      "Rom 9"
+                                  ]
+                 },
+                 {
+                     "day":  43,
+                     "readings":  [
+                                      "Rom 10",
+                                      "Rom 11",
+                                      "Rom 12"
+                                  ]
+                 },
+                 {
+                     "day":  44,
+                     "readings":  [
+                                      "Rom 13",
+                                      "Rom 14",
+                                      "Rom 15"
+                                  ]
+                 },
+                 {
+                     "day":  45,
+                     "readings":  [
+                                      "Rom 16",
+                                      "1Cor 1",
+                                      "1Cor 2"
+                                  ]
+                 },
+                 {
+                     "day":  46,
+                     "readings":  [
+                                      "1Cor 3",
+                                      "1Cor 4",
+                                      "1Cor 5"
+                                  ]
+                 },
+                 {
+                     "day":  47,
+                     "readings":  [
+                                      "1Cor 6",
+                                      "1Cor 7",
+                                      "1Cor 8"
+                                  ]
+                 },
+                 {
+                     "day":  48,
+                     "readings":  [
+                                      "1Cor 9",
+                                      "1Cor 10",
+                                      "1Cor 11"
+                                  ]
+                 },
+                 {
+                     "day":  49,
+                     "readings":  [
+                                      "1Cor 12",
+                                      "1Cor 13",
+                                      "1Cor 14"
+                                  ]
+                 },
+                 {
+                     "day":  50,
+                     "readings":  [
+                                      "1Cor 15",
+                                      "1Cor 16",
+                                      "2Cor 1"
+                                  ]
+                 },
+                 {
+                     "day":  51,
+                     "readings":  [
+                                      "2Cor 2",
+                                      "2Cor 3",
+                                      "2Cor 4"
+                                  ]
+                 },
+                 {
+                     "day":  52,
+                     "readings":  [
+                                      "2Cor 5",
+                                      "2Cor 6",
+                                      "2Cor 7"
+                                  ]
+                 },
+                 {
+                     "day":  53,
+                     "readings":  [
+                                      "2Cor 8",
+                                      "2Cor 9",
+                                      "2Cor 10"
+                                  ]
+                 },
+                 {
+                     "day":  54,
+                     "readings":  [
+                                      "2Cor 11",
+                                      "2Cor 12",
+                                      "2Cor 13"
+                                  ]
+                 },
+                 {
+                     "day":  55,
+                     "readings":  [
+                                      "Gal 1",
+                                      "Gal 2",
+                                      "Gal 3"
+                                  ]
+                 },
+                 {
+                     "day":  56,
+                     "readings":  [
+                                      "Gal 4",
+                                      "Gal 5",
+                                      "Gal 6"
+                                  ]
+                 },
+                 {
+                     "day":  57,
+                     "readings":  [
+                                      "Eph 1",
+                                      "Eph 2",
+                                      "Eph 3"
+                                  ]
+                 },
+                 {
+                     "day":  58,
+                     "readings":  [
+                                      "Eph 4",
+                                      "Eph 5",
+                                      "Eph 6"
+                                  ]
+                 },
+                 {
+                     "day":  59,
+                     "readings":  [
+                                      "Phil 1",
+                                      "Phil 2",
+                                      "Phil 3"
+                                  ]
+                 },
+                 {
+                     "day":  60,
+                     "readings":  [
+                                      "Phil 4",
+                                      "Col 1",
+                                      "Col 2"
+                                  ]
+                 },
+                 {
+                     "day":  61,
+                     "readings":  [
+                                      "Col 3",
+                                      "Col 4",
+                                      "1Thes 1"
+                                  ]
+                 },
+                 {
+                     "day":  62,
+                     "readings":  [
+                                      "1Thes 2",
+                                      "1Thes 3",
+                                      "1Thes 4"
+                                  ]
+                 },
+                 {
+                     "day":  63,
+                     "readings":  [
+                                      "1Thes 5",
+                                      "2Thes 1",
+                                      "2Thes 2"
+                                  ]
+                 },
+                 {
+                     "day":  64,
+                     "readings":  [
+                                      "2Thes 3",
+                                      "1Tim 1",
+                                      "1Tim 2"
+                                  ]
+                 },
+                 {
+                     "day":  65,
+                     "readings":  [
+                                      "1Tim 3",
+                                      "1Tim 4",
+                                      "1Tim 5"
+                                  ]
+                 },
+                 {
+                     "day":  66,
+                     "readings":  [
+                                      "1Tim 6",
+                                      "2Tim 1",
+                                      "2Tim 2"
+                                  ]
+                 },
+                 {
+                     "day":  67,
+                     "readings":  [
+                                      "2Tim 3",
+                                      "2Tim 4",
+                                      "Titus 1"
+                                  ]
+                 },
+                 {
+                     "day":  68,
+                     "readings":  [
+                                      "Titus 2",
+                                      "Titus 3",
+                                      "Phlm 1"
+                                  ]
+                 },
+                 {
+                     "day":  69,
+                     "readings":  [
+                                      "Heb 1",
+                                      "Heb 2",
+                                      "Heb 3"
+                                  ]
+                 },
+                 {
+                     "day":  70,
+                     "readings":  [
+                                      "Heb 4",
+                                      "Heb 5",
+                                      "Heb 6"
+                                  ]
+                 },
+                 {
+                     "day":  71,
+                     "readings":  [
+                                      "Heb 7",
+                                      "Heb 8"
+                                  ]
+                 },
+                 {
+                     "day":  72,
+                     "readings":  [
+                                      "Heb 9",
+                                      "Heb 10",
+                                      "Heb 11"
+                                  ]
+                 },
+                 {
+                     "day":  73,
+                     "readings":  [
+                                      "Heb 12",
+                                      "Heb 13"
+                                  ]
+                 },
+                 {
+                     "day":  74,
+                     "readings":  [
+                                      "Jas 1",
+                                      "Jas 2",
+                                      "Jas 3"
+                                  ]
+                 },
+                 {
+                     "day":  75,
+                     "readings":  [
+                                      "Jas 4",
+                                      "Jas 5"
+                                  ]
+                 },
+                 {
+                     "day":  76,
+                     "readings":  [
+                                      "1Pet 1",
+                                      "1Pet 2",
+                                      "1Pet 3"
+                                  ]
+                 },
+                 {
+                     "day":  77,
+                     "readings":  [
+                                      "1Pet 4",
+                                      "1Pet 5"
+                                  ]
+                 },
+                 {
+                     "day":  78,
+                     "readings":  [
+                                      "2Pet 1",
+                                      "2Pet 2",
+                                      "2Pet 3"
+                                  ]
+                 },
+                 {
+                     "day":  79,
+                     "readings":  [
+                                      "1John 1",
+                                      "1John 2"
+                                  ]
+                 },
+                 {
+                     "day":  80,
+                     "readings":  [
+                                      "1John 3",
+                                      "1John 4",
+                                      "1John 5"
+                                  ]
+                 },
+                 {
+                     "day":  81,
+                     "readings":  [
+                                      "2John 1",
+                                      "3John 1"
+                                  ]
+                 },
+                 {
+                     "day":  82,
+                     "readings":  [
+                                      "Jude 1",
+                                      "Rev 1",
+                                      "Rev 2"
+                                  ]
+                 },
+                 {
+                     "day":  83,
+                     "readings":  [
+                                      "Rev 3",
+                                      "Rev 4"
+                                  ]
+                 },
+                 {
+                     "day":  84,
+                     "readings":  [
+                                      "Rev 5",
+                                      "Rev 6",
+                                      "Rev 7"
+                                  ]
+                 },
+                 {
+                     "day":  85,
+                     "readings":  [
+                                      "Rev 8",
+                                      "Rev 9"
+                                  ]
+                 },
+                 {
+                     "day":  86,
+                     "readings":  [
+                                      "Rev 10",
+                                      "Rev 11",
+                                      "Rev 12"
+                                  ]
+                 },
+                 {
+                     "day":  87,
+                     "readings":  [
+                                      "Rev 13",
+                                      "Rev 14"
+                                  ]
+                 },
+                 {
+                     "day":  88,
+                     "readings":  [
+                                      "Rev 15",
+                                      "Rev 16",
+                                      "Rev 17"
+                                  ]
+                 },
+                 {
+                     "day":  89,
+                     "readings":  [
+                                      "Rev 18",
+                                      "Rev 19"
+                                  ]
+                 },
+                 {
+                     "day":  90,
+                     "readings":  [
+                                      "Rev 20",
+                                      "Rev 21",
+                                      "Rev 22"
+                                  ]
+                 }
+             ],
+    "planName":  "90-Day New Testament Plan",
+    "versification":  "KJV",
+    "dateBased":  true,
+    "numberOfDays":  90,
+    "planCode":  "nt90"
+}

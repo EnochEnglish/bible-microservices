@@ -1,0 +1,3297 @@
+{
+    "planDescriptionZh":  "麦切恩 365 天计划：每天 4 段阅读（旧约两段 + 新约两段）",
+    "planDescription":  "Robert Murray M\u0027Cheyne\u0027s 365-day plan: 4 readings per day (OT twice, NT twice, Psalms twice)",
+    "planNameZh":  "麦切恩一年读经计划",
+    "days":  [
+                 {
+                     "day":  1,
+                     "readings":  [
+                                      "Gen 1",
+                                      "Mat 1",
+                                      "Ezra 1",
+                                      "Acts 1"
+                                  ]
+                 },
+                 {
+                     "day":  2,
+                     "readings":  [
+                                      "Gen 2",
+                                      "Mat 2",
+                                      "Ezra 2",
+                                      "Acts 2"
+                                  ]
+                 },
+                 {
+                     "day":  3,
+                     "readings":  [
+                                      "Gen 3",
+                                      "Mat 3",
+                                      "Ezra 3",
+                                      "Acts 3"
+                                  ]
+                 },
+                 {
+                     "day":  4,
+                     "readings":  [
+                                      "Gen 4",
+                                      "Mat 4",
+                                      "Ezra 4",
+                                      "Acts 4"
+                                  ]
+                 },
+                 {
+                     "day":  5,
+                     "readings":  [
+                                      "Gen 5",
+                                      "Mat 5",
+                                      "Ezra 5",
+                                      "Acts 5"
+                                  ]
+                 },
+                 {
+                     "day":  6,
+                     "readings":  [
+                                      "Gen 6",
+                                      "Mat 6",
+                                      "Ezra 6",
+                                      "Acts 6"
+                                  ]
+                 },
+                 {
+                     "day":  7,
+                     "readings":  [
+                                      "Gen 7",
+                                      "Mat 7",
+                                      "Ezra 7",
+                                      "Acts 7"
+                                  ]
+                 },
+                 {
+                     "day":  8,
+                     "readings":  [
+                                      "Gen 8",
+                                      "Mat 8",
+                                      "Ezra 8",
+                                      "Acts 8"
+                                  ]
+                 },
+                 {
+                     "day":  9,
+                     "readings":  [
+                                      "Gen 9",
+                                      "Mat 9",
+                                      "Ezra 9",
+                                      "Acts 9"
+                                  ]
+                 },
+                 {
+                     "day":  10,
+                     "readings":  [
+                                      "Gen 10",
+                                      "Mat 10",
+                                      "Ezra 10",
+                                      "Acts 10"
+                                  ]
+                 },
+                 {
+                     "day":  11,
+                     "readings":  [
+                                      "Gen 11",
+                                      "Mat 11",
+                                      "Neh 1",
+                                      "Acts 11"
+                                  ]
+                 },
+                 {
+                     "day":  12,
+                     "readings":  [
+                                      "Gen 12",
+                                      "Mat 12",
+                                      "Neh 2",
+                                      "Acts 12"
+                                  ]
+                 },
+                 {
+                     "day":  13,
+                     "readings":  [
+                                      "Gen 13",
+                                      "Mat 13",
+                                      "Neh 3",
+                                      "Acts 13"
+                                  ]
+                 },
+                 {
+                     "day":  14,
+                     "readings":  [
+                                      "Gen 14",
+                                      "Mat 14",
+                                      "Neh 4",
+                                      "Acts 14"
+                                  ]
+                 },
+                 {
+                     "day":  15,
+                     "readings":  [
+                                      "Gen 15",
+                                      "Mat 15",
+                                      "Neh 5",
+                                      "Acts 15"
+                                  ]
+                 },
+                 {
+                     "day":  16,
+                     "readings":  [
+                                      "Gen 16",
+                                      "Mat 16",
+                                      "Neh 6",
+                                      "Acts 16"
+                                  ]
+                 },
+                 {
+                     "day":  17,
+                     "readings":  [
+                                      "Gen 17",
+                                      "Mat 17",
+                                      "Neh 7",
+                                      "Acts 17"
+                                  ]
+                 },
+                 {
+                     "day":  18,
+                     "readings":  [
+                                      "Gen 18",
+                                      "Mat 18",
+                                      "Neh 8",
+                                      "Acts 18"
+                                  ]
+                 },
+                 {
+                     "day":  19,
+                     "readings":  [
+                                      "Gen 19",
+                                      "Mat 19",
+                                      "Neh 9",
+                                      "Acts 19"
+                                  ]
+                 },
+                 {
+                     "day":  20,
+                     "readings":  [
+                                      "Gen 20",
+                                      "Mat 20",
+                                      "Neh 10",
+                                      "Acts 20"
+                                  ]
+                 },
+                 {
+                     "day":  21,
+                     "readings":  [
+                                      "Gen 21",
+                                      "Mat 21",
+                                      "Neh 11",
+                                      "Acts 21"
+                                  ]
+                 },
+                 {
+                     "day":  22,
+                     "readings":  [
+                                      "Gen 22",
+                                      "Mat 22",
+                                      "Neh 12",
+                                      "Acts 22"
+                                  ]
+                 },
+                 {
+                     "day":  23,
+                     "readings":  [
+                                      "Gen 23",
+                                      "Mat 23",
+                                      "Neh 13",
+                                      "Acts 23"
+                                  ]
+                 },
+                 {
+                     "day":  24,
+                     "readings":  [
+                                      "Gen 24",
+                                      "Mat 24",
+                                      "Est 1",
+                                      "Acts 24"
+                                  ]
+                 },
+                 {
+                     "day":  25,
+                     "readings":  [
+                                      "Gen 25",
+                                      "Mat 25",
+                                      "Est 2",
+                                      "Acts 25"
+                                  ]
+                 },
+                 {
+                     "day":  26,
+                     "readings":  [
+                                      "Gen 26",
+                                      "Mat 26",
+                                      "Est 3",
+                                      "Acts 26"
+                                  ]
+                 },
+                 {
+                     "day":  27,
+                     "readings":  [
+                                      "Gen 27",
+                                      "Mat 27",
+                                      "Est 4",
+                                      "Acts 27"
+                                  ]
+                 },
+                 {
+                     "day":  28,
+                     "readings":  [
+                                      "Gen 28",
+                                      "Mat 28",
+                                      "Est 5",
+                                      "Acts 28"
+                                  ]
+                 },
+                 {
+                     "day":  29,
+                     "readings":  [
+                                      "Gen 29",
+                                      "Mark 1",
+                                      "Est 6",
+                                      "Rom 1"
+                                  ]
+                 },
+                 {
+                     "day":  30,
+                     "readings":  [
+                                      "Gen 30",
+                                      "Mark 2",
+                                      "Est 7",
+                                      "Rom 2"
+                                  ]
+                 },
+                 {
+                     "day":  31,
+                     "readings":  [
+                                      "Gen 31",
+                                      "Mark 3",
+                                      "Est 8",
+                                      "Rom 3"
+                                  ]
+                 },
+                 {
+                     "day":  32,
+                     "readings":  [
+                                      "Gen 32",
+                                      "Mark 4",
+                                      "Est 9",
+                                      "Rom 4"
+                                  ]
+                 },
+                 {
+                     "day":  33,
+                     "readings":  [
+                                      "Gen 33",
+                                      "Mark 5",
+                                      "Est 10",
+                                      "Rom 5"
+                                  ]
+                 },
+                 {
+                     "day":  34,
+                     "readings":  [
+                                      "Gen 34",
+                                      "Mark 6",
+                                      "Job 1",
+                                      "Rom 6"
+                                  ]
+                 },
+                 {
+                     "day":  35,
+                     "readings":  [
+                                      "Gen 35",
+                                      "Mark 7",
+                                      "Job 2",
+                                      "Rom 7"
+                                  ]
+                 },
+                 {
+                     "day":  36,
+                     "readings":  [
+                                      "Gen 36",
+                                      "Mark 8",
+                                      "Job 3",
+                                      "Rom 8"
+                                  ]
+                 },
+                 {
+                     "day":  37,
+                     "readings":  [
+                                      "Gen 37",
+                                      "Mark 9",
+                                      "Job 4",
+                                      "Rom 9"
+                                  ]
+                 },
+                 {
+                     "day":  38,
+                     "readings":  [
+                                      "Gen 38",
+                                      "Mark 10",
+                                      "Job 5",
+                                      "Rom 10"
+                                  ]
+                 },
+                 {
+                     "day":  39,
+                     "readings":  [
+                                      "Gen 39",
+                                      "Mark 11",
+                                      "Job 6",
+                                      "Rom 11"
+                                  ]
+                 },
+                 {
+                     "day":  40,
+                     "readings":  [
+                                      "Gen 40",
+                                      "Mark 12",
+                                      "Job 7",
+                                      "Rom 12"
+                                  ]
+                 },
+                 {
+                     "day":  41,
+                     "readings":  [
+                                      "Gen 41",
+                                      "Mark 13",
+                                      "Job 8",
+                                      "Rom 13"
+                                  ]
+                 },
+                 {
+                     "day":  42,
+                     "readings":  [
+                                      "Gen 42",
+                                      "Mark 14",
+                                      "Job 9",
+                                      "Rom 14"
+                                  ]
+                 },
+                 {
+                     "day":  43,
+                     "readings":  [
+                                      "Gen 43",
+                                      "Mark 15",
+                                      "Job 10",
+                                      "Rom 15"
+                                  ]
+                 },
+                 {
+                     "day":  44,
+                     "readings":  [
+                                      "Gen 44",
+                                      "Mark 16",
+                                      "Job 11",
+                                      "Rom 16"
+                                  ]
+                 },
+                 {
+                     "day":  45,
+                     "readings":  [
+                                      "Gen 45",
+                                      "Luke 1",
+                                      "Job 12",
+                                      "1Cor 1"
+                                  ]
+                 },
+                 {
+                     "day":  46,
+                     "readings":  [
+                                      "Gen 46",
+                                      "Luke 2",
+                                      "Job 13",
+                                      "1Cor 2"
+                                  ]
+                 },
+                 {
+                     "day":  47,
+                     "readings":  [
+                                      "Gen 47",
+                                      "Luke 3",
+                                      "Job 14",
+                                      "1Cor 3"
+                                  ]
+                 },
+                 {
+                     "day":  48,
+                     "readings":  [
+                                      "Gen 48",
+                                      "Luke 4",
+                                      "Job 15",
+                                      "1Cor 4"
+                                  ]
+                 },
+                 {
+                     "day":  49,
+                     "readings":  [
+                                      "Gen 49",
+                                      "Luke 5",
+                                      "Job 16",
+                                      "1Cor 5"
+                                  ]
+                 },
+                 {
+                     "day":  50,
+                     "readings":  [
+                                      "Gen 50",
+                                      "Luke 6",
+                                      "Job 17",
+                                      "1Cor 6"
+                                  ]
+                 },
+                 {
+                     "day":  51,
+                     "readings":  [
+                                      "Exod 1",
+                                      "Luke 7",
+                                      "Job 18",
+                                      "1Cor 7"
+                                  ]
+                 },
+                 {
+                     "day":  52,
+                     "readings":  [
+                                      "Exod 2",
+                                      "Luke 8",
+                                      "Job 19",
+                                      "1Cor 8"
+                                  ]
+                 },
+                 {
+                     "day":  53,
+                     "readings":  [
+                                      "Exod 3",
+                                      "Luke 9",
+                                      "Job 20",
+                                      "1Cor 9"
+                                  ]
+                 },
+                 {
+                     "day":  54,
+                     "readings":  [
+                                      "Exod 4",
+                                      "Luke 10",
+                                      "Job 21",
+                                      "1Cor 10"
+                                  ]
+                 },
+                 {
+                     "day":  55,
+                     "readings":  [
+                                      "Exod 5",
+                                      "Luke 11",
+                                      "Job 22",
+                                      "1Cor 11"
+                                  ]
+                 },
+                 {
+                     "day":  56,
+                     "readings":  [
+                                      "Exod 6",
+                                      "Luke 12",
+                                      "Job 23",
+                                      "1Cor 12"
+                                  ]
+                 },
+                 {
+                     "day":  57,
+                     "readings":  [
+                                      "Exod 7",
+                                      "Luke 13",
+                                      "Job 24",
+                                      "1Cor 13"
+                                  ]
+                 },
+                 {
+                     "day":  58,
+                     "readings":  [
+                                      "Exod 8",
+                                      "Luke 14",
+                                      "Job 25",
+                                      "1Cor 14"
+                                  ]
+                 },
+                 {
+                     "day":  59,
+                     "readings":  [
+                                      "Exod 9",
+                                      "Luke 15",
+                                      "Job 26",
+                                      "1Cor 15"
+                                  ]
+                 },
+                 {
+                     "day":  60,
+                     "readings":  [
+                                      "Exod 10",
+                                      "Luke 16",
+                                      "Job 27",
+                                      "1Cor 16"
+                                  ]
+                 },
+                 {
+                     "day":  61,
+                     "readings":  [
+                                      "Exod 11",
+                                      "Luke 17",
+                                      "Job 28",
+                                      "2Cor 1"
+                                  ]
+                 },
+                 {
+                     "day":  62,
+                     "readings":  [
+                                      "Exod 12",
+                                      "Luke 18",
+                                      "Job 29",
+                                      "2Cor 2"
+                                  ]
+                 },
+                 {
+                     "day":  63,
+                     "readings":  [
+                                      "Exod 13",
+                                      "Luke 19",
+                                      "Job 30",
+                                      "2Cor 3"
+                                  ]
+                 },
+                 {
+                     "day":  64,
+                     "readings":  [
+                                      "Exod 14",
+                                      "Luke 20",
+                                      "Job 31",
+                                      "2Cor 4"
+                                  ]
+                 },
+                 {
+                     "day":  65,
+                     "readings":  [
+                                      "Exod 15",
+                                      "Luke 21",
+                                      "Job 32",
+                                      "2Cor 5"
+                                  ]
+                 },
+                 {
+                     "day":  66,
+                     "readings":  [
+                                      "Exod 16",
+                                      "Luke 22",
+                                      "Job 33",
+                                      "2Cor 6"
+                                  ]
+                 },
+                 {
+                     "day":  67,
+                     "readings":  [
+                                      "Exod 17",
+                                      "Luke 23",
+                                      "Job 34",
+                                      "2Cor 7"
+                                  ]
+                 },
+                 {
+                     "day":  68,
+                     "readings":  [
+                                      "Exod 18",
+                                      "Luke 24",
+                                      "Job 35",
+                                      "2Cor 8"
+                                  ]
+                 },
+                 {
+                     "day":  69,
+                     "readings":  [
+                                      "Exod 19",
+                                      "John 1",
+                                      "Job 36",
+                                      "2Cor 9"
+                                  ]
+                 },
+                 {
+                     "day":  70,
+                     "readings":  [
+                                      "Exod 20",
+                                      "John 2",
+                                      "Job 37",
+                                      "2Cor 10"
+                                  ]
+                 },
+                 {
+                     "day":  71,
+                     "readings":  [
+                                      "Exod 21",
+                                      "John 3",
+                                      "Job 38",
+                                      "2Cor 11"
+                                  ]
+                 },
+                 {
+                     "day":  72,
+                     "readings":  [
+                                      "Exod 22",
+                                      "John 4",
+                                      "Job 39",
+                                      "2Cor 12"
+                                  ]
+                 },
+                 {
+                     "day":  73,
+                     "readings":  [
+                                      "Exod 23",
+                                      "John 5",
+                                      "Job 40",
+                                      "2Cor 13"
+                                  ]
+                 },
+                 {
+                     "day":  74,
+                     "readings":  [
+                                      "Exod 24",
+                                      "John 6",
+                                      "Job 41",
+                                      "Gal 1"
+                                  ]
+                 },
+                 {
+                     "day":  75,
+                     "readings":  [
+                                      "Exod 25",
+                                      "John 7",
+                                      "Job 42",
+                                      "Gal 2"
+                                  ]
+                 },
+                 {
+                     "day":  76,
+                     "readings":  [
+                                      "Exod 26",
+                                      "John 8",
+                                      "Psa 1",
+                                      "Gal 3"
+                                  ]
+                 },
+                 {
+                     "day":  77,
+                     "readings":  [
+                                      "Exod 27",
+                                      "John 9",
+                                      "Psa 2",
+                                      "Gal 4"
+                                  ]
+                 },
+                 {
+                     "day":  78,
+                     "readings":  [
+                                      "Exod 28",
+                                      "John 10",
+                                      "Psa 3",
+                                      "Gal 5"
+                                  ]
+                 },
+                 {
+                     "day":  79,
+                     "readings":  [
+                                      "Exod 29",
+                                      "John 11",
+                                      "Psa 4",
+                                      "Gal 6"
+                                  ]
+                 },
+                 {
+                     "day":  80,
+                     "readings":  [
+                                      "Exod 30",
+                                      "John 12",
+                                      "Psa 5",
+                                      "Eph 1"
+                                  ]
+                 },
+                 {
+                     "day":  81,
+                     "readings":  [
+                                      "Exod 31",
+                                      "John 13",
+                                      "Psa 6",
+                                      "Eph 2"
+                                  ]
+                 },
+                 {
+                     "day":  82,
+                     "readings":  [
+                                      "Exod 32",
+                                      "John 14",
+                                      "Psa 7",
+                                      "Eph 3"
+                                  ]
+                 },
+                 {
+                     "day":  83,
+                     "readings":  [
+                                      "Exod 33",
+                                      "John 15",
+                                      "Psa 8",
+                                      "Eph 4"
+                                  ]
+                 },
+                 {
+                     "day":  84,
+                     "readings":  [
+                                      "Exod 34",
+                                      "John 16",
+                                      "Psa 9",
+                                      "Eph 5"
+                                  ]
+                 },
+                 {
+                     "day":  85,
+                     "readings":  [
+                                      "Exod 35",
+                                      "John 17",
+                                      "Psa 10",
+                                      "Eph 6"
+                                  ]
+                 },
+                 {
+                     "day":  86,
+                     "readings":  [
+                                      "Exod 36",
+                                      "John 18",
+                                      "Psa 11",
+                                      "Phil 1"
+                                  ]
+                 },
+                 {
+                     "day":  87,
+                     "readings":  [
+                                      "Exod 37",
+                                      "John 19",
+                                      "Psa 12",
+                                      "Phil 2"
+                                  ]
+                 },
+                 {
+                     "day":  88,
+                     "readings":  [
+                                      "Exod 38",
+                                      "John 20",
+                                      "Psa 13",
+                                      "Phil 3"
+                                  ]
+                 },
+                 {
+                     "day":  89,
+                     "readings":  [
+                                      "Exod 39",
+                                      "John 21",
+                                      "Psa 14",
+                                      "Phil 4"
+                                  ]
+                 },
+                 {
+                     "day":  90,
+                     "readings":  [
+                                      "Exod 40",
+                                      "Acts 1",
+                                      "Psa 15",
+                                      "Col 1"
+                                  ]
+                 },
+                 {
+                     "day":  91,
+                     "readings":  [
+                                      "Lev 1",
+                                      "Acts 2",
+                                      "Psa 16",
+                                      "Col 2"
+                                  ]
+                 },
+                 {
+                     "day":  92,
+                     "readings":  [
+                                      "Lev 2",
+                                      "Acts 3",
+                                      "Psa 17",
+                                      "Col 3"
+                                  ]
+                 },
+                 {
+                     "day":  93,
+                     "readings":  [
+                                      "Lev 3",
+                                      "Acts 4",
+                                      "Psa 18",
+                                      "Col 4"
+                                  ]
+                 },
+                 {
+                     "day":  94,
+                     "readings":  [
+                                      "Lev 4",
+                                      "Acts 5",
+                                      "Psa 19",
+                                      "1Thes 1"
+                                  ]
+                 },
+                 {
+                     "day":  95,
+                     "readings":  [
+                                      "Lev 5",
+                                      "Acts 6",
+                                      "Psa 20",
+                                      "1Thes 2"
+                                  ]
+                 },
+                 {
+                     "day":  96,
+                     "readings":  [
+                                      "Lev 6",
+                                      "Acts 7",
+                                      "Psa 21",
+                                      "1Thes 3"
+                                  ]
+                 },
+                 {
+                     "day":  97,
+                     "readings":  [
+                                      "Lev 7",
+                                      "Acts 8",
+                                      "Psa 22",
+                                      "1Thes 4"
+                                  ]
+                 },
+                 {
+                     "day":  98,
+                     "readings":  [
+                                      "Lev 8",
+                                      "Acts 9",
+                                      "Psa 23",
+                                      "1Thes 5"
+                                  ]
+                 },
+                 {
+                     "day":  99,
+                     "readings":  [
+                                      "Lev 9",
+                                      "Acts 10",
+                                      "Psa 24",
+                                      "2Thes 1"
+                                  ]
+                 },
+                 {
+                     "day":  100,
+                     "readings":  [
+                                      "Lev 10",
+                                      "Acts 11",
+                                      "Psa 25",
+                                      "2Thes 2"
+                                  ]
+                 },
+                 {
+                     "day":  101,
+                     "readings":  [
+                                      "Lev 11",
+                                      "Acts 12",
+                                      "Psa 26",
+                                      "2Thes 3"
+                                  ]
+                 },
+                 {
+                     "day":  102,
+                     "readings":  [
+                                      "Lev 12",
+                                      "Acts 13",
+                                      "Psa 27",
+                                      "1Tim 1"
+                                  ]
+                 },
+                 {
+                     "day":  103,
+                     "readings":  [
+                                      "Lev 13",
+                                      "Acts 14",
+                                      "Psa 28",
+                                      "1Tim 2"
+                                  ]
+                 },
+                 {
+                     "day":  104,
+                     "readings":  [
+                                      "Lev 14",
+                                      "Acts 15",
+                                      "Psa 29",
+                                      "1Tim 3"
+                                  ]
+                 },
+                 {
+                     "day":  105,
+                     "readings":  [
+                                      "Lev 15",
+                                      "Acts 16",
+                                      "Psa 30",
+                                      "1Tim 4"
+                                  ]
+                 },
+                 {
+                     "day":  106,
+                     "readings":  [
+                                      "Lev 16",
+                                      "Acts 17",
+                                      "Psa 31",
+                                      "1Tim 5"
+                                  ]
+                 },
+                 {
+                     "day":  107,
+                     "readings":  [
+                                      "Lev 17",
+                                      "Acts 18",
+                                      "Psa 32",
+                                      "1Tim 6"
+                                  ]
+                 },
+                 {
+                     "day":  108,
+                     "readings":  [
+                                      "Lev 18",
+                                      "Acts 19",
+                                      "Psa 33",
+                                      "2Tim 1"
+                                  ]
+                 },
+                 {
+                     "day":  109,
+                     "readings":  [
+                                      "Lev 19",
+                                      "Acts 20",
+                                      "Psa 34",
+                                      "2Tim 2"
+                                  ]
+                 },
+                 {
+                     "day":  110,
+                     "readings":  [
+                                      "Lev 20",
+                                      "Acts 21",
+                                      "Psa 35",
+                                      "2Tim 3"
+                                  ]
+                 },
+                 {
+                     "day":  111,
+                     "readings":  [
+                                      "Lev 21",
+                                      "Acts 22",
+                                      "Psa 36",
+                                      "2Tim 4"
+                                  ]
+                 },
+                 {
+                     "day":  112,
+                     "readings":  [
+                                      "Lev 22",
+                                      "Acts 23",
+                                      "Psa 37",
+                                      "Titus 1"
+                                  ]
+                 },
+                 {
+                     "day":  113,
+                     "readings":  [
+                                      "Lev 23",
+                                      "Acts 24",
+                                      "Psa 38",
+                                      "Titus 2"
+                                  ]
+                 },
+                 {
+                     "day":  114,
+                     "readings":  [
+                                      "Lev 24",
+                                      "Acts 25",
+                                      "Psa 39",
+                                      "Titus 3"
+                                  ]
+                 },
+                 {
+                     "day":  115,
+                     "readings":  [
+                                      "Lev 25",
+                                      "Acts 26",
+                                      "Psa 40",
+                                      "Phlm 1"
+                                  ]
+                 },
+                 {
+                     "day":  116,
+                     "readings":  [
+                                      "Lev 26",
+                                      "Acts 27",
+                                      "Psa 41",
+                                      "Heb 1"
+                                  ]
+                 },
+                 {
+                     "day":  117,
+                     "readings":  [
+                                      "Lev 27",
+                                      "Acts 28",
+                                      "Psa 42",
+                                      "Heb 2"
+                                  ]
+                 },
+                 {
+                     "day":  118,
+                     "readings":  [
+                                      "Num 1",
+                                      "Rom 1",
+                                      "Psa 43",
+                                      "Heb 3"
+                                  ]
+                 },
+                 {
+                     "day":  119,
+                     "readings":  [
+                                      "Num 2",
+                                      "Rom 2",
+                                      "Psa 44",
+                                      "Heb 4"
+                                  ]
+                 },
+                 {
+                     "day":  120,
+                     "readings":  [
+                                      "Num 3",
+                                      "Rom 3",
+                                      "Psa 45",
+                                      "Heb 5"
+                                  ]
+                 },
+                 {
+                     "day":  121,
+                     "readings":  [
+                                      "Num 4",
+                                      "Rom 4",
+                                      "Psa 46",
+                                      "Heb 6"
+                                  ]
+                 },
+                 {
+                     "day":  122,
+                     "readings":  [
+                                      "Num 5",
+                                      "Rom 5",
+                                      "Psa 47",
+                                      "Heb 7"
+                                  ]
+                 },
+                 {
+                     "day":  123,
+                     "readings":  [
+                                      "Num 6",
+                                      "Rom 6",
+                                      "Psa 48",
+                                      "Heb 8"
+                                  ]
+                 },
+                 {
+                     "day":  124,
+                     "readings":  [
+                                      "Num 7",
+                                      "Rom 7",
+                                      "Psa 49",
+                                      "Heb 9"
+                                  ]
+                 },
+                 {
+                     "day":  125,
+                     "readings":  [
+                                      "Num 8",
+                                      "Rom 8",
+                                      "Psa 50",
+                                      "Heb 10"
+                                  ]
+                 },
+                 {
+                     "day":  126,
+                     "readings":  [
+                                      "Num 9",
+                                      "Rom 9",
+                                      "Psa 51",
+                                      "Heb 11"
+                                  ]
+                 },
+                 {
+                     "day":  127,
+                     "readings":  [
+                                      "Num 10",
+                                      "Rom 10",
+                                      "Psa 52",
+                                      "Heb 12"
+                                  ]
+                 },
+                 {
+                     "day":  128,
+                     "readings":  [
+                                      "Num 11",
+                                      "Rom 11",
+                                      "Psa 53",
+                                      "Heb 13"
+                                  ]
+                 },
+                 {
+                     "day":  129,
+                     "readings":  [
+                                      "Num 12",
+                                      "Rom 12",
+                                      "Psa 54",
+                                      "Jas 1"
+                                  ]
+                 },
+                 {
+                     "day":  130,
+                     "readings":  [
+                                      "Num 13",
+                                      "Rom 13",
+                                      "Psa 55",
+                                      "Jas 2"
+                                  ]
+                 },
+                 {
+                     "day":  131,
+                     "readings":  [
+                                      "Num 14",
+                                      "Rom 14",
+                                      "Psa 56",
+                                      "Jas 3"
+                                  ]
+                 },
+                 {
+                     "day":  132,
+                     "readings":  [
+                                      "Num 15",
+                                      "Rom 15",
+                                      "Psa 57",
+                                      "Jas 4"
+                                  ]
+                 },
+                 {
+                     "day":  133,
+                     "readings":  [
+                                      "Num 16",
+                                      "Rom 16",
+                                      "Psa 58",
+                                      "Jas 5"
+                                  ]
+                 },
+                 {
+                     "day":  134,
+                     "readings":  [
+                                      "Num 17",
+                                      "1Cor 1",
+                                      "Psa 59",
+                                      "1Pet 1"
+                                  ]
+                 },
+                 {
+                     "day":  135,
+                     "readings":  [
+                                      "Num 18",
+                                      "1Cor 2",
+                                      "Psa 60",
+                                      "1Pet 2"
+                                  ]
+                 },
+                 {
+                     "day":  136,
+                     "readings":  [
+                                      "Num 19",
+                                      "1Cor 3",
+                                      "Psa 61",
+                                      "1Pet 3"
+                                  ]
+                 },
+                 {
+                     "day":  137,
+                     "readings":  [
+                                      "Num 20",
+                                      "1Cor 4",
+                                      "Psa 62",
+                                      "1Pet 4"
+                                  ]
+                 },
+                 {
+                     "day":  138,
+                     "readings":  [
+                                      "Num 21",
+                                      "1Cor 5",
+                                      "Psa 63",
+                                      "1Pet 5"
+                                  ]
+                 },
+                 {
+                     "day":  139,
+                     "readings":  [
+                                      "Num 22",
+                                      "1Cor 6",
+                                      "Psa 64",
+                                      "2Pet 1"
+                                  ]
+                 },
+                 {
+                     "day":  140,
+                     "readings":  [
+                                      "Num 23",
+                                      "1Cor 7",
+                                      "Psa 65",
+                                      "2Pet 2"
+                                  ]
+                 },
+                 {
+                     "day":  141,
+                     "readings":  [
+                                      "Num 24",
+                                      "1Cor 8",
+                                      "Psa 66",
+                                      "2Pet 3"
+                                  ]
+                 },
+                 {
+                     "day":  142,
+                     "readings":  [
+                                      "Num 25",
+                                      "1Cor 9",
+                                      "Psa 67",
+                                      "1John 1"
+                                  ]
+                 },
+                 {
+                     "day":  143,
+                     "readings":  [
+                                      "Num 26",
+                                      "1Cor 10",
+                                      "Psa 68",
+                                      "1John 2"
+                                  ]
+                 },
+                 {
+                     "day":  144,
+                     "readings":  [
+                                      "Num 27",
+                                      "1Cor 11",
+                                      "Psa 69",
+                                      "1John 3"
+                                  ]
+                 },
+                 {
+                     "day":  145,
+                     "readings":  [
+                                      "Num 28",
+                                      "1Cor 12",
+                                      "Psa 70",
+                                      "1John 4"
+                                  ]
+                 },
+                 {
+                     "day":  146,
+                     "readings":  [
+                                      "Num 29",
+                                      "1Cor 13",
+                                      "Psa 71",
+                                      "1John 5"
+                                  ]
+                 },
+                 {
+                     "day":  147,
+                     "readings":  [
+                                      "Num 30",
+                                      "1Cor 14",
+                                      "Psa 72",
+                                      "2John 1"
+                                  ]
+                 },
+                 {
+                     "day":  148,
+                     "readings":  [
+                                      "Num 31",
+                                      "1Cor 15",
+                                      "Psa 73",
+                                      "3John 1"
+                                  ]
+                 },
+                 {
+                     "day":  149,
+                     "readings":  [
+                                      "Num 32",
+                                      "1Cor 16",
+                                      "Psa 74",
+                                      "Jude 1"
+                                  ]
+                 },
+                 {
+                     "day":  150,
+                     "readings":  [
+                                      "Num 33",
+                                      "2Cor 1",
+                                      "Psa 75",
+                                      "Rev 1"
+                                  ]
+                 },
+                 {
+                     "day":  151,
+                     "readings":  [
+                                      "Num 34",
+                                      "2Cor 2",
+                                      "Psa 76",
+                                      "Rev 2"
+                                  ]
+                 },
+                 {
+                     "day":  152,
+                     "readings":  [
+                                      "Num 35",
+                                      "2Cor 3",
+                                      "Psa 77",
+                                      "Rev 3"
+                                  ]
+                 },
+                 {
+                     "day":  153,
+                     "readings":  [
+                                      "Num 36",
+                                      "2Cor 4",
+                                      "Psa 78",
+                                      "Rev 4"
+                                  ]
+                 },
+                 {
+                     "day":  154,
+                     "readings":  [
+                                      "Deut 1",
+                                      "2Cor 5",
+                                      "Psa 79",
+                                      "Rev 5"
+                                  ]
+                 },
+                 {
+                     "day":  155,
+                     "readings":  [
+                                      "Deut 2",
+                                      "2Cor 6",
+                                      "Psa 80",
+                                      "Rev 6"
+                                  ]
+                 },
+                 {
+                     "day":  156,
+                     "readings":  [
+                                      "Deut 3",
+                                      "2Cor 7",
+                                      "Psa 81",
+                                      "Rev 7"
+                                  ]
+                 },
+                 {
+                     "day":  157,
+                     "readings":  [
+                                      "Deut 4",
+                                      "2Cor 8",
+                                      "Psa 82",
+                                      "Rev 8"
+                                  ]
+                 },
+                 {
+                     "day":  158,
+                     "readings":  [
+                                      "Deut 5",
+                                      "2Cor 9",
+                                      "Psa 83",
+                                      "Rev 9"
+                                  ]
+                 },
+                 {
+                     "day":  159,
+                     "readings":  [
+                                      "Deut 6",
+                                      "2Cor 10",
+                                      "Psa 84",
+                                      "Rev 10"
+                                  ]
+                 },
+                 {
+                     "day":  160,
+                     "readings":  [
+                                      "Deut 7",
+                                      "2Cor 11",
+                                      "Psa 85",
+                                      "Rev 11"
+                                  ]
+                 },
+                 {
+                     "day":  161,
+                     "readings":  [
+                                      "Deut 8",
+                                      "2Cor 12",
+                                      "Psa 86",
+                                      "Rev 12"
+                                  ]
+                 },
+                 {
+                     "day":  162,
+                     "readings":  [
+                                      "Deut 9",
+                                      "2Cor 13",
+                                      "Psa 87",
+                                      "Rev 13"
+                                  ]
+                 },
+                 {
+                     "day":  163,
+                     "readings":  [
+                                      "Deut 10",
+                                      "Gal 1",
+                                      "Psa 88",
+                                      "Rev 14"
+                                  ]
+                 },
+                 {
+                     "day":  164,
+                     "readings":  [
+                                      "Deut 11",
+                                      "Gal 2",
+                                      "Psa 89",
+                                      "Rev 15"
+                                  ]
+                 },
+                 {
+                     "day":  165,
+                     "readings":  [
+                                      "Deut 12",
+                                      "Gal 3",
+                                      "Psa 90",
+                                      "Rev 16"
+                                  ]
+                 },
+                 {
+                     "day":  166,
+                     "readings":  [
+                                      "Deut 13",
+                                      "Gal 4",
+                                      "Psa 91",
+                                      "Rev 17"
+                                  ]
+                 },
+                 {
+                     "day":  167,
+                     "readings":  [
+                                      "Deut 14",
+                                      "Gal 5",
+                                      "Psa 92",
+                                      "Rev 18"
+                                  ]
+                 },
+                 {
+                     "day":  168,
+                     "readings":  [
+                                      "Deut 15",
+                                      "Gal 6",
+                                      "Psa 93",
+                                      "Rev 19"
+                                  ]
+                 },
+                 {
+                     "day":  169,
+                     "readings":  [
+                                      "Deut 16",
+                                      "Eph 1",
+                                      "Psa 94",
+                                      "Rev 20"
+                                  ]
+                 },
+                 {
+                     "day":  170,
+                     "readings":  [
+                                      "Deut 17",
+                                      "Eph 2",
+                                      "Psa 95",
+                                      "Rev 21"
+                                  ]
+                 },
+                 {
+                     "day":  171,
+                     "readings":  [
+                                      "Deut 18",
+                                      "Eph 3",
+                                      "Psa 96",
+                                      "Rev 22"
+                                  ]
+                 },
+                 {
+                     "day":  172,
+                     "readings":  [
+                                      "Deut 19",
+                                      "Eph 4",
+                                      "Psa 97",
+                                      "Matt 1"
+                                  ]
+                 },
+                 {
+                     "day":  173,
+                     "readings":  [
+                                      "Deut 20",
+                                      "Eph 5",
+                                      "Psa 98",
+                                      "Matt 2"
+                                  ]
+                 },
+                 {
+                     "day":  174,
+                     "readings":  [
+                                      "Deut 21",
+                                      "Eph 6",
+                                      "Psa 99",
+                                      "Matt 3"
+                                  ]
+                 },
+                 {
+                     "day":  175,
+                     "readings":  [
+                                      "Deut 22",
+                                      "Phil 1",
+                                      "Psa 100",
+                                      "Matt 4"
+                                  ]
+                 },
+                 {
+                     "day":  176,
+                     "readings":  [
+                                      "Deut 23",
+                                      "Phil 2",
+                                      "Psa 101",
+                                      "Matt 5"
+                                  ]
+                 },
+                 {
+                     "day":  177,
+                     "readings":  [
+                                      "Deut 24",
+                                      "Phil 3",
+                                      "Psa 102",
+                                      "Matt 6"
+                                  ]
+                 },
+                 {
+                     "day":  178,
+                     "readings":  [
+                                      "Deut 25",
+                                      "Phil 4",
+                                      "Psa 103",
+                                      "Matt 7"
+                                  ]
+                 },
+                 {
+                     "day":  179,
+                     "readings":  [
+                                      "Deut 26",
+                                      "Col 1",
+                                      "Psa 104",
+                                      "Matt 8"
+                                  ]
+                 },
+                 {
+                     "day":  180,
+                     "readings":  [
+                                      "Deut 27",
+                                      "Col 2",
+                                      "Psa 105",
+                                      "Matt 9"
+                                  ]
+                 },
+                 {
+                     "day":  181,
+                     "readings":  [
+                                      "Deut 28",
+                                      "Col 3",
+                                      "Psa 106",
+                                      "Matt 10"
+                                  ]
+                 },
+                 {
+                     "day":  182,
+                     "readings":  [
+                                      "Deut 29",
+                                      "Col 4",
+                                      "Psa 107",
+                                      "Matt 11"
+                                  ]
+                 },
+                 {
+                     "day":  183,
+                     "readings":  [
+                                      "Deut 30",
+                                      "1Thes 1",
+                                      "Psa 108",
+                                      "Matt 12"
+                                  ]
+                 },
+                 {
+                     "day":  184,
+                     "readings":  [
+                                      "Deut 31",
+                                      "1Thes 2",
+                                      "Psa 109",
+                                      "Matt 13"
+                                  ]
+                 },
+                 {
+                     "day":  185,
+                     "readings":  [
+                                      "Deut 32",
+                                      "1Thes 3",
+                                      "Psa 110",
+                                      "Matt 14"
+                                  ]
+                 },
+                 {
+                     "day":  186,
+                     "readings":  [
+                                      "Deut 33",
+                                      "1Thes 4",
+                                      "Psa 111",
+                                      "Matt 15"
+                                  ]
+                 },
+                 {
+                     "day":  187,
+                     "readings":  [
+                                      "Deut 34",
+                                      "1Thes 5",
+                                      "Psa 112",
+                                      "Matt 16"
+                                  ]
+                 },
+                 {
+                     "day":  188,
+                     "readings":  [
+                                      "Josh 1",
+                                      "2Thes 1",
+                                      "Psa 113",
+                                      "Matt 17"
+                                  ]
+                 },
+                 {
+                     "day":  189,
+                     "readings":  [
+                                      "Josh 2",
+                                      "2Thes 2",
+                                      "Psa 114",
+                                      "Matt 18"
+                                  ]
+                 },
+                 {
+                     "day":  190,
+                     "readings":  [
+                                      "Josh 3",
+                                      "2Thes 3",
+                                      "Psa 115",
+                                      "Matt 19"
+                                  ]
+                 },
+                 {
+                     "day":  191,
+                     "readings":  [
+                                      "Josh 4",
+                                      "1Tim 1",
+                                      "Psa 116",
+                                      "Matt 20"
+                                  ]
+                 },
+                 {
+                     "day":  192,
+                     "readings":  [
+                                      "Josh 5",
+                                      "1Tim 2",
+                                      "Psa 117",
+                                      "Matt 21"
+                                  ]
+                 },
+                 {
+                     "day":  193,
+                     "readings":  [
+                                      "Josh 6",
+                                      "1Tim 3",
+                                      "Psa 118",
+                                      "Matt 22"
+                                  ]
+                 },
+                 {
+                     "day":  194,
+                     "readings":  [
+                                      "Josh 7",
+                                      "1Tim 4",
+                                      "Psa 119:1-32",
+                                      "Matt 23"
+                                  ]
+                 },
+                 {
+                     "day":  195,
+                     "readings":  [
+                                      "Josh 8",
+                                      "1Tim 5",
+                                      "Psa 119:33-72",
+                                      "Matt 24"
+                                  ]
+                 },
+                 {
+                     "day":  196,
+                     "readings":  [
+                                      "Josh 9",
+                                      "1Tim 6",
+                                      "Psa 119:73-104",
+                                      "Matt 25"
+                                  ]
+                 },
+                 {
+                     "day":  197,
+                     "readings":  [
+                                      "Josh 10",
+                                      "2Tim 1",
+                                      "Psa 119:105-144",
+                                      "Matt 26"
+                                  ]
+                 },
+                 {
+                     "day":  198,
+                     "readings":  [
+                                      "Josh 11",
+                                      "2Tim 2",
+                                      "Psa 119:145-176",
+                                      "Matt 27"
+                                  ]
+                 },
+                 {
+                     "day":  199,
+                     "readings":  [
+                                      "Josh 12",
+                                      "2Tim 3",
+                                      "Psa 120",
+                                      "Matt 28"
+                                  ]
+                 },
+                 {
+                     "day":  200,
+                     "readings":  [
+                                      "Josh 13",
+                                      "2Tim 4",
+                                      "Psa 121",
+                                      "Mark 1"
+                                  ]
+                 },
+                 {
+                     "day":  201,
+                     "readings":  [
+                                      "Josh 14",
+                                      "Titus 1",
+                                      "Psa 122",
+                                      "Mark 2"
+                                  ]
+                 },
+                 {
+                     "day":  202,
+                     "readings":  [
+                                      "Josh 15",
+                                      "Titus 2",
+                                      "Psa 123",
+                                      "Mark 3"
+                                  ]
+                 },
+                 {
+                     "day":  203,
+                     "readings":  [
+                                      "Josh 16",
+                                      "Titus 3",
+                                      "Psa 124",
+                                      "Mark 4"
+                                  ]
+                 },
+                 {
+                     "day":  204,
+                     "readings":  [
+                                      "Josh 17",
+                                      "Phlm 1",
+                                      "Psa 125",
+                                      "Mark 5"
+                                  ]
+                 },
+                 {
+                     "day":  205,
+                     "readings":  [
+                                      "Josh 18",
+                                      "Heb 1",
+                                      "Psa 126",
+                                      "Mark 6"
+                                  ]
+                 },
+                 {
+                     "day":  206,
+                     "readings":  [
+                                      "Josh 19",
+                                      "Heb 2",
+                                      "Psa 127",
+                                      "Mark 7"
+                                  ]
+                 },
+                 {
+                     "day":  207,
+                     "readings":  [
+                                      "Josh 20",
+                                      "Heb 3",
+                                      "Psa 128",
+                                      "Mark 8"
+                                  ]
+                 },
+                 {
+                     "day":  208,
+                     "readings":  [
+                                      "Josh 21",
+                                      "Heb 4",
+                                      "Psa 129",
+                                      "Mark 9"
+                                  ]
+                 },
+                 {
+                     "day":  209,
+                     "readings":  [
+                                      "Josh 22",
+                                      "Heb 5",
+                                      "Psa 130",
+                                      "Mark 10"
+                                  ]
+                 },
+                 {
+                     "day":  210,
+                     "readings":  [
+                                      "Josh 23",
+                                      "Heb 6",
+                                      "Psa 131",
+                                      "Mark 11"
+                                  ]
+                 },
+                 {
+                     "day":  211,
+                     "readings":  [
+                                      "Josh 24",
+                                      "Heb 7",
+                                      "Psa 132",
+                                      "Mark 12"
+                                  ]
+                 },
+                 {
+                     "day":  212,
+                     "readings":  [
+                                      "Judg 1",
+                                      "Heb 8",
+                                      "Psa 133",
+                                      "Mark 13"
+                                  ]
+                 },
+                 {
+                     "day":  213,
+                     "readings":  [
+                                      "Judg 2",
+                                      "Heb 9",
+                                      "Psa 134",
+                                      "Mark 14"
+                                  ]
+                 },
+                 {
+                     "day":  214,
+                     "readings":  [
+                                      "Judg 3",
+                                      "Heb 10",
+                                      "Psa 135",
+                                      "Mark 15"
+                                  ]
+                 },
+                 {
+                     "day":  215,
+                     "readings":  [
+                                      "Judg 4",
+                                      "Heb 11",
+                                      "Psa 136",
+                                      "Mark 16"
+                                  ]
+                 },
+                 {
+                     "day":  216,
+                     "readings":  [
+                                      "Judg 5",
+                                      "Heb 12",
+                                      "Psa 137",
+                                      "Luke 1"
+                                  ]
+                 },
+                 {
+                     "day":  217,
+                     "readings":  [
+                                      "Judg 6",
+                                      "Heb 13",
+                                      "Psa 138",
+                                      "Luke 2"
+                                  ]
+                 },
+                 {
+                     "day":  218,
+                     "readings":  [
+                                      "Judg 7",
+                                      "Jas 1",
+                                      "Psa 139",
+                                      "Luke 3"
+                                  ]
+                 },
+                 {
+                     "day":  219,
+                     "readings":  [
+                                      "Judg 8",
+                                      "Jas 2",
+                                      "Psa 140",
+                                      "Luke 4"
+                                  ]
+                 },
+                 {
+                     "day":  220,
+                     "readings":  [
+                                      "Judg 9",
+                                      "Jas 3",
+                                      "Psa 141",
+                                      "Luke 5"
+                                  ]
+                 },
+                 {
+                     "day":  221,
+                     "readings":  [
+                                      "Judg 10",
+                                      "Jas 4",
+                                      "Psa 142",
+                                      "Luke 6"
+                                  ]
+                 },
+                 {
+                     "day":  222,
+                     "readings":  [
+                                      "Judg 11",
+                                      "Jas 5",
+                                      "Psa 143",
+                                      "Luke 7"
+                                  ]
+                 },
+                 {
+                     "day":  223,
+                     "readings":  [
+                                      "Judg 12",
+                                      "1Pet 1",
+                                      "Psa 144",
+                                      "Luke 8"
+                                  ]
+                 },
+                 {
+                     "day":  224,
+                     "readings":  [
+                                      "Judg 13",
+                                      "1Pet 2",
+                                      "Psa 145",
+                                      "Luke 9"
+                                  ]
+                 },
+                 {
+                     "day":  225,
+                     "readings":  [
+                                      "Judg 14",
+                                      "1Pet 3",
+                                      "Psa 146",
+                                      "Luke 10"
+                                  ]
+                 },
+                 {
+                     "day":  226,
+                     "readings":  [
+                                      "Judg 15",
+                                      "1Pet 4",
+                                      "Psa 147",
+                                      "Luke 11"
+                                  ]
+                 },
+                 {
+                     "day":  227,
+                     "readings":  [
+                                      "Judg 16",
+                                      "1Pet 5",
+                                      "Psa 148",
+                                      "Luke 12"
+                                  ]
+                 },
+                 {
+                     "day":  228,
+                     "readings":  [
+                                      "Judg 17",
+                                      "2Pet 1",
+                                      "Psa 149",
+                                      "Luke 13"
+                                  ]
+                 },
+                 {
+                     "day":  229,
+                     "readings":  [
+                                      "Judg 18",
+                                      "2Pet 2",
+                                      "Psa 150",
+                                      "Luke 14"
+                                  ]
+                 },
+                 {
+                     "day":  230,
+                     "readings":  [
+                                      "Judg 19",
+                                      "2Pet 3",
+                                      "Prov 1",
+                                      "Luke 15"
+                                  ]
+                 },
+                 {
+                     "day":  231,
+                     "readings":  [
+                                      "Judg 20",
+                                      "1John 1",
+                                      "Prov 2",
+                                      "Luke 16"
+                                  ]
+                 },
+                 {
+                     "day":  232,
+                     "readings":  [
+                                      "Judg 21",
+                                      "1John 2",
+                                      "Prov 3",
+                                      "Luke 17"
+                                  ]
+                 },
+                 {
+                     "day":  233,
+                     "readings":  [
+                                      "Ruth 1",
+                                      "1John 3",
+                                      "Prov 4",
+                                      "Luke 18"
+                                  ]
+                 },
+                 {
+                     "day":  234,
+                     "readings":  [
+                                      "Ruth 2",
+                                      "1John 4",
+                                      "Prov 5",
+                                      "Luke 19"
+                                  ]
+                 },
+                 {
+                     "day":  235,
+                     "readings":  [
+                                      "Ruth 3",
+                                      "1John 5",
+                                      "Prov 6",
+                                      "Luke 20"
+                                  ]
+                 },
+                 {
+                     "day":  236,
+                     "readings":  [
+                                      "Ruth 4",
+                                      "2John 1",
+                                      "Prov 7",
+                                      "Luke 21"
+                                  ]
+                 },
+                 {
+                     "day":  237,
+                     "readings":  [
+                                      "1Sam 1",
+                                      "3John 1",
+                                      "Prov 8",
+                                      "Luke 22"
+                                  ]
+                 },
+                 {
+                     "day":  238,
+                     "readings":  [
+                                      "1Sam 2",
+                                      "Jude 1",
+                                      "Prov 9",
+                                      "Luke 23"
+                                  ]
+                 },
+                 {
+                     "day":  239,
+                     "readings":  [
+                                      "1Sam 3",
+                                      "Rev 1",
+                                      "Prov 10",
+                                      "Luke 24"
+                                  ]
+                 },
+                 {
+                     "day":  240,
+                     "readings":  [
+                                      "1Sam 4",
+                                      "Rev 2",
+                                      "Prov 11",
+                                      "John 1"
+                                  ]
+                 },
+                 {
+                     "day":  241,
+                     "readings":  [
+                                      "1Sam 5",
+                                      "Rev 3",
+                                      "Prov 12",
+                                      "John 2"
+                                  ]
+                 },
+                 {
+                     "day":  242,
+                     "readings":  [
+                                      "1Sam 6",
+                                      "Rev 4",
+                                      "Prov 13",
+                                      "John 3"
+                                  ]
+                 },
+                 {
+                     "day":  243,
+                     "readings":  [
+                                      "1Sam 7",
+                                      "Rev 5",
+                                      "Prov 14",
+                                      "John 4"
+                                  ]
+                 },
+                 {
+                     "day":  244,
+                     "readings":  [
+                                      "1Sam 8",
+                                      "Rev 6",
+                                      "Prov 15",
+                                      "John 5"
+                                  ]
+                 },
+                 {
+                     "day":  245,
+                     "readings":  [
+                                      "1Sam 9",
+                                      "Rev 7",
+                                      "Prov 16",
+                                      "John 6"
+                                  ]
+                 },
+                 {
+                     "day":  246,
+                     "readings":  [
+                                      "1Sam 10",
+                                      "Rev 8",
+                                      "Prov 17",
+                                      "John 7"
+                                  ]
+                 },
+                 {
+                     "day":  247,
+                     "readings":  [
+                                      "1Sam 11",
+                                      "Rev 9",
+                                      "Prov 18",
+                                      "John 8"
+                                  ]
+                 },
+                 {
+                     "day":  248,
+                     "readings":  [
+                                      "1Sam 12",
+                                      "Rev 10",
+                                      "Prov 19",
+                                      "John 9"
+                                  ]
+                 },
+                 {
+                     "day":  249,
+                     "readings":  [
+                                      "1Sam 13",
+                                      "Rev 11",
+                                      "Prov 20",
+                                      "John 10"
+                                  ]
+                 },
+                 {
+                     "day":  250,
+                     "readings":  [
+                                      "1Sam 14",
+                                      "Rev 12",
+                                      "Prov 21",
+                                      "John 11"
+                                  ]
+                 },
+                 {
+                     "day":  251,
+                     "readings":  [
+                                      "1Sam 15",
+                                      "Rev 13",
+                                      "Prov 22",
+                                      "John 12"
+                                  ]
+                 },
+                 {
+                     "day":  252,
+                     "readings":  [
+                                      "1Sam 16",
+                                      "Rev 14",
+                                      "Prov 23",
+                                      "John 13"
+                                  ]
+                 },
+                 {
+                     "day":  253,
+                     "readings":  [
+                                      "1Sam 17",
+                                      "Rev 15",
+                                      "Prov 24",
+                                      "John 14"
+                                  ]
+                 },
+                 {
+                     "day":  254,
+                     "readings":  [
+                                      "1Sam 18",
+                                      "Rev 16",
+                                      "Prov 25",
+                                      "John 15"
+                                  ]
+                 },
+                 {
+                     "day":  255,
+                     "readings":  [
+                                      "1Sam 19",
+                                      "Rev 17",
+                                      "Prov 26",
+                                      "John 16"
+                                  ]
+                 },
+                 {
+                     "day":  256,
+                     "readings":  [
+                                      "1Sam 20",
+                                      "Rev 18",
+                                      "Prov 27",
+                                      "John 17"
+                                  ]
+                 },
+                 {
+                     "day":  257,
+                     "readings":  [
+                                      "1Sam 21",
+                                      "Rev 19",
+                                      "Prov 28",
+                                      "John 18"
+                                  ]
+                 },
+                 {
+                     "day":  258,
+                     "readings":  [
+                                      "1Sam 22",
+                                      "Rev 20",
+                                      "Prov 29",
+                                      "John 19"
+                                  ]
+                 },
+                 {
+                     "day":  259,
+                     "readings":  [
+                                      "1Sam 23",
+                                      "Rev 21",
+                                      "Prov 30",
+                                      "John 20"
+                                  ]
+                 },
+                 {
+                     "day":  260,
+                     "readings":  [
+                                      "1Sam 24",
+                                      "Rev 22",
+                                      "Prov 31",
+                                      "John 21"
+                                  ]
+                 },
+                 {
+                     "day":  261,
+                     "readings":  [
+                                      "1Sam 25",
+                                      "Matt 1",
+                                      "Eccl 1",
+                                      "Acts 1"
+                                  ]
+                 },
+                 {
+                     "day":  262,
+                     "readings":  [
+                                      "1Sam 26",
+                                      "Matt 2",
+                                      "Eccl 2",
+                                      "Acts 2"
+                                  ]
+                 },
+                 {
+                     "day":  263,
+                     "readings":  [
+                                      "1Sam 27",
+                                      "Matt 3",
+                                      "Eccl 3",
+                                      "Acts 3"
+                                  ]
+                 },
+                 {
+                     "day":  264,
+                     "readings":  [
+                                      "1Sam 28",
+                                      "Matt 4",
+                                      "Eccl 4",
+                                      "Acts 4"
+                                  ]
+                 },
+                 {
+                     "day":  265,
+                     "readings":  [
+                                      "1Sam 29",
+                                      "Matt 5",
+                                      "Eccl 5",
+                                      "Acts 5"
+                                  ]
+                 },
+                 {
+                     "day":  266,
+                     "readings":  [
+                                      "1Sam 30",
+                                      "Matt 6",
+                                      "Eccl 6",
+                                      "Acts 6"
+                                  ]
+                 },
+                 {
+                     "day":  267,
+                     "readings":  [
+                                      "1Sam 31",
+                                      "Matt 7",
+                                      "Eccl 7",
+                                      "Acts 7"
+                                  ]
+                 },
+                 {
+                     "day":  268,
+                     "readings":  [
+                                      "2Sam 1",
+                                      "Matt 8",
+                                      "Eccl 8",
+                                      "Acts 8"
+                                  ]
+                 },
+                 {
+                     "day":  269,
+                     "readings":  [
+                                      "2Sam 2",
+                                      "Matt 9",
+                                      "Eccl 9",
+                                      "Acts 9"
+                                  ]
+                 },
+                 {
+                     "day":  270,
+                     "readings":  [
+                                      "2Sam 3",
+                                      "Matt 10",
+                                      "Eccl 10",
+                                      "Acts 10"
+                                  ]
+                 },
+                 {
+                     "day":  271,
+                     "readings":  [
+                                      "2Sam 4",
+                                      "Matt 11",
+                                      "Eccl 11",
+                                      "Acts 11"
+                                  ]
+                 },
+                 {
+                     "day":  272,
+                     "readings":  [
+                                      "2Sam 5",
+                                      "Matt 12",
+                                      "Eccl 12",
+                                      "Acts 12"
+                                  ]
+                 },
+                 {
+                     "day":  273,
+                     "readings":  [
+                                      "2Sam 6",
+                                      "Matt 13",
+                                      "Song 1",
+                                      "Acts 13"
+                                  ]
+                 },
+                 {
+                     "day":  274,
+                     "readings":  [
+                                      "2Sam 7",
+                                      "Matt 14",
+                                      "Song 2",
+                                      "Acts 14"
+                                  ]
+                 },
+                 {
+                     "day":  275,
+                     "readings":  [
+                                      "2Sam 8",
+                                      "Matt 15",
+                                      "Song 3",
+                                      "Acts 15"
+                                  ]
+                 },
+                 {
+                     "day":  276,
+                     "readings":  [
+                                      "2Sam 9",
+                                      "Matt 16",
+                                      "Song 4",
+                                      "Acts 16"
+                                  ]
+                 },
+                 {
+                     "day":  277,
+                     "readings":  [
+                                      "2Sam 10",
+                                      "Matt 17",
+                                      "Song 5",
+                                      "Acts 17"
+                                  ]
+                 },
+                 {
+                     "day":  278,
+                     "readings":  [
+                                      "2Sam 11",
+                                      "Matt 18",
+                                      "Song 6",
+                                      "Acts 18"
+                                  ]
+                 },
+                 {
+                     "day":  279,
+                     "readings":  [
+                                      "2Sam 12",
+                                      "Matt 19",
+                                      "Song 7",
+                                      "Acts 19"
+                                  ]
+                 },
+                 {
+                     "day":  280,
+                     "readings":  [
+                                      "2Sam 13",
+                                      "Matt 20",
+                                      "Song 8",
+                                      "Acts 20"
+                                  ]
+                 },
+                 {
+                     "day":  281,
+                     "readings":  [
+                                      "2Sam 14",
+                                      "Matt 21",
+                                      "Isa 1",
+                                      "Acts 21"
+                                  ]
+                 },
+                 {
+                     "day":  282,
+                     "readings":  [
+                                      "2Sam 15",
+                                      "Matt 22",
+                                      "Isa 2",
+                                      "Acts 22"
+                                  ]
+                 },
+                 {
+                     "day":  283,
+                     "readings":  [
+                                      "2Sam 16",
+                                      "Matt 23",
+                                      "Isa 3",
+                                      "Acts 23"
+                                  ]
+                 },
+                 {
+                     "day":  284,
+                     "readings":  [
+                                      "2Sam 17",
+                                      "Matt 24",
+                                      "Isa 4",
+                                      "Acts 24"
+                                  ]
+                 },
+                 {
+                     "day":  285,
+                     "readings":  [
+                                      "2Sam 18",
+                                      "Matt 25",
+                                      "Isa 5",
+                                      "Acts 25"
+                                  ]
+                 },
+                 {
+                     "day":  286,
+                     "readings":  [
+                                      "2Sam 19",
+                                      "Matt 26",
+                                      "Isa 6",
+                                      "Acts 26"
+                                  ]
+                 },
+                 {
+                     "day":  287,
+                     "readings":  [
+                                      "2Sam 20",
+                                      "Matt 27",
+                                      "Isa 7",
+                                      "Acts 27"
+                                  ]
+                 },
+                 {
+                     "day":  288,
+                     "readings":  [
+                                      "2Sam 21",
+                                      "Matt 28",
+                                      "Isa 8",
+                                      "Acts 28"
+                                  ]
+                 },
+                 {
+                     "day":  289,
+                     "readings":  [
+                                      "2Sam 22",
+                                      "Mark 1",
+                                      "Isa 9",
+                                      "Rom 1"
+                                  ]
+                 },
+                 {
+                     "day":  290,
+                     "readings":  [
+                                      "2Sam 23",
+                                      "Mark 2",
+                                      "Isa 10",
+                                      "Rom 2"
+                                  ]
+                 },
+                 {
+                     "day":  291,
+                     "readings":  [
+                                      "2Sam 24",
+                                      "Mark 3",
+                                      "Isa 11",
+                                      "Rom 3"
+                                  ]
+                 },
+                 {
+                     "day":  292,
+                     "readings":  [
+                                      "1Kgs 1",
+                                      "Mark 4",
+                                      "Isa 12",
+                                      "Rom 4"
+                                  ]
+                 },
+                 {
+                     "day":  293,
+                     "readings":  [
+                                      "1Kgs 2",
+                                      "Mark 5",
+                                      "Isa 13",
+                                      "Rom 5"
+                                  ]
+                 },
+                 {
+                     "day":  294,
+                     "readings":  [
+                                      "1Kgs 3",
+                                      "Mark 6",
+                                      "Isa 14",
+                                      "Rom 6"
+                                  ]
+                 },
+                 {
+                     "day":  295,
+                     "readings":  [
+                                      "1Kgs 4",
+                                      "Mark 7",
+                                      "Isa 15",
+                                      "Rom 7"
+                                  ]
+                 },
+                 {
+                     "day":  296,
+                     "readings":  [
+                                      "1Kgs 5",
+                                      "Mark 8",
+                                      "Isa 16",
+                                      "Rom 8"
+                                  ]
+                 },
+                 {
+                     "day":  297,
+                     "readings":  [
+                                      "1Kgs 6",
+                                      "Mark 9",
+                                      "Isa 17",
+                                      "Rom 9"
+                                  ]
+                 },
+                 {
+                     "day":  298,
+                     "readings":  [
+                                      "1Kgs 7",
+                                      "Mark 10",
+                                      "Isa 18",
+                                      "Rom 10"
+                                  ]
+                 },
+                 {
+                     "day":  299,
+                     "readings":  [
+                                      "1Kgs 8",
+                                      "Mark 11",
+                                      "Isa 19",
+                                      "Rom 11"
+                                  ]
+                 },
+                 {
+                     "day":  300,
+                     "readings":  [
+                                      "1Kgs 9",
+                                      "Mark 12",
+                                      "Isa 20",
+                                      "Rom 12"
+                                  ]
+                 },
+                 {
+                     "day":  301,
+                     "readings":  [
+                                      "1Kgs 10",
+                                      "Mark 13",
+                                      "Isa 21",
+                                      "Rom 13"
+                                  ]
+                 },
+                 {
+                     "day":  302,
+                     "readings":  [
+                                      "1Kgs 11",
+                                      "Mark 14",
+                                      "Isa 22",
+                                      "Rom 14"
+                                  ]
+                 },
+                 {
+                     "day":  303,
+                     "readings":  [
+                                      "1Kgs 12",
+                                      "Mark 15",
+                                      "Isa 23",
+                                      "Rom 15"
+                                  ]
+                 },
+                 {
+                     "day":  304,
+                     "readings":  [
+                                      "1Kgs 13",
+                                      "Mark 16",
+                                      "Isa 24",
+                                      "Rom 16"
+                                  ]
+                 },
+                 {
+                     "day":  305,
+                     "readings":  [
+                                      "1Kgs 14",
+                                      "Luke 1",
+                                      "Isa 25",
+                                      "1Cor 1"
+                                  ]
+                 },
+                 {
+                     "day":  306,
+                     "readings":  [
+                                      "1Kgs 15",
+                                      "Luke 2",
+                                      "Isa 26",
+                                      "1Cor 2"
+                                  ]
+                 },
+                 {
+                     "day":  307,
+                     "readings":  [
+                                      "1Kgs 16",
+                                      "Luke 3",
+                                      "Isa 27",
+                                      "1Cor 3"
+                                  ]
+                 },
+                 {
+                     "day":  308,
+                     "readings":  [
+                                      "1Kgs 17",
+                                      "Luke 4",
+                                      "Isa 28",
+                                      "1Cor 4"
+                                  ]
+                 },
+                 {
+                     "day":  309,
+                     "readings":  [
+                                      "1Kgs 18",
+                                      "Luke 5",
+                                      "Isa 29",
+                                      "1Cor 5"
+                                  ]
+                 },
+                 {
+                     "day":  310,
+                     "readings":  [
+                                      "1Kgs 19",
+                                      "Luke 6",
+                                      "Isa 30",
+                                      "1Cor 6"
+                                  ]
+                 },
+                 {
+                     "day":  311,
+                     "readings":  [
+                                      "1Kgs 20",
+                                      "Luke 7",
+                                      "Isa 31",
+                                      "1Cor 7"
+                                  ]
+                 },
+                 {
+                     "day":  312,
+                     "readings":  [
+                                      "1Kgs 21",
+                                      "Luke 8",
+                                      "Isa 32",
+                                      "1Cor 8"
+                                  ]
+                 },
+                 {
+                     "day":  313,
+                     "readings":  [
+                                      "1Kgs 22",
+                                      "Luke 9",
+                                      "Isa 33",
+                                      "1Cor 9"
+                                  ]
+                 },
+                 {
+                     "day":  314,
+                     "readings":  [
+                                      "2Kgs 1",
+                                      "Luke 10",
+                                      "Isa 34",
+                                      "1Cor 10"
+                                  ]
+                 },
+                 {
+                     "day":  315,
+                     "readings":  [
+                                      "2Kgs 2",
+                                      "Luke 11",
+                                      "Isa 35",
+                                      "1Cor 11"
+                                  ]
+                 },
+                 {
+                     "day":  316,
+                     "readings":  [
+                                      "2Kgs 3",
+                                      "Luke 12",
+                                      "Isa 36",
+                                      "1Cor 12"
+                                  ]
+                 },
+                 {
+                     "day":  317,
+                     "readings":  [
+                                      "2Kgs 4",
+                                      "Luke 13",
+                                      "Isa 37",
+                                      "1Cor 13"
+                                  ]
+                 },
+                 {
+                     "day":  318,
+                     "readings":  [
+                                      "2Kgs 5",
+                                      "Luke 14",
+                                      "Isa 38",
+                                      "1Cor 14"
+                                  ]
+                 },
+                 {
+                     "day":  319,
+                     "readings":  [
+                                      "2Kgs 6",
+                                      "Luke 15",
+                                      "Isa 39",
+                                      "1Cor 15"
+                                  ]
+                 },
+                 {
+                     "day":  320,
+                     "readings":  [
+                                      "2Kgs 7",
+                                      "Luke 16",
+                                      "Isa 40",
+                                      "1Cor 16"
+                                  ]
+                 },
+                 {
+                     "day":  321,
+                     "readings":  [
+                                      "2Kgs 8",
+                                      "Luke 17",
+                                      "Isa 41",
+                                      "2Cor 1"
+                                  ]
+                 },
+                 {
+                     "day":  322,
+                     "readings":  [
+                                      "2Kgs 9",
+                                      "Luke 18",
+                                      "Isa 42",
+                                      "2Cor 2"
+                                  ]
+                 },
+                 {
+                     "day":  323,
+                     "readings":  [
+                                      "2Kgs 10",
+                                      "Luke 19",
+                                      "Isa 43",
+                                      "2Cor 3"
+                                  ]
+                 },
+                 {
+                     "day":  324,
+                     "readings":  [
+                                      "2Kgs 11",
+                                      "Luke 20",
+                                      "Isa 44",
+                                      "2Cor 4"
+                                  ]
+                 },
+                 {
+                     "day":  325,
+                     "readings":  [
+                                      "2Kgs 12",
+                                      "Luke 21",
+                                      "Isa 45",
+                                      "2Cor 5"
+                                  ]
+                 },
+                 {
+                     "day":  326,
+                     "readings":  [
+                                      "2Kgs 13",
+                                      "Luke 22",
+                                      "Isa 46",
+                                      "2Cor 6"
+                                  ]
+                 },
+                 {
+                     "day":  327,
+                     "readings":  [
+                                      "2Kgs 14",
+                                      "Luke 23",
+                                      "Isa 47",
+                                      "2Cor 7"
+                                  ]
+                 },
+                 {
+                     "day":  328,
+                     "readings":  [
+                                      "2Kgs 15",
+                                      "Luke 24",
+                                      "Isa 48",
+                                      "2Cor 8"
+                                  ]
+                 },
+                 {
+                     "day":  329,
+                     "readings":  [
+                                      "2Kgs 16",
+                                      "John 1",
+                                      "Isa 49",
+                                      "2Cor 9"
+                                  ]
+                 },
+                 {
+                     "day":  330,
+                     "readings":  [
+                                      "2Kgs 17",
+                                      "John 2",
+                                      "Isa 50",
+                                      "2Cor 10"
+                                  ]
+                 },
+                 {
+                     "day":  331,
+                     "readings":  [
+                                      "2Kgs 18",
+                                      "John 3",
+                                      "Isa 51",
+                                      "2Cor 11"
+                                  ]
+                 },
+                 {
+                     "day":  332,
+                     "readings":  [
+                                      "2Kgs 19",
+                                      "John 4",
+                                      "Isa 52",
+                                      "2Cor 12"
+                                  ]
+                 },
+                 {
+                     "day":  333,
+                     "readings":  [
+                                      "2Kgs 20",
+                                      "John 5",
+                                      "Isa 53",
+                                      "2Cor 13"
+                                  ]
+                 },
+                 {
+                     "day":  334,
+                     "readings":  [
+                                      "2Kgs 21",
+                                      "John 6",
+                                      "Isa 54",
+                                      "Gal 1"
+                                  ]
+                 },
+                 {
+                     "day":  335,
+                     "readings":  [
+                                      "2Kgs 22",
+                                      "John 7",
+                                      "Isa 55",
+                                      "Gal 2"
+                                  ]
+                 },
+                 {
+                     "day":  336,
+                     "readings":  [
+                                      "2Kgs 23",
+                                      "John 8",
+                                      "Isa 56",
+                                      "Gal 3"
+                                  ]
+                 },
+                 {
+                     "day":  337,
+                     "readings":  [
+                                      "2Kgs 24",
+                                      "John 9",
+                                      "Isa 57",
+                                      "Gal 4"
+                                  ]
+                 },
+                 {
+                     "day":  338,
+                     "readings":  [
+                                      "2Kgs 25",
+                                      "John 10",
+                                      "Isa 58",
+                                      "Gal 5"
+                                  ]
+                 },
+                 {
+                     "day":  339,
+                     "readings":  [
+                                      "1Chr 1",
+                                      "John 11",
+                                      "Isa 59",
+                                      "Gal 6"
+                                  ]
+                 },
+                 {
+                     "day":  340,
+                     "readings":  [
+                                      "1Chr 2",
+                                      "John 12",
+                                      "Isa 60",
+                                      "Eph 1"
+                                  ]
+                 },
+                 {
+                     "day":  341,
+                     "readings":  [
+                                      "1Chr 3",
+                                      "John 13",
+                                      "Isa 61",
+                                      "Eph 2"
+                                  ]
+                 },
+                 {
+                     "day":  342,
+                     "readings":  [
+                                      "1Chr 4",
+                                      "John 14",
+                                      "Isa 62",
+                                      "Eph 3"
+                                  ]
+                 },
+                 {
+                     "day":  343,
+                     "readings":  [
+                                      "1Chr 5",
+                                      "John 15",
+                                      "Isa 63",
+                                      "Eph 4"
+                                  ]
+                 },
+                 {
+                     "day":  344,
+                     "readings":  [
+                                      "1Chr 6",
+                                      "John 16",
+                                      "Isa 64",
+                                      "Eph 5"
+                                  ]
+                 },
+                 {
+                     "day":  345,
+                     "readings":  [
+                                      "1Chr 7",
+                                      "John 17",
+                                      "Isa 65",
+                                      "Eph 6"
+                                  ]
+                 },
+                 {
+                     "day":  346,
+                     "readings":  [
+                                      "1Chr 8",
+                                      "John 18",
+                                      "Isa 66",
+                                      "Phil 1"
+                                  ]
+                 },
+                 {
+                     "day":  347,
+                     "readings":  [
+                                      "1Chr 9",
+                                      "John 19",
+                                      "Jer 1",
+                                      "Phil 2"
+                                  ]
+                 },
+                 {
+                     "day":  348,
+                     "readings":  [
+                                      "1Chr 10",
+                                      "John 20",
+                                      "Jer 2",
+                                      "Phil 3"
+                                  ]
+                 },
+                 {
+                     "day":  349,
+                     "readings":  [
+                                      "1Chr 11",
+                                      "John 21",
+                                      "Jer 3",
+                                      "Phil 4"
+                                  ]
+                 },
+                 {
+                     "day":  350,
+                     "readings":  [
+                                      "1Chr 12",
+                                      "Acts 1",
+                                      "Jer 4",
+                                      "Col 1"
+                                  ]
+                 },
+                 {
+                     "day":  351,
+                     "readings":  [
+                                      "1Chr 13",
+                                      "Acts 2",
+                                      "Jer 5",
+                                      "Col 2"
+                                  ]
+                 },
+                 {
+                     "day":  352,
+                     "readings":  [
+                                      "1Chr 14",
+                                      "Acts 3",
+                                      "Jer 6",
+                                      "Col 3"
+                                  ]
+                 },
+                 {
+                     "day":  353,
+                     "readings":  [
+                                      "1Chr 15",
+                                      "Acts 4",
+                                      "Jer 7",
+                                      "Col 4"
+                                  ]
+                 },
+                 {
+                     "day":  354,
+                     "readings":  [
+                                      "1Chr 16",
+                                      "Acts 5",
+                                      "Jer 8",
+                                      "1Thes 1"
+                                  ]
+                 },
+                 {
+                     "day":  355,
+                     "readings":  [
+                                      "1Chr 17",
+                                      "Acts 6",
+                                      "Jer 9",
+                                      "1Thes 2"
+                                  ]
+                 },
+                 {
+                     "day":  356,
+                     "readings":  [
+                                      "1Chr 18",
+                                      "Acts 7",
+                                      "Jer 10",
+                                      "1Thes 3"
+                                  ]
+                 },
+                 {
+                     "day":  357,
+                     "readings":  [
+                                      "1Chr 19",
+                                      "Acts 8",
+                                      "Jer 11",
+                                      "1Thes 4"
+                                  ]
+                 },
+                 {
+                     "day":  358,
+                     "readings":  [
+                                      "1Chr 20",
+                                      "Acts 9",
+                                      "Jer 12",
+                                      "1Thes 5"
+                                  ]
+                 },
+                 {
+                     "day":  359,
+                     "readings":  [
+                                      "1Chr 21",
+                                      "Acts 10",
+                                      "Jer 13",
+                                      "2Thes 1"
+                                  ]
+                 },
+                 {
+                     "day":  360,
+                     "readings":  [
+                                      "1Chr 22",
+                                      "Acts 11",
+                                      "Jer 14",
+                                      "2Thes 2"
+                                  ]
+                 },
+                 {
+                     "day":  361,
+                     "readings":  [
+                                      "1Chr 23",
+                                      "Acts 12",
+                                      "Jer 15",
+                                      "2Thes 3"
+                                  ]
+                 },
+                 {
+                     "day":  362,
+                     "readings":  [
+                                      "1Chr 24",
+                                      "Acts 13",
+                                      "Jer 16",
+                                      "1Tim 1"
+                                  ]
+                 },
+                 {
+                     "day":  363,
+                     "readings":  [
+                                      "1Chr 25",
+                                      "Acts 14",
+                                      "Jer 17",
+                                      "1Tim 2"
+                                  ]
+                 },
+                 {
+                     "day":  364,
+                     "readings":  [
+                                      "1Chr 26",
+                                      "Acts 15",
+                                      "Jer 18",
+                                      "1Tim 3"
+                                  ]
+                 },
+                 {
+                     "day":  365,
+                     "readings":  [
+                                      "1Chr 27",
+                                      "Acts 16",
+                                      "Jer 19",
+                                      "1Tim 4"
+                                  ]
+                 }
+             ],
+    "planName":  "M\u0027Cheyne One-Year Bible Reading Plan",
+    "versification":  "KJV",
+    "dateBased":  true,
+    "numberOfDays":  365,
+    "planCode":  "mcheyne"
+}
