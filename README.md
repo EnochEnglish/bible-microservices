@@ -1,6 +1,6 @@
 # bible-microservices — Bible Study System
 
-**Last updated**: 2026-06-25 | **Branch**: `monolith-clean`
+**Last updated**: 2026-06-25 | **Branch**: `monolith-clean` | **Version**: v9 (20260625v9)
 
 Full-stack Bible study system inspired by AndBible. Single-JVM monolith backend + dual frontend (desktop + mobile).
 Self-hosted SWORD module engine, Strong's interlinear, devotional reading, Bible maps, bilingual UI.
@@ -21,6 +21,8 @@ Self-hosted SWORD module engine, Strong's interlinear, devotional reading, Bible
 - [Project Structure](#project-structure)
 - [Tech Stack](#tech-stack)
 - [Environment](#environment)
+- [Feature Roadmap](#feature-roadmap)
+- [Changelog](#changelog)
 
 ---
 
@@ -395,3 +397,107 @@ bible-microservices/
 
 See [LICENSE](LICENSE) and [COPYRIGHTS.md](COPYRIGHTS.md). Bible translations and SWORD modules
 are copyrighted by their respective owners and distributed under their own licenses.
+
+---
+
+## Feature Roadmap
+
+Benchmarked against [AndBible](https://github.com/AndBible/and-bible) and [JSword](https://github.com/crosswire/jsword).
+
+### ✅ Implemented (20 features)
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | Multi-translation reading (29 translations) | ✅ |
+| 2 | Chapter navigation (desktop + mobile) | ✅ |
+| 3 | Full-text search (Lucene, 8 EN translations) | ✅ |
+| 4 | Strong's dictionary (14,341 entries) | ✅ |
+| 5 | Interlinear word-by-word (7 translations) | ✅ |
+| 6 | Morphology analysis (406+ codes, Robinson + OSHB) | ✅ |
+| 7 | Commentaries (10: TSK/MHCC/MHC/JFB/Clarke/Calvin/Barnes/RWP/Catena/Wesley) | ✅ |
+| 8 | Dictionaries (Easton 3,961 + ISBE 9,349 + Nave 5,319) | ✅ |
+| 9 | Daily devotionals (SME 366 days) | ✅ |
+| 10 | General books (Pilgrim's Progress) | ✅ |
+| 11 | Bible maps (3 modules, 18 maps) | ✅ |
+| 12 | Module manager (CrossWire 425 modules) | ✅ |
+| 13 | User authentication (JWT + captcha) | ✅ |
+| 14 | Bookmarks & notes (localStorage) | ✅ |
+| 15 | TTS reading (per-verse + full chapter) | ✅ |
+| 16 | Bilingual UI (中文/English) | ✅ |
+| 17 | Multi-version comparison (desktop 3-col + mobile) | ✅ |
+| 18 | Cross-references (TSK embedded data) | ✅ |
+| 19 | Mobile PWA (installable, offline cache) | ✅ |
+| 20 | Footnote display (OSIS tag stripping) | ✅ |
+
+### ❌ Not Yet Implemented
+
+#### P0 — Core Features
+
+| Feature | Description |
+|---------|-------------|
+| Reading plans | Predefined plans (1-year, M'Cheyne, 90-day NT), daily check-in, progress tracking, TTS integration |
+| Highlight & annotation | Multi-color verse highlighting, underlines, margin notes — most requested by users |
+| Study Pads | Note panel for sermon note-taking with verse references and search |
+| Workspaces | Multiple independent Bible study layouts with separate settings |
+
+#### P1 — Important Enhancements
+
+| Feature | Description |
+|---------|-------------|
+| Advanced search | Boolean (AND/OR/NOT), regex, scope limits (OT/NT/book/chapter) |
+| Cross-reference jumping | TSK data exists but frontend click-to-navigate not wired |
+| Footnote jumping | OSIS `<note>`/`<scripRef>` should be clickable |
+| Light/dark theme toggle | Currently dark-only |
+| Desktop font size slider | Mobile has pinch, desktop needs slider |
+| History navigation | Back/forward verse history |
+| Bookmark categories | Tags, colors, CSV import/export |
+
+#### P2 — JSword Resources Not Yet Loaded
+
+| BookCategory | Description |
+|-------------|-------------|
+| GLOSSARY | Glossaries (Smith's, Hitchcock's) |
+| IMAGES | Image collections (Bible scenes, archaeology) |
+| ESSAYS | Essay collections |
+| QUESTIONABLE | Unorthodox literature (academic use) |
+
+#### P3 — AndBible 5.1 Roadmap
+
+| Feature | Description |
+|---------|-------------|
+| AI Bible Study | AI-powered study assistance |
+| Bible Knowledge Graph | Scripture knowledge graph |
+| Reading & Memorization Tracker | Reading + memorization tracking |
+| EPUB support | Import EPUB books as general books |
+| MyBible/MySword import | Import third-party format modules |
+
+---
+
+## Changelog
+
+### v9 (2026-06-25) — Current
+
+- **Mobile PWA frontend**: Full mobile UI with bottom nav, swipe gestures, installable PWA
+- **Interlinear expanded to 7 translations**: KJV, ChiUns, ChiUn, BSB, OSHB, SP, LXX
+- **Compare mode fix**: Compare bar now shows correctly when entering compare mode
+- **OSIS tag stripping**: KJV footnotes no longer show raw `<catchWord>`/`<rdg>` tags
+- **Desktop interlinear sync**: Desktop app.js updated with 7-translation interlinear support
+- **H2 path fix**: Monolith startup from correct CWD resolves H2 database path
+- **Interlinear button visibility**: Only shows for translations with Strong's data
+- **Compare data persistence**: Switching primary translation no longer wipes compare data
+
+### v8 (2026-06-22) — Server deployment
+
+- **Monolith deployed to ECS**: Single JVM on 1GiB VPS (8.222.165.245)
+- **nginx reverse proxy**: `/bible/` → frontend, `/api/` → :8080, legacy site preserved
+- **22 translations + 29 SWORD modules** loaded on server
+- **Strong's dictionary**: 5,667 Greek + 8,674 Hebrew entries
+- **3 frontend bug fixes**: Search fallback, map module paths, module manager API
+- **JSword Linux case-sensitivity fix**: Symlinks for BibleAtlas/BibleMap
+
+### v7 (2026-06-20) — Monolith merge
+
+- **6 microservices → 1 JVM**: 71% memory reduction (~350MB vs ~1200MB)
+- **bible-monolith.jar**: 75MB single JAR, port 8080
+- **5 rounds of frontend bug fixes**: UTF-8 BOM, morph hover, interlinear loading
+- **Auth service**: JWT (42h expiry), H2 file DB, math + HMAC captcha
