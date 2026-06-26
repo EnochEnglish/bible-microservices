@@ -1,6 +1,6 @@
 # bible-microservices — Bible Study System
 
-**Last updated**: 2026-06-25 | **Branch**: `monolith-clean` | **Version**: v9 (20260625v9)
+**Last updated**: 2026-06-27 | **Branch**: `monolith-clean` | **Version**: v10 (20260627a)
 
 Full-stack Bible study system inspired by AndBible. Single-JVM monolith backend + dual frontend (desktop + mobile).
 Self-hosted SWORD module engine, Strong's interlinear, devotional reading, Bible maps, bilingual UI.
@@ -404,7 +404,7 @@ are copyrighted by their respective owners and distributed under their own licen
 
 Benchmarked against [AndBible](https://github.com/AndBible/and-bible) and [JSword](https://github.com/crosswire/jsword).
 
-### ✅ Implemented (20 features)
+### ✅ Implemented (21 features)
 
 | # | Feature | Status |
 |---|---------|--------|
@@ -428,6 +428,7 @@ Benchmarked against [AndBible](https://github.com/AndBible/and-bible) and [JSwor
 | 18 | Cross-references (TSK embedded data) | ✅ |
 | 19 | Mobile PWA (installable, offline cache) | ✅ |
 | 20 | Footnote display (OSIS tag stripping) | ✅ |
+| 21 | Reading plans (M'Cheyne 365d, NT 90d, Proverbs 30d) | ✅ v10 |
 
 ### ❌ Not Yet Implemented
 
@@ -435,7 +436,7 @@ Benchmarked against [AndBible](https://github.com/AndBible/and-bible) and [JSwor
 
 | Feature | Description |
 |---------|-------------|
-| Reading plans | Predefined plans (1-year, M'Cheyne, 90-day NT), daily check-in, progress tracking, TTS integration |
+| ~~Reading plans~~ | ✅ Implemented in v10 (3 plans: M'Cheyne, NT 90, Proverbs 30) |
 | Highlight & annotation | Multi-color verse highlighting, underlines, margin notes — most requested by users |
 | Study Pads | Note panel for sermon note-taking with verse references and search |
 | Workspaces | Multiple independent Bible study layouts with separate settings |
@@ -475,7 +476,15 @@ Benchmarked against [AndBible](https://github.com/AndBible/and-bible) and [JSwor
 
 ## Changelog
 
-### v9 (2026-06-25) — Current
+### v10 (2026-06-27) — Current
+
+- **Reading plans**: 3 plans (M'Cheyne 365d, NT 90d, Proverbs 30d) with progress tracking
+- **basePath support**: Dynamic `<base>` tag + config.js auto-detect for nginx `/bible/` deployment
+- **OSIS book name mapping**: Frontend `OSIS_TO_ID` table fixes reading plan links (Deut→DEU, Phil→PHP, Psa→PSA)
+- **Mobile link fix**: Desktop→mobile link uses basePath
+- **Server deployed**: 8.222.165.245, monolith + frontend running
+
+### v9 (2026-06-25)
 
 - **Mobile PWA frontend**: Full mobile UI with bottom nav, swipe gestures, installable PWA
 - **Interlinear expanded to 7 translations**: KJV, ChiUns, ChiUn, BSB, OSHB, SP, LXX
