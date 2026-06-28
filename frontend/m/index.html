@@ -6,77 +6,77 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0f1117">
-  <title>Bible Reader 📖</title>
+  <title>Bible Reader</title>
   <script>document.write('<base href="' + (location.pathname.startsWith('/bible/') ? '/bible/m/' : '/m/') + '">');</script>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="mobile.css?v=20260626c">
+  <link rel="stylesheet" href="mobile.css?v=20260629a">
 </head>
 <body>
 
-<!-- ═══ Top Bar ═══ -->
+<!-- Top Bar -->
 <header id="topBar">
-  <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
+  <button id="menuBtn" class="icon-btn" aria-label="Menu">&#9776;</button>
   <select id="translationSelect" class="trans-select"></select>
-  <button id="searchBtn" class="icon-btn" aria-label="Search" onclick="switchView('search')">🔍</button>
-  <button id="moreBtn" class="icon-btn" aria-label="More">⚙️</button>
+  <button id="searchBtn" class="icon-btn" aria-label="Search" onclick="switchView('search')">&#128269;</button>
+  <button id="moreBtn" class="icon-btn" aria-label="More">&#9881;&#65039;</button>
 </header>
 
-<!-- ═══ Compare Bar (shows when compare mode is on) ═══ -->
+<!-- Compare Bar -->
 <div id="compareBar" class="compare-bar" style="display:none"></div>
 
-<!-- ═══ Chapter Header ═══ -->
+<!-- Chapter Header -->
 <div id="chapterHeader" class="chapter-header"></div>
 
-<!-- ═══ Verse Content ═══ -->
+<!-- Verse Content -->
 <main id="verseContent" class="verse-content">
-  <div class="loading">Loading...</div>
+  <div class="loading" data-i18n="loading">Loading...</div>
 </main>
 
-<!-- ═══ Chapter Navigation ═══ -->
+<!-- Chapter Navigation -->
 <nav id="chapterNav" class="chapter-nav"></nav>
 
-<!-- ═══ Bottom Navigation ═══ -->
+<!-- Bottom Navigation -->
 <nav id="bottomNav" class="bottom-nav">
   <button class="nav-btn active" data-view="reader">
-    <span class="nav-icon">📖</span>
-    <span class="nav-label">Read</span>
+    <span class="nav-icon">&#128214;</span>
+    <span class="nav-label" data-i18n="navRead">Read</span>
   </button>
   <button class="nav-btn" data-view="search">
-    <span class="nav-icon">🔍</span>
-    <span class="nav-label">Search</span>
+    <span class="nav-icon">&#128269;</span>
+    <span class="nav-label" data-i18n="navSearch">Search</span>
   </button>
   <button class="nav-btn" data-view="dict">
-    <span class="nav-icon">📚</span>
-    <span class="nav-label">Dict</span>
+    <span class="nav-icon">&#128218;</span>
+    <span class="nav-label" data-i18n="navDict">Dict</span>
   </button>
   <button class="nav-btn" data-view="commentary">
-    <span class="nav-icon">📝</span>
-    <span class="nav-label">Notes</span>
+    <span class="nav-icon">&#128221;</span>
+    <span class="nav-label" data-i18n="navNotes">Notes</span>
   </button>
   <button class="nav-btn" data-view="maps">
-    <span class="nav-icon">🗺️</span>
-    <span class="nav-label">Maps</span>
+    <span class="nav-icon">&#128506;</span>
+    <span class="nav-label" data-i18n="navMaps">Maps</span>
   </button>
   <button class="nav-btn" data-view="devotion">
-    <span class="nav-icon">🔥</span>
-    <span class="nav-label">Devotion</span>
+    <span class="nav-icon">&#128293;</span>
+    <span class="nav-label" data-i18n="navDevotion">Devotion</span>
   </button>
   <button class="nav-btn" data-view="plan">
-    <span class="nav-icon">📅</span>
-    <span class="nav-label">Plan</span>
+    <span class="nav-icon">&#128197;</span>
+    <span class="nav-label" data-i18n="navPlan">Plan</span>
   </button>
 </nav>
 
-<!-- ═══ Side Drawer (Book/Chapter picker) ═══ -->
+<!-- Side Drawer -->
 <div id="drawerOverlay" class="drawer-overlay"></div>
 <aside id="drawer" class="drawer">
   <div class="drawer-header">
     <select id="langToggle" class="lang-select">
-      <option value="bilingual">🌐 双语</option>
-      <option value="zh">🇨🇳 中文</option>
-      <option value="en">🇬🇧 English</option>
+      <option value="bilingual">&#127760; 双语</option>
+      <option value="zh">&#127464;&#127475; 中文</option>
+      <option value="en">&#127468;&#127463; English</option>
     </select>
-    <button id="drawerClose" class="icon-btn">✕</button>
+    <button id="drawerClose" class="icon-btn">&#10005;</button>
   </div>
   <div class="drawer-section">
     <div class="section-title" id="otLabel">Old Testament</div>
@@ -92,98 +92,99 @@
   </div>
 </aside>
 
-<!-- ═══ Search View ═══ -->
+<!-- Search View -->
 <div id="searchView" class="view" style="display:none">
   <div class="search-bar">
     <input type="text" id="searchInput" placeholder="Search the Bible..." autocomplete="off">
-    <button id="searchSubmit" class="icon-btn">🔍</button>
+    <button id="searchSubmit" class="icon-btn">&#128269;</button>
   </div>
   <div id="searchResults" class="search-results"></div>
 </div>
 
-<!-- ═══ Dictionary View ═══ -->
+<!-- Dictionary View -->
 <div id="dictView" class="view" style="display:none">
   <div class="search-bar">
     <input type="text" id="dictSearchInput" placeholder="Search dictionary..." autocomplete="off">
-    <button id="dictSearchSubmit" class="icon-btn">🔍</button>
+    <button id="dictSearchSubmit" class="icon-btn">&#128269;</button>
   </div>
   <div id="dictResults" class="search-results"></div>
 </div>
 
-<!-- ═══ Maps View ═══ -->
+<!-- Maps View -->
 <div id="mapsView" class="view" style="display:none"></div>
 
-<!-- ═══ Map Image Viewer (fullscreen overlay) ═══ -->
+<!-- Map Image Viewer -->
 <div id="mapImageOverlay" class="popup-overlay" style="display:none"></div>
 
-<!-- ═══ Commentary Drawer ═══ -->
+<!-- Commentary Drawer -->
 <div id="commentaryOverlay" class="drawer-overlay"></div>
 <aside id="commentaryDrawer" class="commentary-drawer">
   <div class="drawer-header">
-    <span id="commentaryTitle" class="drawer-title">📝 Commentary</span>
-    <button id="commentaryClose" class="icon-btn">✕</button>
+    <span id="commentaryTitle" class="drawer-title">&#128221; Commentary</span>
+    <button id="commentaryClose" class="icon-btn">&#10005;</button>
   </div>
   <div id="commentaryTabs" class="cmt-tabs"></div>
   <div id="commentaryBody" class="cmt-body"></div>
 </aside>
 
-<!-- ═══ Reading Plan View ═══ -->
+<!-- Reading Plan View -->
 <div id="planView" class="view" style="display:none"></div>
 
-<!-- ═══ Devotion View ═══ -->
+<!-- Devotion View -->
 <div id="devotionView" class="view" style="display:none">
   <div class="devotion-header">
-    <button id="devPrevDay" class="icon-btn">◀</button>
+    <button id="devPrevDay" class="icon-btn">&#9664;</button>
+    <select id="devotionModuleSelect" class="trans-select" style="max-width:60%"></select>
     <span id="devDate" class="dev-date"></span>
-    <button id="devNextDay" class="icon-btn">▶</button>
+    <button id="devNextDay" class="icon-btn">&#9654;</button>
   </div>
   <div id="devotionContent" class="devotion-content">
-    <div class="loading">Loading...</div>
+    <div class="loading" data-i18n="loading">Loading...</div>
   </div>
 </div>
 
-<!-- ═══ Strong's Popup ═══ -->
+<!-- Strong's Popup -->
 <div id="strongsOverlay" class="popup-overlay" style="display:none">
   <div class="popup-card" id="strongsCard">
     <div class="popup-header">
       <span id="strongsTitle">Strong's Dictionary</span>
-      <button class="icon-btn" onclick="closeStrongs()">✕</button>
+      <button class="icon-btn" onclick="closeStrongs()">&#10005;</button>
     </div>
     <div id="strongsBody" class="popup-body"></div>
   </div>
 </div>
 
-<!-- ═══ More Menu ═══ -->
+<!-- More Menu -->
 <div id="moreOverlay" class="popup-overlay" style="display:none" onclick="closeMore()">
   <div class="more-menu" onclick="event.stopPropagation()">
     <button class="more-item" id="interlinearMenuItem" onclick="toggleInterlinear()">
-      <span>🔤</span> <span id="interlinearLabel">Interlinear</span>
+      <span>&#128292;</span> <span id="interlinearLabel">Interlinear</span>
     </button>
     <button class="more-item" onclick="toggleCompareMode()">
-      <span>📖</span> <span id="compareLabel">Compare</span>
+      <span>&#128214;</span> <span id="compareLabel">Compare</span>
     </button>
     <button class="more-item" onclick="openFontSettings()">
-      <span>🔠</span> <span>Font Size</span>
+      <span>&#128288;</span> <span id="fontMenuLabel">Font Size</span>
     </button>
     <button class="more-item" onclick="speakChapter()">
-      <span>🔊</span> <span id="ttsLabel">Read Aloud</span>
+      <span>&#128266;</span> <span id="ttsLabel">Read Aloud</span>
     </button>
     <hr>
     <button class="more-item" id="authBtn" onclick="openAuthPanel()">
-      <span>👤</span> <span>Login</span>
+      <span>&#128100;</span> <span id="authBtnLabel">Login</span>
     </button>
     <a class="more-item" href="../" id="desktopLink">
-      <span>🖥️</span> <span>Desktop Version</span>
+      <span>&#128421;&#65039;</span> <span id="desktopLinkLabel">Desktop Version</span>
     </a>
   </div>
 </div>
 
-<!-- ═══ Font Size Control ═══ -->
+<!-- Font Size Control -->
 <div id="fontOverlay" class="popup-overlay" style="display:none" onclick="closeFont()">
   <div class="font-panel" onclick="event.stopPropagation()">
     <div class="popup-header">
-      <span>Font Size</span>
-      <button class="icon-btn" onclick="closeFont()">✕</button>
+      <span id="fontPanelTitle">Font Size</span>
+      <button class="icon-btn" onclick="closeFont()">&#10005;</button>
     </div>
     <div class="font-controls">
       <button class="font-btn" onclick="adjustFont(-1)">A-</button>
@@ -193,47 +194,52 @@
   </div>
 </div>
 
-<!-- ═══ Auth Panel ═══ -->
+<!-- Auth Panel -->
 <div id="authOverlay" class="popup-overlay" style="display:none" onclick="closeAuth()">
   <div class="auth-panel" onclick="event.stopPropagation()">
     <div id="authLoginForm">
       <div class="popup-header">
-        <span>👤 Login</span>
-        <button class="icon-btn" onclick="closeAuth()">✕</button>
+        <span id="loginTitle">&#128100; Login</span>
+        <button class="icon-btn" onclick="closeAuth()">&#10005;</button>
       </div>
       <div class="auth-form">
         <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
         <input type="password" id="loginPassword" placeholder="Password">
-        <button class="auth-submit" onclick="doLogin()">Login</button>
+        <button class="auth-submit" id="loginSubmitBtn" onclick="doLogin()">Login</button>
         <div class="auth-toggle"><a href="#" id="showRegister">Register</a></div>
       </div>
     </div>
     <div id="authRegisterForm" style="display:none">
       <div class="popup-header">
-        <span>👤 Register</span>
-        <button class="icon-btn" onclick="closeAuth()">✕</button>
+        <span id="registerTitle">&#128100; Register</span>
+        <button class="icon-btn" onclick="closeAuth()">&#10005;</button>
       </div>
       <div class="auth-form">
         <input type="text" id="regUsername" placeholder="Username" autocomplete="off">
         <input type="password" id="regPassword" placeholder="Password">
-        <button class="auth-submit" onclick="doRegister()">Register</button>
+        <div class="captcha-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <input type="text" id="regCaptchaAnswer" placeholder="Captcha" autocomplete="off" style="flex:1;min-width:0">
+          <span id="captchaQuestion" class="captcha-question" onclick="loadCaptcha()" style="white-space:nowrap;color:var(--accent,#4a9eff);cursor:pointer;font-size:0.85em">Tap to load</span>
+        </div>
+        <input type="hidden" id="regCaptchaToken">
+        <div id="regError" class="auth-error" style="display:none;color:#e05555;font-size:0.85em;margin-bottom:8px"></div>
+        <button class="auth-submit" id="registerSubmitBtn" onclick="doRegister()">Register</button>
         <div class="auth-toggle"><a href="#" id="showLogin">Login</a></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ Strong's Tooltip ═══ -->
+<!-- Strong's Tooltip -->
 <div id="strongsTooltip" class="strongs-tooltip" style="display:none"></div>
 
-<!-- ═══ Swipe Hint ═══ -->
-<div id="swipeHint" class="swipe-hint" style="display:none">← Swipe →</div>
+<!-- Swipe Hint -->
+<div id="swipeHint" class="swipe-hint" style="display:none" data-i18n="swipeHint">&#8592; Swipe &#8594;</div>
 
-<script src="../js/config.js?v=20260627a"></script>
-<script src="../js/morphology.js?v=20260627a"></script>
-<script src="mobile.js?v=20260627a"></script>
+<script src="../js/config.js?v=20260629a"></script>
+<script src="../js/morphology.js?v=20260629a"></script>
+<script src="mobile.js?v=20260629a"></script>
 <script>
-  // Fix desktop link href with basePath for nginx deployment
   (function() {
     var dl = document.getElementById('desktopLink');
     if (dl && typeof APP_CONFIG !== 'undefined' && APP_CONFIG.basePath) {

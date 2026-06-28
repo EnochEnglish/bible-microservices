@@ -160,7 +160,28 @@ var I18N = {
     devotionNoContent: "No devotion content for this date",
     devotionError: "Failed to load devotion",
     devotionModuleSME: "Spurgeon M&E",
-    devotionModuleDaily: "Daily Light"
+    devotionModuleDaily: "Daily Light",
+    mapsTitle: "Bible Maps",
+    mapsSelectAtlas: "-- Select Atlas --",
+    planTitle: "Reading Plan",
+    planToday: "Today",
+    authTitle: "Login",
+    authTabLogin: "Login",
+    authTabRegister: "Register",
+    authForgotLink: "Forgot password?",
+    authForgotHint: "Enter username to show password and reset login",
+    authResetBtn: "Reset Password",
+    authBackLogin: "Back to Login",
+    profileEdit: "Edit Profile",
+    profileChangePwd: "Change Password",
+    profileLogout: "Logout",
+    profileSave: "Save",
+    profileCancel: "Cancel",
+    pwdChange: "Change",
+    captchaLoad: "Click to load",
+    genderMale: "Male",
+    genderFemale: "Female",
+    genderLabel: "Gender"
   },
   zh: {
     search: "搜索经文...",
@@ -203,7 +224,28 @@ var I18N = {
     devotionNoContent: "此日期暂无灵修内容",
     devotionError: "灵修加载失败",
     devotionModuleSME: "司布真晨晚祷",
-    devotionModuleDaily: "每日亮光"
+    devotionModuleDaily: "每日亮光",
+    mapsTitle: "圣经地图",
+    mapsSelectAtlas: "-- 选择地图集 --",
+    planTitle: "读经计划",
+    planToday: "今天",
+    authTitle: "登录",
+    authTabLogin: "登录",
+    authTabRegister: "注册",
+    authForgotLink: "忘记密码？",
+    authForgotHint: "请输入用户名，系统将显示密码并重置登录",
+    authResetBtn: "重置密码",
+    authBackLogin: "返回登录",
+    profileEdit: "编辑资料",
+    profileChangePwd: "修改密码",
+    profileLogout: "退出登录",
+    profileSave: "保存",
+    profileCancel: "取消",
+    pwdChange: "修改",
+    captchaLoad: "点击加载",
+    genderMale: "男",
+    genderFemale: "女",
+    genderLabel: "性别"
   }
 };
 
@@ -365,6 +407,33 @@ function renderCompareSelector() {
 // ═══════════════════════════════════════════
 //  LANGUAGE
 // ═══════════════════════════════════════════
+function applyLanguageLabels() {
+  // Update all elements with data-zh/data-en
+  document.querySelectorAll('[data-zh]').forEach(function(el){
+    var zh=el.getAttribute('data-zh');var en=el.getAttribute('data-en');
+    if(!zh)return;
+    if(state.lang==='zh')el.textContent=zh;
+    else if(state.lang==='bilingual')el.textContent=zh+' / '+en;
+    else el.textContent=en;
+  });
+  // Update all elements with data-zh-ph/data-en-ph (placeholders)
+  document.querySelectorAll('[data-zh-ph]').forEach(function(el){
+    var zh=el.getAttribute('data-zh-ph');var en=el.getAttribute('data-en-ph');
+    if(!zh)return;
+    if(state.lang==='zh')el.placeholder=zh;
+    else if(state.lang==='bilingual')el.placeholder=zh+' / '+en;
+    else el.placeholder=en;
+  });
+  // Update all elements with data-zh-title/data-en-title (tooltips)
+  document.querySelectorAll('[data-zh-title]').forEach(function(el){
+    var zh=el.getAttribute('data-zh-title');var en=el.getAttribute('data-en-title');
+    if(!zh)return;
+    if(state.lang==='zh')el.title=zh;
+    else if(state.lang==='bilingual')el.title=zh+' / '+en;
+    else el.title=en;
+  });
+}
+
 function setupLanguage() {
   var sel = document.getElementById("langToggle");
   if (!sel) return;
@@ -386,21 +455,17 @@ function setupLanguage() {
       renderSearchResults(state._lastQuery || "");
     }
     refreshLabels();
-    // Update homepage buttons
-    ['devotionBtn','genbookBtn','modulesBtn'].forEach(function(id){
-      var b=document.getElementById(id);
-      if(!b)return;
-      var zh=b.getAttribute('data-zh');var en=b.getAttribute('data-en');
-      if(state.lang==='zh')b.textContent=zh;
-      else if(state.lang==='bilingual')b.textContent=zh+' / '+en;
-      else b.textContent=en;
-    });
+    applyLanguageLabels();
+    // Update login button (may be overridden by updateLoginButton)
+    if (!authState.loggedIn) updateLoginButton();
     // Refresh dictionary popup if open
     if (document.getElementById("dictOverlay").style.display === "flex") {
       document.getElementById("dictPopupTitle").textContent = "📚 " + t("dictTitle");
       loadDictSources();
     }
   };
+  // Apply labels on initial load
+  applyLanguageLabels();
 }
 
 function refreshLabels() {
@@ -3596,7 +3661,10 @@ function updateLoginButton() {
     btn.textContent = "👤 " + authState.user.username;
     btn.className = "logged-in";
   } else {
-    btn.textContent = state.lang === "zh" ? "👤 登录" : "👤 Login";
+    var zh = "👤 登录", en = "👤 Login";
+    if (state.lang === 'zh') btn.textContent = zh;
+    else if (state.lang === 'bilingual') btn.textContent = zh + ' / ' + en;
+    else btn.textContent = en;
     btn.className = "";
   }
   // Toggle bookmark/note topbar buttons
@@ -3730,6 +3798,18 @@ var DPLAN_NAMES_ZH = {
   proverbs30: "30天箴言计划"
 };
 
+// Translate reading plan label to bilingual
+function translatePlanLabelD(r) {
+  var book = findBookByOsis(r.bookId);
+  if (!book) return r.label;
+  var chPart = r.chapterStart === r.chapterEnd ? String(r.chapterStart) : r.chapterStart + '-' + r.chapterEnd;
+  var zh = book.nameZh + ' ' + chPart;
+  var en = book.name + ' ' + chPart;
+  if (state.lang === 'zh') return zh;
+  if (state.lang === 'bilingual') return zh + ' / ' + en;
+  return en;
+}
+
 function openPlanPanel() {
   document.getElementById("planOverlay").style.display = "flex";
   if (!dplanState.plans.length) {
@@ -3744,7 +3824,7 @@ function openPlanPanel() {
       renderPlanSelector();
       loadDesktopPlanProgress();
     }).catch(() => {
-      document.getElementById("planTodayCard").innerHTML = "<p>Failed to load plans</p>";
+      document.getElementById("planTodayCard").innerHTML = "<p>" + (t('planFailedLoad')||'Failed to load plans') + "</p>";
     });
   } else {
     renderPlanSelector();
@@ -3807,20 +3887,23 @@ function renderDesktopPlanView() {
 
 function loadDesktopPlanDay(day) {
   dplanState.selectedDay = day;
-  document.getElementById("planDayDisplay").textContent = "Day " + day;
+  document.getElementById("planDayDisplay").textContent = (state.lang === "zh" ? "第 " + day + " 天" : (state.lang === "bilingual" ? "第 " + day + " 天 / Day " + day : "Day " + day));
   fetch("/api/v1/reading-plans/" + dplanState.currentPlan + "/day/" + day).then(r => r.json()).then(data => {
     dplanState.todayReading = data;
     var isDone = dplanState.progress[day] && dplanState.progress[day].completed;
-    var html = '<div style="margin-bottom:8px;font-size:1.1em;font-weight:600">Day ' + day + '</div>';
+    var dayLabel = (state.lang === "zh" ? "第 " + day + " 天" : (state.lang === "bilingual" ? "第 " + day + " 天 / Day " + day : "Day " + day));
+    var html = '<div style="margin-bottom:8px;font-size:1.1em;font-weight:600">' + dayLabel + '</div>';
     data.readings.forEach((r, i) => {
       var done = dplanState.progress[day] && dplanState.progress[day].readCount > i;
+      var label = translatePlanLabelD(r);
       html += '<div class="plan-reading-item-d' + (done ? " done" : "") + '" onclick="goToDesktopReading(\'' + r.bookId + '\',' + r.chapterStart + ',' + i + ',' + day + ')" style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;border-radius:6px;margin-bottom:4px;background:var(--bg-input,#14161e)">';
       html += '<span style="font-size:1.2em;color:var(--accent,#4a9eff)">' + (done ? "✓" : "○") + "</span>";
-      html += '<span style="flex:1">' + r.label + "</span>";
+      html += '<span style="flex:1">' + label + "</span>";
       html += '<span style="font-size:0.85em;color:var(--muted,#888)">📖 →</span>';
       html += "</div>";
     });
-    html += '<div style="text-align:center;margin-top:12px"><button onclick="toggleDesktopPlanComplete()" style="padding:8px 20px;font-weight:600;background:' + (isDone ? "#2d8a4e" : "#4a9eff") + ';color:#fff;border:none;border-radius:6px;cursor:pointer">' + (isDone ? "✓ Completed" : "✓ Mark Complete") + "</button></div>";
+    var markText = isDone ? (state.lang === "zh" ? "✓ 已完成" : (state.lang === "bilingual" ? "✓ 已完成 / Completed" : "✓ Completed")) : (state.lang === "zh" ? "✓ 标记完成" : (state.lang === "bilingual" ? "✓ 标记完成 / Mark Complete" : "✓ Mark Complete"));
+    html += '<div style="text-align:center;margin-top:12px"><button onclick="toggleDesktopPlanComplete()" style="padding:8px 20px;font-weight:600;background:' + (isDone ? "#2d8a4e" : "#4a9eff") + ';color:#fff;border:none;border-radius:6px;cursor:pointer">' + markText + "</button></div>";
     document.getElementById("planTodayCard").innerHTML = html;
     
     // Progress bar

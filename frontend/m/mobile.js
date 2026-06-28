@@ -81,12 +81,23 @@ var BOOK_ORDER = [
   {id:'REV',name:'Revelation',nameZh:'启示录',chapters:22}
 ];
 
-var COMMENTARY_LABELS = {
-  'TSK':'TSK', 'JFB':'JFB', 'MHCC':'MH Concise', 'MHC':'MH Complete',
-  'Clarke':'Clarke', 'Calvin':'Calvin', 'Barnes':'Barnes',
-  'RWP':'Robertson', 'Catena':'Catena', 'Wesley':'Wesley',
-  'Pentateuch':'Pentateuch', 'GenesisIntro':'Genesis Intro'
+var COMMENTARY_NAMES_ZH = {
+  'TSK':'TSK 交叉引用', 'JFB':'JFB 注释', 'MHCC':'Matthew Henry 简注',
+  'MHC':'Matthew Henry 全注', 'Clarke':'Adam Clarke 注释', 'Calvin':'加尔文注释',
+  'Barnes':'Barnes NT 注释', 'RWP':'Robertson 词图', 'Catena':'教父集注',
+  'Wesley':'Wesley 注释', 'Pentateuch':'摩西五经', 'GenesisIntro':'创世记导论'
 };
+var COMMENTARY_NAMES_EN = {
+  'TSK':'TSK Cross-Refs', 'JFB':'JFB Commentary', 'MHCC':'M.H. Concise',
+  'MHC':'M.H. Complete', 'Clarke':'Clarke\'s Commentary', 'Calvin':'Calvin\'s Commentary',
+  'Barnes':'Barnes NT Notes', 'RWP':'Robertson Word Pix', 'Catena':'Catena Aurea',
+  'Wesley':'Wesley\'s Notes', 'Pentateuch':'Pentateuch', 'GenesisIntro':'Genesis Intro'
+};
+function cmtName(id) {
+  if (state.lang === 'en') return COMMENTARY_NAMES_EN[id] || id;
+  if (state.lang === 'zh') return COMMENTARY_NAMES_ZH[id] || id;
+  return (COMMENTARY_NAMES_ZH[id] || id) + ' / ' + (COMMENTARY_NAMES_EN[id] || id);
+}
 
 var DICT_NAMES = { easton:"Easton", isbe:"ISBE", nave:"Nave" };
 
@@ -108,9 +119,29 @@ var I18N = {
     username:'Username', password:'Password',
     loginSuccess:'Login successful', loginFailed:'Login failed',
     registerSuccess:'Registration successful', registerFailed:'Registration failed',
+    fillFields:'Please enter username and password', needCaptcha:'Please load and enter the captcha',
     selectBook:'Select Book', selectChapter:'Select Chapter',
     compare:'Compare', compareOff:'Close Compare', selectVersion:'Add version...',
-    maps:'Maps', selectMapModule:'Select map set', noMaps:'No maps available'
+    maps:'Maps', selectMapModule:'Select map set', noMaps:'No maps available',
+    // nav labels
+    navRead:'Read', navSearch:'Search', navDict:'Dict', navNotes:'Notes',
+    navMaps:'Maps', navDevotion:'Devotion', navPlan:'Plan',
+    // strongs & popups
+    strongsTitle:"Strong's Dictionary", noEntryFound:'No entry found for',
+    // font & more menu
+    fontMenu:'Font Size', fontPanel:'Font Size',
+    // auth
+    loginTitle:'Login', registerTitle:'Register',
+    // swipe
+    swipeHint:'← Swipe →',
+    // reading plan
+    planDay:'Day', planToday:'Today', planMarkComplete:'Mark Complete',
+    planCompleted:'Completed', planFailedLoad:'Failed to load plans',
+    planLoading:'Loading...', planProgress:'progress',
+    // devotion modules
+    devotionModuleSME:'Spurgeon M&E', devotionModuleDaily:'Daily Light',
+    // dictionary title
+    dictTitle:'Dictionary'
   },
   zh: {
     loading:'加载中...', failed:'加载失败', searching:'搜索中...',
@@ -128,9 +159,29 @@ var I18N = {
     username:'用户名', password:'密码',
     loginSuccess:'登录成功', loginFailed:'登录失败',
     registerSuccess:'注册成功', registerFailed:'注册失败',
+    fillFields:'请填写用户名和密码', needCaptcha:'请先加载并填写验证码',
     selectBook:'选择书卷', selectChapter:'选择章节',
     compare:'多版本对照', compareOff:'关闭对照', selectVersion:'添加版本...',
-    maps:'圣经地图', selectMapModule:'选择地图集', noMaps:'暂无地图'
+    maps:'圣经地图', selectMapModule:'选择地图集', noMaps:'暂无地图',
+    // nav labels
+    navRead:'读经', navSearch:'搜索', navDict:'词典', navNotes:'注释',
+    navMaps:'地图', navDevotion:'灵修', navPlan:'计划',
+    // strongs & popups
+    strongsTitle:"斯特朗词典", noEntryFound:'未找到条目：',
+    // font & more menu
+    fontMenu:'字体大小', fontPanel:'字体大小',
+    // auth
+    loginTitle:'登录', registerTitle:'注册',
+    // swipe
+    swipeHint:'← 滑动 →',
+    // reading plan
+    planDay:'第', planToday:'今天', planMarkComplete:'标记完成',
+    planCompleted:'已完成', planFailedLoad:'计划加载失败',
+    planLoading:'加载中...', planProgress:'进度',
+    // devotion modules
+    devotionModuleSME:'司布真晨晚祷', devotionModuleDaily:'每日亮光',
+    // dictionary title
+    dictTitle:'词典'
   }
 };
 
@@ -236,6 +287,7 @@ function closeAuth() { document.getElementById('authOverlay').style.display = 'n
 function showAuthForm(form) {
   document.getElementById('authLoginForm').style.display = form === 'login' ? 'block' : 'none';
   document.getElementById('authRegisterForm').style.display = form === 'register' ? 'block' : 'none';
+  if (form === 'register') loadCaptcha();
 }
 
 function doLogin() {
@@ -255,21 +307,62 @@ function doLogin() {
   }).catch(function() { alert(t('loginFailed')); });
 }
 
+// -- Captcha
+function loadCaptcha() {
+  var q = document.getElementById('captchaQuestion');
+  if (q) q.textContent = state.lang === 'zh' ? '加载中...' : 'Loading...';
+  fetch('/api/v1/auth/captcha')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.success) {
+        document.getElementById('captchaQuestion').textContent = d.question;
+        document.getElementById('regCaptchaToken').value = d.token;
+        document.getElementById('regCaptchaAnswer').value = '';
+      } else {
+        document.getElementById('captchaQuestion').textContent = state.lang === 'zh' ? '加载失败' : 'Failed';
+      }
+    }).catch(function() {
+      document.getElementById('captchaQuestion').textContent = state.lang === 'zh' ? '加载失败' : 'Failed';
+    });
+}
+
 function doRegister() {
   var username = document.getElementById('regUsername').value.trim();
   var password = document.getElementById('regPassword').value;
-  if (!username || !password) return;
+  var captchaToken = document.getElementById('regCaptchaToken').value;
+  var captchaAnswer = parseInt(document.getElementById('regCaptchaAnswer').value) || 0;
+  var errEl = document.getElementById('regError');
+  function showErr(msg) { if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; } else { alert(msg); } }
+  function hideErr() { if (errEl) errEl.style.display = 'none'; }
+  hideErr();
+  if (!username || !password) {
+    showErr(t('fillFields') || (state.lang === 'zh' ? '请填写用户名和密码' : 'Please enter username and password'));
+    return;
+  }
+  if (!captchaToken || !captchaAnswer) {
+    showErr(t('needCaptcha') || (state.lang === 'zh' ? '请先加载并填写验证码' : 'Please load and enter the captcha'));
+    return;
+  }
+  if (username.length < 2 || password.length < 3) {
+    showErr(state.lang === 'zh' ? '用户名至少2字符，密码至少3字符' : 'Username min 2 chars, password min 3 chars');
+    return;
+  }
   fetch('/api/v1/auth/register', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: username, password: password })
+    body: JSON.stringify({ username: username, password: password, captchaToken: captchaToken, captchaAnswer: captchaAnswer })
   }).then(function(r) { return r.json(); }).then(function(data) {
-    if (data.token) {
-      authState.token = data.token; authState.user = { username: username };
+    if (data.success && data.token) {
+      authState.token = data.token; authState.user = data.user || { username: username };
       localStorage.setItem('bible-auth-token', data.token);
       localStorage.setItem('bible-auth-user', JSON.stringify(authState.user));
-      updateAuthUI(); closeAuth(); alert(t('registerSuccess'));
-    } else { alert(t('registerFailed') + ': ' + (data.error || '')); }
-  }).catch(function() { alert(t('registerFailed')); });
+      updateAuthUI(); closeAuth();
+    } else {
+      showErr(data.message || t('registerFailed'));
+      loadCaptcha();
+    }
+  }).catch(function() {
+    showErr(state.lang === 'zh' ? '网络错误，请检查服务是否运行' : 'Network error');
+  });
 }
 
 function doLogout() {
@@ -284,9 +377,9 @@ function updateAuthUI() {
   if (!btn) return;
   if (isLoggedIn()) {
     btn.innerHTML = '<span>👤</span> <span>' + escHtml(authState.user ? authState.user.username : 'Me') + '</span>';
-    btn.onclick = function() { if (confirm('Logout?')) doLogout(); };
+    btn.onclick = function() { if (confirm(t('logout') + '?')) doLogout(); };
   } else {
-    btn.innerHTML = '<span>👤</span> <span>' + t('login') + '</span>';
+    btn.innerHTML = '<span>👤</span> <span id="authBtnLabel">' + t('login') + '</span>';
     btn.onclick = openAuthPanel;
   }
 }
@@ -322,6 +415,8 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('bible-lang', state.lang);
     renderTranslationSelector(); renderBookList(); renderChapterGrid();
     renderChapterHeader(); renderChapterNav(); renderVerses(); updateLabels();
+    if (state.view === 'devotion') loadDevotion();
+    if (state.view === 'plan') renderPlanView();
   });
 
   // Bottom nav
@@ -368,21 +463,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
   initTTS();
   updateAuthUI();
+  updateLabels();
   loadTranslations();
 });
 
 function updateLabels() {
+  // Inputs
   document.getElementById('searchInput').placeholder = t('search');
   document.getElementById('dictSearchInput').placeholder = t('dictSearch');
+  document.getElementById('loginUsername').placeholder = t('username');
+  document.getElementById('loginPassword').placeholder = t('password');
+  document.getElementById('regUsername').placeholder = t('username');
+  document.getElementById('regPassword').placeholder = t('password');
+  // Drawer
   document.getElementById('otLabel').textContent = t('oldTestament');
   document.getElementById('ntLabel').textContent = t('newTestament');
   document.getElementById('chapterLabel').textContent = t('selectChapter');
+  // More menu
   document.getElementById('interlinearLabel').textContent = t('interlinear');
   document.getElementById('ttsLabel').textContent = state.tts.playing ? t('stopReading') : t('readAloud');
   document.getElementById('compareLabel').textContent = state.compareMode ? t('compareOff') : t('compare');
+  document.getElementById('fontMenuLabel').textContent = t('fontMenu');
+  document.getElementById('desktopLinkLabel').textContent = t('desktopVersion');
+  // Commentary
   document.getElementById('commentaryTitle').textContent = '📝 ' + t('commentary');
-  var dt = document.getElementById('dictTitle');
-  if (dt) dt.textContent = '📚 ' + t('dictionary');
+  // Strong's
+  document.getElementById('strongsTitle').textContent = t('strongsTitle');
+  // Font panel
+  document.getElementById('fontPanelTitle').textContent = t('fontPanel');
+  // Auth
+  document.getElementById('loginTitle').textContent = '👤 ' + t('loginTitle');
+  document.getElementById('registerTitle').textContent = '👤 ' + t('registerTitle');
+  document.getElementById('loginSubmitBtn').textContent = t('login');
+  document.getElementById('registerSubmitBtn').textContent = t('register');
+  document.getElementById('showRegister').textContent = t('register');
+  document.getElementById('showLogin').textContent = t('login');
+  // Swipe hint
+  var sh = document.getElementById('swipeHint'); if (sh) sh.textContent = t('swipeHint');
+  // Nav labels
+  var navMap = {navRead:'navRead',navSearch:'navSearch',navDict:'navDict',navNotes:'navNotes',navMaps:'navMaps',navDevotion:'navDevotion',navPlan:'navPlan'};
+  Object.keys(navMap).forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.textContent = t(navMap[id]);
+  });
+  // data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (I18N.en[key] || I18N.zh[key]) el.textContent = t(key);
+  });
   // Show/hide interlinear menu item based on translation support
   var ilItem = document.getElementById('interlinearMenuItem');
   if (ilItem) ilItem.style.display = isInterlinearTranslation(state.currentTranslation) ? '' : 'none';
@@ -1047,9 +1174,9 @@ function openStrongsPopup(sn) {
         strongsCache[sn] = html;
         body.innerHTML = html;
       } else {
-        body.innerHTML = '<div class="st-def">No entry found for ' + escHtml(sn) + '</div>';
+        body.innerHTML = '<div class="st-def">' + t('noEntryFound') + ' ' + escHtml(sn) + '</div>';
       }
-    }).catch(function() { body.innerHTML = '<div class="st-def">Failed to load</div>'; });
+    }).catch(function() { body.innerHTML = '<div class="st-def">' + t('failed') + '</div>'; });
 }
 
 function closeStrongs() { document.getElementById('strongsOverlay').style.display = 'none'; }
@@ -1116,16 +1243,37 @@ function loadCommentaries() {
 
 function renderCommentaryTabs() {
   var c = document.getElementById('commentaryTabs');
-  if (!state.commentaries || !state.commentaries.commentaries || !state.commentaries.commentaries.length) {
-    c.innerHTML = ''; return;
+  var sources = [];
+  if (state.commentaries && state.commentaries.commentaries && state.commentaries.commentaries.length) {
+    var seen = {};
+    state.commentaries.commentaries.forEach(function(cm) {
+      var key = cm.source || cm.sourceName || '';
+      if (!key || seen[key]) return;
+      seen[key] = true;
+      sources.push({ id: key, name: cmtName(key) || cm.sourceName || key });
+    });
   }
-  var html = '', seen = {};
-  state.commentaries.commentaries.forEach(function(cm) {
-    var key = cm.source || cm.sourceName || '';
-    if (!key || seen[key]) return;
-    seen[key] = true;
-    var name = COMMENTARY_LABELS[key] || cm.sourceName || key;
-    html += '<div class="cmt-tab' + (key === state.activeCommentary ? ' active' : '') + '" data-cmt="' + escHtml(key) + '">' + escHtml(name) + '</div>';
+  // Fallback sources (same as desktop)
+  var fallbacks = [
+    { id: 'TSK', name: cmtName('TSK') },
+    { id: 'JFB', name: cmtName('JFB') },
+    { id: 'MHCC', name: cmtName('MHCC') }
+  ];
+  if (!sources.length) {
+    sources = fallbacks;
+  } else {
+    fallbacks.forEach(function(fb) {
+      if (!sources.some(function(s){return s.id === fb.id})) {
+        sources.push(fb);
+      }
+    });
+  }
+  if (!sources.length) { c.innerHTML = ''; return; }
+  // Set active to first if not set
+  if (!state.activeCommentary) state.activeCommentary = sources[0].id;
+  var html = '';
+  sources.forEach(function(s) {
+    html += '<div class="cmt-tab' + (s.id === state.activeCommentary ? ' active' : '') + '" data-cmt="' + escHtml(s.id) + '">' + escHtml(s.name) + '</div>';
   });
   c.innerHTML = html;
   c.querySelectorAll('.cmt-tab').forEach(function(el) {
@@ -1238,9 +1386,30 @@ function renderDictResults(results) {
 // ═══════════════════════════════════════════
 //  DEVOTION
 // ═══════════════════════════════════════════
+var DEVOTION_MODULES = [
+  { id:'SME', zhKey:'devotionModuleSME' },
+  { id:'Daily', zhKey:'devotionModuleDaily' }
+];
 var devotionState = { module:'SME', currentKey:null, keys:[] };
 
+function initDevotionModuleSelect() {
+  var sel = document.getElementById('devotionModuleSelect');
+  if (!sel) return;
+  var html = '';
+  DEVOTION_MODULES.forEach(function(m) {
+    html += '<option value="' + m.id + '">' + t(m.zhKey) + '</option>';
+  });
+  sel.innerHTML = html;
+  sel.value = devotionState.module;
+  sel.onchange = function() {
+    devotionState.module = sel.value;
+    devotionState.keys = [];
+    loadDevotion();
+  };
+}
+
 function loadDevotion() {
+  initDevotionModuleSelect();
   document.getElementById('devotionContent').innerHTML = '<div class="loading">' + t('devotionLoading') + '</div>';
   var now = new Date();
   var mm = String(now.getMonth() + 1).padStart(2, '0');
@@ -1260,13 +1429,99 @@ function loadDevotion() {
   } else { loadDevotionContent(mm + '.' + dd); }
 }
 
+function parseDevotionOSIS(xml) {
+  var parser = new DOMParser();
+  var doc;
+  try { doc = parser.parseFromString(xml, 'text/xml'); } catch(e) { return escHtml(stripOsisTags(xml)); }
+  var errNode = doc.querySelector('parsererror');
+  if (errNode) doc = parser.parseFromString(xml, 'text/html');
+  var html = '';
+  var root = doc.documentElement;
+  var sections = root.querySelectorAll('div[type="section"]');
+  if (sections.length > 0) {
+    sections.forEach(function(sec) {
+      var title = sec.querySelector(':scope > title');
+      if (title) html += '<h4 style="margin:14px 0 6px;color:var(--accent,#4a9eff);font-size:15px">' + escHtml(title.textContent) + '</h4>';
+      html += renderDevotionNodes(sec);
+    });
+  } else {
+    html += renderDevotionNodes(root);
+  }
+  return html || '<p>' + escHtml(stripOsisTags(xml)) + '</p>';
+}
+
+function renderDevotionNodes(parent) {
+  var html = '';
+  var children = parent.childNodes;
+  var buf = '';
+  function flushBuf() { if (buf.trim()) { html += '<p style="margin:6px 0;line-height:1.7">' + buf.trim() + '</p>'; buf = ''; } }
+  for (var i = 0; i < children.length; i++) {
+    var n = children[i];
+    if (n.nodeType === Node.TEXT_NODE) { buf += escHtml(n.textContent); continue; }
+    if (n.nodeType !== Node.ELEMENT_NODE) continue;
+    var tag = n.tagName.toLowerCase();
+    if (tag === 'p') { flushBuf(); html += '<p style="margin:6px 0;line-height:1.7">' + renderDevotionInline(n) + '</p>'; }
+    else if (tag === 'title') { flushBuf(); html += '<h4 style="margin:14px 0 6px;color:var(--accent,#4a9eff);font-size:15px">' + escHtml(n.textContent) + '</h4>'; }
+    else if (tag === 'lb' || tag === 'br') { buf += '<br>'; }
+    else if (tag === 'hi') {
+      var type = n.getAttribute('type') || '';
+      if (type === 'italic' || type === 'i') buf += '<em>' + escHtml(n.textContent) + '</em>';
+      else if (type === 'bold' || type === 'b') buf += '<strong>' + escHtml(n.textContent) + '</strong>';
+      else buf += escHtml(n.textContent);
+    } else if (tag === 'reference') {
+      buf += '<span class="dv-ref" data-ref="' + escHtml(n.getAttribute('osisRef') || '') + '" style="color:var(--accent,#4a9eff);cursor:pointer;text-decoration:underline">' + escHtml(n.textContent) + '</span>';
+    } else if (tag === 'div') { flushBuf(); html += renderDevotionNodes(n); }
+    else { buf += renderDevotionInline(n); }
+  }
+  flushBuf();
+  return html;
+}
+
+function renderDevotionInline(parent) {
+  var html = '';
+  var children = parent.childNodes;
+  for (var i = 0; i < children.length; i++) {
+    var n = children[i];
+    if (n.nodeType === Node.TEXT_NODE) { html += escHtml(n.textContent); continue; }
+    if (n.nodeType !== Node.ELEMENT_NODE) continue;
+    var tag = n.tagName.toLowerCase();
+    if (tag === 'hi') {
+      var type = n.getAttribute('type') || '';
+      if (type === 'italic' || type === 'i') html += '<em>' + escHtml(n.textContent) + '</em>';
+      else if (type === 'bold' || type === 'b') html += '<strong>' + escHtml(n.textContent) + '</strong>';
+      else html += escHtml(n.textContent);
+    } else if (tag === 'reference') {
+      html += '<span class="dv-ref" data-ref="' + escHtml(n.getAttribute('osisRef') || '') + '" style="color:var(--accent,#4a9eff);cursor:pointer;text-decoration:underline">' + escHtml(n.textContent) + '</span>';
+    } else if (tag === 'lb' || tag === 'br') { html += '<br>'; }
+    else { html += renderDevotionInline(n); }
+  }
+  return html;
+}
+
 function loadDevotionContent(key) {
   fetch('/api/v1/sword/genbook/' + devotionState.module + '/content?key=' + encodeURIComponent(key))
     .then(function(r) { return r.json(); })
     .then(function(data) {
       var d = data.data || data;
-      var text = stripOsisTags(d.content || data.content || '');
-      document.getElementById('devotionContent').innerHTML = text || '<div class="loading">' + t('devotionNoContent') + '</div>';
+      var content = d.content || data.content || '';
+      if (content) {
+        document.getElementById('devotionContent').innerHTML = parseDevotionOSIS(content);
+        // Bind reference clicks
+        document.querySelectorAll('#devotionContent .dv-ref').forEach(function(el) {
+          el.addEventListener('click', function() {
+            var ref = el.getAttribute('data-ref');
+            var m = ref && ref.match(/Bible:(.+)\.(\d+)\.(\d+)/i);
+            if (m) {
+              var bookName = m[1]; var chapter = parseInt(m[2]);
+              var book = BOOK_ORDER.find(function(b) { return b.name && b.name.toLowerCase() === bookName.toLowerCase(); }) ||
+                BOOK_ORDER.find(function(b) { return b.id && b.id.toLowerCase() === bookName.toLowerCase(); });
+              if (book) { state.currentBook = book; state.currentChapter = chapter; loadChapter(); switchView('reader'); }
+            }
+          });
+        });
+      } else {
+        document.getElementById('devotionContent').innerHTML = '<div class="loading">' + t('devotionNoContent') + '</div>';
+      }
     }).catch(function() { document.getElementById('devotionContent').innerHTML = '<div class="loading">' + t('devotionError') + '</div>'; });
 }
 
@@ -1624,6 +1879,18 @@ var PLAN_NAMES_ZH = {
   proverbs30: "30天箴言计划"
 };
 
+// Translate reading plan label (e.g. "Deuteronomy 24-26" → "申命记 24-26")
+function translatePlanLabel(r) {
+  var book = findBookByOsisId(r.bookId) || BOOK_ORDER.find(function(b) { return b.id === r.bookId; });
+  if (!book) return r.label;
+  var chPart = r.chapterStart === r.chapterEnd ? String(r.chapterStart) : r.chapterStart + '-' + r.chapterEnd;
+  var zh = book.nameZh + ' ' + chPart;
+  var en = book.name + ' ' + chPart;
+  if (state.lang === 'zh') return zh;
+  if (state.lang === 'bilingual') return zh + ' / ' + en;
+  return en;
+}
+
 function loadReadingPlan() {
   if (!planState.plans.length) {
     fetch('/api/v1/reading-plans')
@@ -1641,7 +1908,7 @@ function loadReadingPlan() {
         renderPlanView();
       })
       .catch(function() {
-        document.getElementById('planView').innerHTML = '<div class="loading">Failed to load plans</div>';
+        document.getElementById('planView').innerHTML = '<div class="loading">' + t('planFailedLoad') + '</div>';
       });
   } else {
     renderPlanView();
@@ -1656,8 +1923,10 @@ function renderPlanView() {
   html += '<select id="planSelect" class="plan-select" onchange="switchPlan(this.value)">';
   planState.plans.forEach(function(p) {
     var nameZh = PLAN_NAMES_ZH[p.planCode] || p.planName;
+    var nameEn = p.planName || p.planCode;
+    var displayName = (state.lang === 'zh') ? nameZh : (state.lang === 'bilingual') ? nameZh + ' / ' + nameEn : nameEn;
     var sel = p.planCode === planState.currentPlan ? ' selected' : '';
-    html += '<option value="' + p.planCode + '"' + sel + '>' + nameZh + '</option>';
+    html += '<option value="' + p.planCode + '"' + sel + '>' + displayName + '</option>';
   });
   html += '</select>';
   html += '</div>';
@@ -1665,12 +1934,13 @@ function renderPlanView() {
   // Today's reading card
   html += '<div class="plan-today-card">';
   html += '<div class="plan-today-header">';
-  html += '<span class="plan-day-label">Day ' + planState.currentDay + '</span>';
+  var dayLabel = (state.lang === 'zh') ? t('planDay') + ' ' + planState.currentDay + ' 天' : (state.lang === 'bilingual') ? t('planDay') + ' ' + planState.currentDay + ' 天 / Day ' + planState.currentDay : 'Day ' + planState.currentDay;
+  html += '<span class="plan-day-label">' + dayLabel + '</span>';
   html += '<span class="plan-date-label" id="planDate"></span>';
   html += '</div>';
-  html += '<div id="planReadings" class="plan-readings"><div class="loading">Loading...</div></div>';
+  html += '<div id="planReadings" class="plan-readings"><div class="loading">' + t('planLoading') + '</div></div>';
   html += '<div class="plan-actions">';
-  html += '<button class="plan-check-btn" id="planCheckBtn" onclick="togglePlanComplete()">✓ Mark Complete</button>';
+  html += '<button class="plan-check-btn" id="planCheckBtn" onclick="togglePlanComplete()">✓ ' + t('planMarkComplete') + '</button>';
   html += '</div>';
   html += '</div>';
   
@@ -1693,9 +1963,10 @@ function renderPlanView() {
   // Day navigator
   html += '<div class="plan-day-nav">';
   html += '<button class="icon-btn" onclick="changePlanDay(-1)">◀</button>';
-  html += '<span id="planDayDisplay">Day ' + planState.selectedDay + '</span>';
+  var selDayLabel = (state.lang === 'zh') ? t('planDay') + ' ' + planState.selectedDay + ' 天' : (state.lang === 'bilingual') ? t('planDay') + ' ' + planState.selectedDay + ' 天 / Day ' + planState.selectedDay : 'Day ' + planState.selectedDay;
+  html += '<span id="planDayDisplay">' + selDayLabel + '</span>';
   html += '<button class="icon-btn" onclick="changePlanDay(1)">▶</button>';
-  html += '<button class="plan-today-btn" onclick="goToToday()">Today</button>';
+  html += '<button class="plan-today-btn" onclick="goToToday()">' + t('planToday') + '</button>';
   html += '</div>';
   
   // Calendar grid (mini)
@@ -1719,7 +1990,7 @@ function switchPlan(code) {
 function loadPlanDay(day) {
   planState.selectedDay = day;
   var display = document.getElementById('planDayDisplay');
-  if (display) display.textContent = 'Day ' + day;
+  if (display) display.textContent = (state.lang === 'zh') ? t('planDay') + ' ' + day + ' 天' : (state.lang === 'bilingual') ? t('planDay') + ' ' + day + ' 天 / Day ' + day : 'Day ' + day;
   
   fetch('/api/v1/reading-plans/' + planState.currentPlan + '/day/' + day)
     .then(function(r) { return r.json(); })
@@ -1729,12 +2000,13 @@ function loadPlanDay(day) {
       data.readings.forEach(function(r, i) {
         var done = planState.progress[day] && planState.progress[day].readCount > i;
         var cls = done ? ' plan-reading-done' : '';
+        var labelZh = translatePlanLabel(r);
         html += '<div class="plan-reading-item' + cls + '" onclick="goToReading(\'' + r.bookId + '\',' + r.chapterStart + ',' + r.chapterEnd + ',' + i + ',' + day + ')"';
         html += ' style="display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:6px;background:var(--bg-input,#14161e);border-radius:8px;cursor:pointer;transition:background .15s"';
         html += ' ontouchstart="this.style.background=\'var(--bg-hover,#1f2230)\'" ontouchend="this.style.background=\'var(--bg-input,#14161e)\'"';
         html += '>';
         html += '<span class="plan-reading-check" style="font-size:18px;color:var(--accent,#4a9eff)">' + (done ? '✓' : '○') + '</span>';
-        html += '<span class="plan-reading-label" style="flex:1;font-size:15px">' + r.label + '</span>';
+        html += '<span class="plan-reading-label" style="flex:1;font-size:15px">' + labelZh + '</span>';
         html += '<span style="font-size:14px;color:var(--text-dim,#888)">📖 →</span>';
         html += '</div>';
       });
@@ -1753,7 +2025,7 @@ function loadPlanDay(day) {
       updateCheckButton(day);
     })
     .catch(function() {
-      document.getElementById('planReadings').innerHTML = '<div class="loading">Failed to load</div>';
+      document.getElementById('planReadings').innerHTML = '<div class="loading">' + t('failed') + '</div>';
     });
 }
 
@@ -1837,7 +2109,7 @@ function updateCheckButton(day) {
   var btn = document.getElementById('planCheckBtn');
   if (!btn) return;
   var isDone = planState.progress[day] && planState.progress[day].completed;
-  btn.textContent = isDone ? '✓ Completed' : '✓ Mark Complete';
+  btn.textContent = isDone ? '✓ ' + t('planCompleted') : '✓ ' + t('planMarkComplete');
   btn.classList.toggle('plan-check-done', isDone);
 }
 
