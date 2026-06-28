@@ -281,23 +281,27 @@ body {
 }
 #commentaryBody {
   overflow-y:auto;
-  max-height:calc(100vh - 140px);
+  /* Leave room for sticky tabs bar (~60px) + panel padding */
+  max-height:calc(100vh - 200px);
 }
 
-/* Commentary Source Tabs */
+/* Commentary Source Selector */
 .commentary-tabs {
-  display:flex; gap:4px; margin-bottom:12px; flex-wrap:wrap;
+  margin-bottom:12px;
+  position:sticky; top:0; z-index:10;
+  background:var(--bg2); padding:4px 0;
 }
-.commentary-tabs .cmt-tab {
-  padding:4px 10px; font-size:10.5px; font-weight:600;
+.commentary-tabs select.cmt-select {
+  width:100%; padding:5px 8px; font-size:12px; font-weight:600;
   border-radius:4px; cursor:pointer;
-  background:var(--bg3); color:var(--text2);
+  background:var(--bg3); color:var(--text);
   border:1px solid var(--border);
-  transition:all 0.15s;
+  outline:none;
 }
-.commentary-tabs .cmt-tab:hover { border-color:var(--accent); color:var(--text); }
-.commentary-tabs .cmt-tab.active {
-  background:var(--accent); color:#fff; border-color:var(--accent);
+.commentary-tabs select.cmt-select:hover { border-color:var(--accent); }
+.commentary-tabs select.cmt-select:focus { border-color:var(--accent); }
+.commentary-tabs select.cmt-select option {
+  background:var(--bg2); color:var(--text);
 }
 
 /* Commentary Item */

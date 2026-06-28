@@ -318,15 +318,16 @@ body {
 }
 .commentary-drawer.open { transform:translateY(0); }
 .cmt-tabs {
-  display:flex; gap:4px; overflow-x:auto; margin-bottom:12px;
-  padding-bottom:4px; -webkit-overflow-scrolling:touch;
+  margin-bottom:12px; padding-bottom:4px;
 }
-.cmt-tab {
-  padding:6px 12px; font-size:12px; white-space:nowrap;
-  background:var(--bg3); border:1px solid var(--border);
-  border-radius:16px; color:var(--text2); cursor:pointer; flex-shrink:0;
+.cmt-tabs select.cmt-select {
+  width:100%; padding:6px 8px; font-size:13px;
+  background:var(--bg3); color:var(--text);
+  border:1px solid var(--border); border-radius:6px;
+  outline:none; -webkit-appearance:none; appearance:none;
 }
-.cmt-tab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.cmt-tabs select.cmt-select:focus { border-color:var(--accent); }
+.cmt-tabs select.cmt-select option { background:var(--bg2); color:var(--text); }
 .cmt-body { font-size:14px; line-height:1.6; color:var(--text); }
 .cmt-body .cmt-empty { color:var(--text2); text-align:center; padding:20px; }
 .cmt-entry {

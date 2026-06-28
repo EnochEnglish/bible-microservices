@@ -1242,20 +1242,24 @@ function renderCommentaryTabs() {
     });
   }
 
-  var html = "";
+  // Sort alphabetically by id
+  sources.sort(function(a, b) { return a.id.localeCompare(b.id); });
+
+  var html = '<select class="cmt-select" id="cmtSelect">';
   sources.forEach(function(s) {
-    html += '<div class="cmt-tab' + (state.activeCommentary === s.id ? " active" : "") +
-      '" data-source="' + s.id + '">' + (cmtName(s.id) || s.name) + '</div>';
+    var label = cmtName(s.id) || s.name;
+    html += '<option value="' + s.id + '"' + (state.activeCommentary === s.id ? ' selected' : '') + '>' + label + '</option>';
   });
+  html += '</select>';
   tabsEl.innerHTML = html;
 
-  tabsEl.querySelectorAll(".cmt-tab").forEach(function(tab) {
-    tab.addEventListener("click", function() {
-      state.activeCommentary = tab.dataset.source;
-      renderCommentaryTabs();
+  var sel = tabsEl.querySelector("#cmtSelect");
+  if (sel) {
+    sel.addEventListener("change", function() {
+      state.activeCommentary = this.value;
       renderCommentaryBody();
     });
-  });
+  }
 }
 
 function renderCommentaryBody() {

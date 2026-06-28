@@ -1244,7 +1244,11 @@ function loadCommentaries() {
 function renderCommentaryTabs() {
   var c = document.getElementById('commentaryTabs');
   var sources = [];
-  if (state.commentaries && state.commentaries.commentaries && state.commentaries.commentaries.length) {
+  if (state.commentaries && state.commentaries.sources && state.commentaries.sources.length) {
+    state.commentaries.sources.forEach(function(s) {
+      sources.push({ id: s.id, name: cmtName(s.id) || s.name || s.id });
+    });
+  } else if (state.commentaries && state.commentaries.commentaries && state.commentaries.commentaries.length) {
     var seen = {};
     state.commentaries.commentaries.forEach(function(cm) {
       var key = cm.source || cm.sourceName || '';
@@ -1253,7 +1257,7 @@ function renderCommentaryTabs() {
       sources.push({ id: key, name: cmtName(key) || cm.sourceName || key });
     });
   }
-  // Fallback sources (same as desktop)
+  // Fallbacks
   var fallbacks = [
     { id: 'TSK', name: cmtName('TSK') },
     { id: 'JFB', name: cmtName('JFB') },
@@ -1263,25 +1267,25 @@ function renderCommentaryTabs() {
     sources = fallbacks;
   } else {
     fallbacks.forEach(function(fb) {
-      if (!sources.some(function(s){return s.id === fb.id})) {
-        sources.push(fb);
-      }
+      if (!sources.some(function(s){return s.id === fb.id;})) sources.push(fb);
     });
   }
   if (!sources.length) { c.innerHTML = ''; return; }
-  // Set active to first if not set
+  sources.sort(function(a, b) { return a.id.localeCompare(b.id); });
   if (!state.activeCommentary) state.activeCommentary = sources[0].id;
-  var html = '';
+  var html = '<select class="cmt-select" id="cmtSelect">';
   sources.forEach(function(s) {
-    html += '<div class="cmt-tab' + (s.id === state.activeCommentary ? ' active' : '') + '" data-cmt="' + escHtml(s.id) + '">' + escHtml(s.name) + '</div>';
+    html += '<option value="' + escHtml(s.id) + '"' + (s.id === state.activeCommentary ? ' selected' : '') + '>' + escHtml(s.name) + '</option>';
   });
+  html += '</select>';
   c.innerHTML = html;
-  c.querySelectorAll('.cmt-tab').forEach(function(el) {
-    el.addEventListener('click', function() {
-      state.activeCommentary = el.dataset.cmt;
-      renderCommentaryTabs(); renderCommentaryBody();
+  var sel = c.querySelector('#cmtSelect');
+  if (sel) {
+    sel.addEventListener('change', function() {
+      state.activeCommentary = this.value;
+      renderCommentaryBody();
     });
-  });
+  }
 }
 
 function renderCommentaryBody() {
