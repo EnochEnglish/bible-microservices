@@ -2,6 +2,7 @@ package com.bible.monolith.controller
 
 import com.bible.monolith.service.AnnotationService
 import com.bible.monolith.service.BibleTextService
+import com.bible.monolith.service.SwordCommentaryService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.net.URLDecoder
@@ -25,7 +26,8 @@ import java.nio.charset.StandardCharsets
 @RequestMapping("/api/v1/annotations")
 class AnnotationController(
     private val annotationService: AnnotationService,
-    private val bibleTextService: BibleTextService
+    private val bibleTextService: BibleTextService,
+    private val swordCommentaryService: SwordCommentaryService
 ) {
 
     // ==================== 注释书 ====================
@@ -37,29 +39,83 @@ class AnnotationController(
         @RequestParam(required = false) verse: Int?,
         @RequestParam(required = false) source: String?
     ): ResponseEntity<Map<String, Any>> {
-        val result = annotationService.getCommentaries(source, book, chapter, verse)
-        val sources = annotationService.getAllCommentarySources()
+        // ── 1. H2 COMMENTARIES table (imported data) ──
+        val h2Sources = annotationService.getAllCommentarySources()
+        val h2Ids = h2Sources.map { it.first }.toSet()
+        val h2Result = if (source == null || source in h2Ids) {
+            annotationService.getCommentaries(source, book, chapter, verse)
+        } else emptyList()
+
+        // ── 2. SWORD COMMENTARY modules (JSword direct read) ──
+        val swordSources = swordCommentaryService.listSources(excludeIds = h2Ids)
+        val swordIds = swordSources.map { it.id }.toSet()
+        val swordResult: List<SwordCommentaryService.CommentaryEntry> = if (source == null || source in swordIds) {
+            if (verse != null) {
+                val entry = swordCommentaryService.getCommentaryForVerse(source ?: "", book, chapter, verse)
+                if (entry != null) listOf(entry) else emptyList()
+            } else {
+                if (source != null) {
+                    swordCommentaryService.getCommentaryForChapter(source, book, chapter)
+                } else {
+                    swordSources.flatMap { src: SwordCommentaryService.SwordCommentarySource ->
+                        swordCommentaryService.getCommentaryForChapter(src.id, book, chapter)
+                    }
+                }
+            }
+        } else emptyList()
+
+        // ── 3. Merge results ──
+        val allCommentaries = mutableListOf<Map<String, Any?>>()
+        // H2 entries
+        allCommentaries.addAll(h2Result.map { c ->
+            mapOf(
+                "source" to c.source,
+                "sourceName" to c.sourceName,
+                "bookId" to c.bookId,
+                "chapter" to c.chapter,
+                "verseStart" to c.verseStart,
+                "verseEnd" to c.verseEnd,
+                "text" to c.text,
+                "storage" to "h2"
+            )
+        })
+        // SWORD entries
+        allCommentaries.addAll(swordResult.map { e ->
+            mapOf(
+                "source" to e.source,
+                "sourceName" to e.sourceName,
+                "bookId" to e.bookId,
+                "chapter" to e.chapter,
+                "verseStart" to e.verseStart,
+                "verseEnd" to e.verseEnd,
+                "text" to e.text,
+                "storage" to "sword"
+            )
+        })
+
+        // ── 4. Merge source lists ──
+        val allSources = mutableListOf<Map<String, String>>()
+        allSources.addAll(h2Sources.map { (s: String, n: String) -> mapOf("id" to s, "name" to n, "storage" to "h2") })
+        allSources.addAll(swordSources.map { s: SwordCommentaryService.SwordCommentarySource -> mapOf("id" to s.id, "name" to s.name, "storage" to "sword") })
+
         return ResponseEntity.ok(mapOf(
-            "commentaries" to result.map { c ->
-                mapOf(
-                    "source" to c.source,
-                    "sourceName" to c.sourceName,
-                    "bookId" to c.bookId,
-                    "chapter" to c.chapter,
-                    "verseStart" to c.verseStart,
-                    "verseEnd" to c.verseEnd,
-                    "text" to c.text
-                )
-            },
-            "sources" to sources.map { (s, n) -> mapOf("id" to s, "name" to n) }
+            "commentaries" to allCommentaries,
+            "sources" to allSources
         ))
     }
 
     @GetMapping("/commentary-sources")
     fun getSources(): ResponseEntity<Map<String, Any>> {
-        val sources = annotationService.getAllCommentarySources()
+        val h2Sources = annotationService.getAllCommentarySources()
+        val h2Ids = h2Sources.map { it.first }.toSet()
+        val swordSources = swordCommentaryService.listSources(excludeIds = h2Ids)
+
+        val allSources = mutableListOf<Map<String, String>>()
+        allSources.addAll(h2Sources.map { (s: String, n: String) -> mapOf("id" to s, "name" to n, "storage" to "h2") })
+        allSources.addAll(swordSources.map { s: SwordCommentaryService.SwordCommentarySource -> mapOf("id" to s.id, "name" to s.name, "storage" to "sword") })
+
         return ResponseEntity.ok(mapOf(
-            "sources" to sources.map { (s, n) -> mapOf("id" to s, "name" to n) }
+            "sources" to allSources
         ))
     }
 

@@ -9,7 +9,7 @@
   <title>Bible Reader</title>
   <script>document.write('<base href="' + (location.pathname.startsWith('/bible/') ? '/bible/m/' : '/m/') + '">');</script>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="mobile.css?v=20260629e">
+  <link rel="stylesheet" href="mobile.css?v=20260701ba">
 </head>
 <body>
 
@@ -173,6 +173,9 @@
     <button class="more-item" id="authBtn" onclick="openAuthPanel()">
       <span>&#128100;</span> <span id="authBtnLabel">Login</span>
     </button>
+    <a class="more-item" href="../library.html">
+      <span>📚</span> <span>图书馆 / Library</span>
+    </a>
     <a class="more-item" href="../" id="desktopLink">
       <span>&#128421;&#65039;</span> <span id="desktopLinkLabel">Desktop Version</span>
     </a>
@@ -236,9 +239,9 @@
 <!-- Swipe Hint -->
 <div id="swipeHint" class="swipe-hint" style="display:none" data-i18n="swipeHint">&#8592; Swipe &#8594;</div>
 
-<script src="../js/config.js?v=20260629e"></script>
-<script src="../js/morphology.js?v=20260629e"></script>
-<script src="mobile.js?v=20260629e"></script>
+<script src="../js/config.js?v=20260701ba"></script>
+<script src="../js/morphology.js?v=20260701ba"></script>
+<script src="mobile.js?v=20260701ba"></script>
 <script>
   (function() {
     var dl = document.getElementById('desktopLink');

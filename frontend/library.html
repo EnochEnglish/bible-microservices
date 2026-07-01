@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Christian Library / 基督教经典图书馆</title>
+  <link rel="stylesheet" href="css/style.css?v=20260701b">
+  <link rel="stylesheet" href="css/library.css?v=20260701b">
+</head>
+<body>
+<div id="library-app">
+
+  <!-- Top Bar -->
+  <div class="lib-topbar">
+    <div class="lib-logo">📚 Christian Library / 基督教经典图书馆</div>
+    <a href="/" class="lib-back-btn">← Bible / 圣经</a>
+    <select id="libLangToggle" class="lib-lang-select">
+      <option value="bilingual">🌐 双语</option>
+      <option value="zh">🇨🇳 中文</option>
+      <option value="en">🇬🇧 English</option>
+    </select>
+  </div>
+
+  <!-- Bookshelf View -->
+  <div id="bookshelfView" class="lib-bookshelf">
+    <div class="lib-shelf-header">
+      <h2 id="shelfTitle">书架 / Bookshelf</h2>
+      <input type="text" id="bookSearch" placeholder="搜索书名 / Search..." class="lib-search-input">
+    </div>
+    <div class="lib-filter-bar">
+      <button class="lib-filter-btn active" data-filter="all">全部 / All</button>
+      <button class="lib-filter-btn" data-filter="GENERAL_BOOK">经典著作 / Classics</button>
+      <button class="lib-filter-btn" data-filter="DAILY_DEVOTIONS">灵修 / Devotions</button>
+      <button class="lib-filter-btn" data-filter="ESSAYS">论文 / Essays</button>
+    </div>
+    <div id="bookGrid" class="lib-book-grid">
+      <div class="lib-loading">加载中... / Loading...</div>
+    </div>
+  </div>
+
+  <!-- Reader View -->
+  <div id="readerView" class="lib-reader" style="display:none">
+    <div class="lib-reader-header">
+      <button id="backToShelf" class="lib-back-shelf">← 返回书架 / Back</button>
+      <div class="lib-reader-title" id="readerTitle"></div>
+      <div class="lib-reader-controls">
+        <button id="prevChapter" class="lib-nav-btn">◀ 上一章</button>
+        <select id="chapterSelect" class="lib-chapter-select"></select>
+        <button id="nextChapter" class="lib-nav-btn">下一章 ▶</button>
+      </div>
+    </div>
+    <div class="lib-reader-toolbar">
+      <button id="fontDecrease" class="lib-tool-btn">A-</button>
+      <button id="fontIncrease" class="lib-tool-btn">A+</button>
+      <button id="themeToggle" class="lib-tool-btn">🌙</button>
+      <span class="lib-font-size-label" id="fontSizeLabel">18px</span>
+    </div>
+    <div id="readerContent" class="lib-reader-content">
+      <div class="lib-loading">加载中... / Loading...</div>
+    </div>
+  </div>
+
+</div>
+<script src="js/config.js?v=20260701b"></script>
+<script src="js/library.js?v=20260701b"></script>
+</body>
+</html>

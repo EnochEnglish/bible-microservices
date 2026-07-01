@@ -549,9 +549,20 @@ class ModuleInstallService(
     private fun resolveDownloadUrl(repo: RepositoryInfo, moduleName: String): String {
         val lowerUrl = "https://${repo.host}${repo.packageDir}/${moduleName}.zip"
         val upperUrl = "https://${repo.host}${repo.packageDir}/${moduleName.uppercase()}.zip"
+        // Capitalize first letter only (e.g. "Imitation.zip") — common CrossWire convention
+        val capUrl = if (moduleName.isNotEmpty()) {
+            val cap = moduleName[0].uppercaseChar() + moduleName.substring(1)
+            "https://${repo.host}${repo.packageDir}/${cap}.zip"
+        } else lowerUrl
 
         // Try lowercase first (most common)
         if (urlExists(lowerUrl)) return lowerUrl
+
+        // Try capitalized first-letter (very common in CrossWire)
+        if (urlExists(capUrl)) {
+            logger.info("Using capitalized URL: {}", capUrl)
+            return capUrl
+        }
 
         // Try uppercase fallback
         if (urlExists(upperUrl)) {
