@@ -31,6 +31,15 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
 }
 
+/* Ensure body can scroll — override style.css body{height:100vh;overflow:hidden} */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  background: var(--lib-bg) !important;
+}
+
 /* Top Bar */
 .lib-topbar {
   display: flex;
@@ -188,6 +197,8 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   min-height: 50vh;
+  padding-bottom: 4rem;
+  overflow-y: visible;
 }
 .lib-reader-content h1, .lib-reader-content h2, .lib-reader-content h3 {
   color: var(--lib-accent);
