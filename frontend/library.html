@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Christian Library / 基督教经典图书馆</title>
-  <link rel="stylesheet" href="css/style.css?v=20260702a">
-  <link rel="stylesheet" href="css/library.css?v=20260702a">
+  <link rel="stylesheet" href="css/style.css?v=20260702b">
+  <link rel="stylesheet" href="css/library.css?v=20260702b">
 </head>
 <body>
 <div id="library-app">
@@ -32,6 +32,7 @@
       <button class="lib-filter-btn" data-filter="GENERAL_BOOK">经典著作 / Classics</button>
       <button class="lib-filter-btn" data-filter="DAILY_DEVOTIONS">灵修 / Devotions</button>
       <button class="lib-filter-btn" data-filter="ESSAYS">论文 / Essays</button>
+      <button class="lib-filter-btn" data-filter="CHINESE_BOOK">中文著作 / Chinese</button>
     </div>
     <div id="bookGrid" class="lib-book-grid">
       <div class="lib-loading">加载中... / Loading...</div>
@@ -61,7 +62,8 @@
   </div>
 
 </div>
-<script src="js/config.js?v=20260702a"></script>
-<script src="js/library.js?v=20260702a"></script>
+<script>var LIBRARY_DATA_BASE='library-data';</script>
+<script src="js/config.js?v=20260702b"></script>
+<script src="js/library.js?v=20260702b"></script>
 </body>
 </html>

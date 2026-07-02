@@ -1,7 +1,10 @@
-// Library Page — Christian Classics Reader
-// Uses existing SWORD GenBook API: /api/v1/sword/genbook/{module}/keys and /content
+// Library Page — Christian Classics Reader + Static Chinese Books
+// SWORD books: /api/v1/sword/genbook/{module}/keys and /content
+// Static books: /library-data/{bookCode}/meta.json and {id}.json
 
 var API = (typeof API_BASE !== 'undefined') ? API_BASE : '';
+var STATIC_BASE = (typeof LIBRARY_DATA_BASE !== 'undefined') ? LIBRARY_DATA_BASE : 'library-data';
+
 var libState = {
   lang: 'bilingual',
   books: [],
@@ -89,6 +92,21 @@ var BOOK_META_EN = {
   'DBD': { name: 'Day by Day by Grace', author: 'Bob Hoekstra' }
 };
 
+// ─── Static books registry ───
+// Each entry: { code, title, titleEn, author, category, categoryEn, language, icon }
+var STATIC_BOOKS = [
+  {
+    code: 'bible_wenti',
+    title: '圣经问题解答',
+    titleEn: 'Bible Questions & Answers',
+    author: '陈终道',
+    category: 'CHINESE_BOOK',
+    categoryEn: 'Chinese Books',
+    language: 'zh',
+    icon: '❓'
+  }
+];
+
 function libT(zh, en) {
   if (libState.lang === 'zh') return zh;
   if (libState.lang === 'en') return en;
@@ -103,6 +121,12 @@ function getBookMeta(initials) {
   return { name: zh.name + ' / ' + en.name, author: zh.author || en.author };
 }
 
+function getStaticBookMeta(book) {
+  if (libState.lang === 'zh') return { name: book.title, author: book.author };
+  if (libState.lang === 'en') return { name: book.titleEn || book.title, author: book.author };
+  return { name: book.title + ' / ' + (book.titleEn || book.title), author: book.author };
+}
+
 // ─── API helpers ───
 function fetchJson(url) {
   return fetch(url).then(function(r) { return r.json(); });
@@ -110,7 +134,6 @@ function fetchJson(url) {
 
 // ─── Init ───
 document.addEventListener('DOMContentLoaded', function() {
-  // Restore preferences
   var savedLang = localStorage.getItem('lib_lang');
   if (savedLang) { libState.lang = savedLang; document.getElementById('libLangToggle').value = savedLang; }
   var savedFont = localStorage.getItem('lib_fontSize');
@@ -128,13 +151,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (libState.currentBook) updateReaderLabels();
   });
 
-  // Search
   document.getElementById('bookSearch').addEventListener('input', function(e) {
     libState.searchQuery = e.target.value.toLowerCase();
     renderBookshelf();
   });
 
-  // Filter buttons
   document.querySelectorAll('.lib-filter-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       document.querySelectorAll('.lib-filter-btn').forEach(function(b) { b.classList.remove('active'); });
@@ -144,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Reader controls
   document.getElementById('backToShelf').addEventListener('click', showBookshelf);
   document.getElementById('prevChapter').addEventListener('click', function() { navigateChapter(-1); });
   document.getElementById('nextChapter').addEventListener('click', function() { navigateChapter(1); });
@@ -152,7 +172,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadChapter(parseInt(e.target.value));
   });
 
-  // Font controls
   document.getElementById('fontDecrease').addEventListener('click', function() { changeFont(-2); });
   document.getElementById('fontIncrease').addEventListener('click', function() { changeFont(2); });
   document.getElementById('themeToggle').addEventListener('click', toggleTheme);
@@ -160,17 +179,33 @@ document.addEventListener('DOMContentLoaded', function() {
   loadBooks();
 });
 
-// ─── Load book list from SWORD API ───
+// ─── Load book list: SWORD API + Static books ───
 function loadBooks() {
+  // First, add static books
+  libState.books = STATIC_BOOKS.map(function(b) {
+    return {
+      initials: b.code,
+      name: b.title,
+      category: b.category,
+      language: b.language,
+      isStatic: true,
+      _staticData: b
+    };
+  });
+
+  // Then fetch SWORD books
   fetchJson(API + '/sword/modules')
     .then(function(data) {
-      libState.books = data.modules.filter(function(m) {
+      var swordBooks = data.modules.filter(function(m) {
         return ['GENERAL_BOOK', 'DAILY_DEVOTIONS', 'ESSAYS'].indexOf(m.category) !== -1;
       });
+      swordBooks.forEach(function(b) { b.isStatic = false; });
+      libState.books = libState.books.concat(swordBooks);
       renderBookshelf();
     })
     .catch(function(err) {
-      document.getElementById('bookGrid').innerHTML = '<div class="lib-loading">加载失败: ' + err.message + '</div>';
+      // SWORD API failed — still show static books
+      renderBookshelf();
     });
 }
 
@@ -181,13 +216,16 @@ function renderBookshelf() {
 
   // Filter
   if (libState.filter !== 'all') {
-    books = books.filter(function(b) { return b.category === libState.filter; });
+    books = books.filter(function(b) {
+      if (libState.filter === 'CHINESE_BOOK') return b.isStatic;
+      return b.category === libState.filter;
+    });
   }
 
   // Search
   if (libState.searchQuery) {
     books = books.filter(function(b) {
-      var meta = getBookMeta(b.initials);
+      var meta = b.isStatic ? getStaticBookMeta(b._staticData) : getBookMeta(b.initials);
       return (meta.name + ' ' + meta.author + ' ' + b.initials + ' ' + b.name).toLowerCase().indexOf(libState.searchQuery) !== -1;
     });
   }
@@ -199,9 +237,15 @@ function renderBookshelf() {
 
   var html = '';
   books.forEach(function(book) {
-    var meta = getBookMeta(book.initials);
-    var icon = book.category === 'DAILY_DEVOTIONS' ? '📖' : (book.category === 'ESSAYS' ? '📝' : '📕');
-    html += '<div class="lib-book-card" onclick="openBook(\'' + book.initials + '\')">';
+    var meta, icon;
+    if (book.isStatic) {
+      meta = getStaticBookMeta(book._staticData);
+      icon = book._staticData.icon || '📕';
+    } else {
+      meta = getBookMeta(book.initials);
+      icon = book.category === 'DAILY_DEVOTIONS' ? '📖' : (book.category === 'ESSAYS' ? '📝' : '📕');
+    }
+    html += '<div class="lib-book-card" onclick="openBook(\'' + book.initials + '\',' + (book.isStatic ? 'true' : 'false') + ')">';
     html += '  <div class="lib-book-icon">' + icon + '</div>';
     html += '  <div class="lib-book-title">' + escHtml(meta.name) + '</div>';
     html += '  <div class="lib-book-author">' + escHtml(meta.author) + '</div>';
@@ -210,32 +254,60 @@ function renderBookshelf() {
   });
   grid.innerHTML = html;
 
-  // Update shelf title
   document.getElementById('shelfTitle').textContent = libT('书架', 'Bookshelf') + ' (' + books.length + ')';
 }
 
-// ─── Open a book ───
-function openBook(initials) {
+// ─── Open a book (SWORD or Static) ───
+function openBook(initials, isStatic) {
   libState.currentBook = initials;
+  libState.currentBookIsStatic = isStatic;
   libState.currentKeyIndex = 0;
   document.getElementById('bookshelfView').style.display = 'none';
   document.getElementById('readerView').style.display = 'block';
 
+  if (isStatic) {
+    openStaticBook(initials);
+  } else {
+    openSwordBook(initials);
+  }
+}
+
+// ─── Open SWORD book ───
+function openSwordBook(initials) {
   var meta = getBookMeta(initials);
   document.getElementById('readerTitle').textContent = meta.name;
 
-  // Load table of contents
   fetchJson(API + '/sword/genbook/' + initials + '/keys?limit=500')
     .then(function(data) {
       if (!data.success || !data.data || !data.data.keys) {
         document.getElementById('readerContent').innerHTML = '<div class="lib-loading">' + libT('无法加载目录', 'Failed to load contents') + '</div>';
         return;
       }
-      libState.currentKeys = data.data.keys;
+      libState.currentKeys = data.data.keys.map(function(k) {
+        return { name: k.name || k.osisRef || k.key, key: k.key || k.osisRef || k.name };
+      });
       renderChapterSelect();
-      if (libState.currentKeys.length > 0) {
-        loadChapter(0);
-      }
+      if (libState.currentKeys.length > 0) loadChapter(0);
+    })
+    .catch(function(err) {
+      document.getElementById('readerContent').innerHTML = '<div class="lib-loading">Error: ' + escHtml(err.message) + '</div>';
+    });
+}
+
+// ─── Open Static book (JSON files) ───
+function openStaticBook(code) {
+  var staticBook = STATIC_BOOKS.find(function(b) { return b.code === code; });
+  var meta = getStaticBookMeta(staticBook);
+  document.getElementById('readerTitle').textContent = meta.name;
+
+  fetchJson(STATIC_BASE + '/' + code + '/meta.json')
+    .then(function(metaData) {
+      libState.currentKeys = metaData.chapters.map(function(ch) {
+        return { name: ch.title, key: ch.id, category: ch.category };
+      });
+      libState._staticMeta = metaData;
+      renderChapterSelect();
+      if (libState.currentKeys.length > 0) loadChapter(0);
     })
     .catch(function(err) {
       document.getElementById('readerContent').innerHTML = '<div class="lib-loading">Error: ' + escHtml(err.message) + '</div>';
@@ -249,8 +321,11 @@ function renderChapterSelect() {
   libState.currentKeys.forEach(function(key, i) {
     var opt = document.createElement('option');
     opt.value = i;
-    // Show key name (truncate if too long)
-    var name = key.name || key.key || key.osisRef || ('Chapter ' + (i + 1));
+    var name = key.name || ('Chapter ' + (i + 1));
+    // Add category prefix for static books with categories
+    if (key.category) {
+      name = '[' + key.category + '] ' + name;
+    }
     opt.textContent = (i + 1) + '. ' + name;
     sel.appendChild(opt);
   });
@@ -263,25 +338,43 @@ function loadChapter(index) {
   document.getElementById('chapterSelect').value = index;
 
   var key = libState.currentKeys[index];
-  var keyRef = key.key || key.osisRef || key.name;
-  if (!keyRef) return;
 
   document.getElementById('readerContent').innerHTML = '<div class="lib-loading">' + libT('加载中...', 'Loading...') + '</div>';
-
-  // Update nav buttons
   document.getElementById('prevChapter').disabled = (index <= 0);
   document.getElementById('nextChapter').disabled = (index >= libState.currentKeys.length - 1);
 
-  fetchJson(API + '/sword/genbook/' + libState.currentBook + '/content?key=' + encodeURIComponent(keyRef))
+  if (libState.currentBookIsStatic) {
+    loadStaticChapter(libState.currentBook, key.key);
+  } else {
+    loadSwordChapter(libState.currentBook, key.key, key);
+  }
+}
+
+// ─── Load SWORD chapter ───
+function loadSwordChapter(book, keyRef, key) {
+  fetchJson(API + '/sword/genbook/' + book + '/content?key=' + encodeURIComponent(keyRef))
     .then(function(data) {
       if (!data.success || !data.data) {
         document.getElementById('readerContent').innerHTML = '<div class="lib-loading">' + libT('内容为空', 'No content available') + '</div>';
         return;
       }
       var content = data.data.content || data.data.html || data.data.text || '';
-      // Strip OSIS/XML tags for plain reading
       content = stripTags(content);
       document.getElementById('readerContent').innerHTML = '<h2>' + escHtml(key.name || keyRef) + '</h2>' + content;
+    })
+    .catch(function(err) {
+      document.getElementById('readerContent').innerHTML = '<div class="lib-loading">Error: ' + escHtml(err.message) + '</div>';
+    });
+}
+
+// ─── Load Static chapter (JSON file) ───
+function loadStaticChapter(bookCode, chapterId) {
+  fetchJson(STATIC_BASE + '/' + bookCode + '/' + chapterId + '.json')
+    .then(function(data) {
+      var content = data.content || '';
+      var title = data.title || chapterId;
+      // Static books already have clean HTML, just render it
+      document.getElementById('readerContent').innerHTML = '<h2>' + escHtml(title) + '</h2><div class="lib-static-content">' + content + '</div>';
     })
     .catch(function(err) {
       document.getElementById('readerContent').innerHTML = '<div class="lib-loading">Error: ' + escHtml(err.message) + '</div>';
@@ -328,8 +421,16 @@ function toggleTheme() {
 // ─── Update reader labels on lang change ───
 function updateReaderLabels() {
   if (libState.currentBook) {
-    var meta = getBookMeta(libState.currentBook);
-    document.getElementById('readerTitle').textContent = meta.name;
+    if (libState.currentBookIsStatic) {
+      var staticBook = STATIC_BOOKS.find(function(b) { return b.code === libState.currentBook; });
+      if (staticBook) {
+        var meta = getStaticBookMeta(staticBook);
+        document.getElementById('readerTitle').textContent = meta.name;
+      }
+    } else {
+      var meta = getBookMeta(libState.currentBook);
+      document.getElementById('readerTitle').textContent = meta.name;
+    }
   }
   renderChapterSelect();
 }
@@ -341,7 +442,6 @@ function escHtml(s) {
 }
 
 function stripTags(html) {
-  // Convert <p>, <div>, <br> to newlines, then strip remaining tags
   return html
     .replace(/<\/p>/gi, '\n\n')
     .replace(/<br\s*\/?>/gi, '\n')
