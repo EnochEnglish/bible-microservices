@@ -160,6 +160,48 @@ A dedicated mobile PWA designed for phones (320px–768px). Lives in `frontend/m
 - **Bilingual UI**: Chinese/English/Bilingual modes
 - **Multi-version comparison**: up to 3 translations side-by-side (desktop + mobile)
 - **Mobile PWA**: installable, offline caching, swipe gestures
+- **Library page**: 35 SWORD books + 30 Chinese static books = 65 titles, auto-discovered via `index.json`
+
+### Library Page (中文电子书)
+
+独立页面 `library.html`，提供中文基督教电子书阅读。同时展示 SWORD GenBook 模块（英文经典）和静态 JSON 书籍（中文著作）。
+
+- **URL**: `http://localhost:3000/library.html`
+- **书单自动化**: 运行时从 `library-data/index.json` 自动加载，无需修改 JS 代码
+- **分类筛选**: 解经/灵修/经典/神学/家庭/讲道 + SWORD 原有分类
+- **阅读器**: 字体调节（12-32px）、深色/浅色主题、章节导航
+
+#### 新增中文电子书流程
+
+1. **准备数据**: 将电子书转为 JSON 格式，放入 `frontend/library-data/{book_code}/`，包含：
+   - `meta.json` — 元数据（title/titleEn/author/category/icon/totalChapters/chapters）
+   - `001.json`, `002.json`, ... — 各章节内容（id/title/content）
+
+2. **生成清单**: 运行脚本自动扫描所有 `meta.json`，更新 `index.json`
+   ```powershell
+   node gen-library-index.js
+   ```
+
+3. **完成**: 刷新 `library.html` 即可看到新书，无需改任何代码
+
+#### 批量转换 HTML 电子书
+
+已有 `convert-all-books.js` 脚本可批量转换 HTML 文件为 JSON 格式：
+
+1. 编辑脚本中的 `BOOKS` 数组，添加源路径和元数据
+2. 运行 `node convert-all-books.js`
+3. 运行 `node gen-library-index.js` 更新清单
+
+#### 当前中文电子书清单（30本，825章）
+
+| 分类 | 数量 | 代表书目 |
+|------|------|----------|
+| 解经问题 | 2本 | 圣经问题解答(陈终道)、圣经中的得胜者 |
+| 讲道 | 1本 | 讲道集 |
+| 灵修 | 7本 | 荒漠甘泉、每日与主同行、雅比斯的祷告等 |
+| 经典著作 | 4本 | 与神同在(劳伦斯)、殉道史(中英文)、跪着的基督徒 |
+| 神学 | 1本 | 系统神学 |
+| 家庭婚姻 | 15本 | 爱之语、蒙福的儿女、婚姻问题解答等 |
 
 ---
 
@@ -476,7 +518,18 @@ Benchmarked against [AndBible](https://github.com/AndBible/and-bible) and [JSwor
 
 ## Changelog
 
-### v10 (2026-06-27) — Current
+### v11 (2026-07-03) — Library + SWORD commentary expansion
+
+- **SWORD commentary dual-source**: New `SwordCommentaryService.kt` adds 25 SWORD commentary modules (total 34 sources: 9 H2 + 25 SWORD)
+- **Library page**: New `library.html` with 35 SWORD books + 30 Chinese static books (642 chapters, 9.6MB)
+- **Auto-discovered book list**: `library-data/index.json` replaces hardcoded `STATIC_BOOKS` array; run `node gen-library-index.js` to update
+- **Batch converter**: `convert-all-books.js` converts HTML books to static JSON format
+- **123 SWORD modules**: 94 downloaded from CrossWire (31 commentary + 33 dictionary + 31 GenBook + 3 devotion + 1 essay)
+- **Scroll fix**: Library page body overflow override for `style.css` `body{overflow:hidden}`
+- **Commentary selector**: Tab buttons → `<select>` dropdown (9 sources in bilingual mode no longer overflow)
+- **3 new Chinese Bibles**: ChiNCVt (新译本繁体), ChiSB (思高圣经), ChiUnL (深文理和合本)
+
+### v10 (2026-06-27)
 
 - **Reading plans**: 3 plans (M'Cheyne 365d, NT 90d, Proverbs 30d) with progress tracking
 - **basePath support**: Dynamic `<base>` tag + config.js auto-detect for nginx `/bible/` deployment
