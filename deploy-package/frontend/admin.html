@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用户管理 | Bible</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body { margin:0; padding:0; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background: #f5f5f5; }
+  .mgmt-nav { display:flex; align-items:center; gap:12px; padding:10px 16px; background:#fff; border-bottom:1px solid #ddd; position:sticky; top:0; z-index:10; }
+  .mgmt-nav a { color:#1a73e8; text-decoration:none; font-size:0.9rem; }
+  .mgmt-nav h2 { margin:0; font-size:1.1rem; flex:1; }
+  .mgmt-nav .nav-links { display:flex; gap:8px; }
+  .mgmt-nav .nav-links a { padding:4px 10px; border-radius:4px; }
+  .mgmt-nav .nav-links a.active { background:#1a73e8; color:#fff; }
+  .mgmt-body { max-width:700px; margin:0 auto; padding:16px; }
+  .section { background:#fff; border:1px solid #e0e0e0; border-radius:6px; padding:12px; margin-bottom:12px; }
+  .section h3 { margin:0 0 10px 0; font-size:0.95rem; }
+  .form-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+  .form-row input, .form-row select { padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.85rem; }
+  .form-row input { flex:1; min-width:100px; }
+  .form-row select { width:100px; }
+  .btn-primary { padding:8px 16px; background:#1a73e8; color:#fff; border:none; border-radius:4px; cursor:pointer; font-size:0.85rem; white-space:nowrap; }
+  .btn-primary:hover { background:#1557b0; }
+  .btn-danger { padding:4px 8px; background:#dc3545; color:#fff; border:none; border-radius:3px; cursor:pointer; font-size:0.75rem; }
+  .btn-danger:hover { background:#b02a37; }
+  .btn-warn { padding:4px 8px; background:#ff9800; color:#fff; border:none; border-radius:3px; cursor:pointer; font-size:0.75rem; }
+  .btn-warn:hover { background:#e68900; }
+  .btn-outline { padding:4px 8px; border:1px solid #ccc; background:#fff; border-radius:3px; cursor:pointer; font-size:0.75rem; }
+  .btn-outline:hover { background:#f0f0f0; }
+  .error-msg { display:none; padding:6px 10px; background:#ffebee; color:#c62828; border-radius:4px; font-size:0.8rem; margin-bottom:6px; }
+  .user-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+  .user-table th { text-align:left; padding:8px 6px; border-bottom:2px solid #e0e0e0; color:#666; font-weight:600; }
+  .user-table td { padding:8px 6px; border-bottom:1px solid #f0f0f0; }
+  .user-table .actions { display:flex; gap:4px; flex-wrap:wrap; }
+  .badge-role { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; }
+  .badge-admin { background:#e3f2fd; color:#1565c0; }
+  .badge-user { background:#f5f5f5; color:#666; }
+  .badge-enabled { color:#2e7d32; }
+  .badge-disabled { color:#c62828; }
+  .login-prompt { text-align:center; padding:40px; color:#999; }
+  .login-prompt a { color:#1a73e8; }
+</style>
+</head>
+<body>
+
+<div class="mgmt-nav">
+  <h2>⚙️ 用户管理</h2>
+  <div class="nav-links">
+    <a href="index.html">📖 回到阅读器</a>
+    <a href="modules.html">📦 模块管理</a>
+  </div>
+</div>
+
+<div class="mgmt-body">
+  <!-- Login prompt when not logged in / not admin -->
+  <div id="loginPrompt" class="login-prompt" style="display:none">
+    <p>需要管理员权限访问此页面。</p>
+    <p><a href="index.html">返回阅读器登录</a></p>
+  </div>
+
+  <!-- Admin content -->
+  <div id="adminContent" style="display:none">
+
+    <!-- Create User -->
+    <div class="section">
+      <h3>➕ 创建新用户</h3>
+      <div class="form-row">
+        <input type="text" id="newUsername" placeholder="用户名">
+        <input type="password" id="newPassword" placeholder="密码">
+        <select id="newRole">
+          <option value="USER">普通用户</option>
+          <option value="ADMIN">管理员</option>
+        </select>
+        <button class="btn-primary" onclick="doCreate()">创建</button>
+      </div>
+      <div class="error-msg" id="createError"></div>
+    </div>
+
+    <!-- User List -->
+    <div class="section">
+      <h3>👥 用户列表</h3>
+      <div class="error-msg" id="listError"></div>
+      <table class="user-table">
+        <thead>
+          <tr><th>用户名</th><th>角色</th><th>状态</th><th>操作</th></tr>
+        </thead>
+        <tbody id="userTableBody"><tr><td colspan="4" style="text-align:center;color:#999">加载中...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js?v=20260616b"></script>
+<script>
+var API = APP_CONFIG.apiBase;
+var AUTH_API = API + '/auth';
+var token='', isAdmin=false;
+
+// ── Init ──
+function init() {
+  try {
+    var a = JSON.parse(localStorage.getItem('bible_auth'));
+    if (a && a.token && a.user && a.user.role==='ADMIN') {
+      token = a.token; isAdmin = true;
+    }
+  } catch(e) {}
+
+  if (!isAdmin) {
+    document.getElementById('loginPrompt').style.display = 'block';
+    return;
+  }
+  document.getElementById('adminContent').style.display = 'block';
+  loadUsers();
+}
+
+// ── Load users ──
+function loadUsers() {
+  var tb = document.getElementById('userTableBody');
+  tb.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999">加载中...</td></tr>';
+  document.getElementById('listError').style.display = 'none';
+
+  fetch(AUTH_API + '/admin/users', {
+    headers: {'Authorization': 'Bearer ' + token}
+  }).then(function(r){ return r.json() }).then(function(d){
+    var users = d.users || [];
+    if (!users.length) { tb.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999">暂无用户</td></tr>'; return; }
+    var html = '';
+    for (var i=0;i<users.length;i++) {
+      var u = users[i];
+      var roleClass = u.role==='ADMIN' ? 'badge-role badge-admin' : 'badge-role badge-user';
+      var status = u.enabled ? '<span class="badge-enabled">启用</span>' : '<span class="badge-disabled">禁用</span>';
+      html += '<tr>'
+        + '<td>' + (u.username||'') + '</td>'
+        + '<td><span class="' + roleClass + '">' + (u.role||'USER') + '</span></td>'
+        + '<td>' + status + '</td>'
+        + '<td class="actions">'
+        + (u.role!=='ADMIN' ? '<button class="btn-outline" onclick="changeRole(' + u.id + ',\'ADMIN\')">提升</button>' : '<button class="btn-warn" onclick="changeRole(' + u.id + ',\'USER\')">降级</button>')
+        + (u.enabled ? '<button class="btn-danger" onclick="toggleUser(' + u.id + ',false)">禁用</button>' : '<button class="btn-primary" style="font-size:0.75rem;padding:4px 8px" onclick="toggleUser(' + u.id + ',true)">启用</button>')
+        + '<button class="btn-outline" onclick="resetPwd(' + u.id + ')">重置密码</button>'
+        + '</td>'
+        + '</tr>';
+    }
+    tb.innerHTML = html;
+  }).catch(function(e){
+    tb.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#c62828">加载失败</td></tr>';
+    document.getElementById('listError').textContent = '加载出错: ' + e.message;
+    document.getElementById('listError').style.display = 'block';
+  });
+}
+
+// ── Create user ──
+function doCreate() {
+  var username = document.getElementById('newUsername').value.trim();
+  var password = document.getElementById('newPassword').value;
+  var role = document.getElementById('newRole').value;
+  var errEl = document.getElementById('createError');
+
+  if (!username || !password) { errEl.textContent = '请填写用户名和密码'; errEl.style.display = 'block'; return; }
+  if (username.length<2 || password.length<3) { errEl.textContent = '用户名至少2字符，密码至少3字符'; errEl.style.display='block'; return; }
+
+  errEl.style.display = 'none';
+  fetch(AUTH_API + '/admin/users', {
+    method:'POST',
+    headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+token},
+    body: JSON.stringify({username:username, password:password, role:role})
+  }).then(function(r){return r.json()}).then(function(d){
+    if (d.success) {
+      document.getElementById('newUsername').value = '';
+      document.getElementById('newPassword').value = '';
+      loadUsers();
+    } else {
+      errEl.textContent = d.message || '创建失败';
+      errEl.style.display = 'block';
+    }
+  }).catch(function(e){
+    errEl.textContent = '网络错误: ' + e.message;
+    errEl.style.display = 'block';
+  });
+}
+
+// ── Change role ──
+function changeRole(userId, role) {
+  fetch(AUTH_API + '/admin/users/' + userId + '/role', {
+    method:'PUT',
+    headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+token},
+    body: JSON.stringify({role:role})
+  }).then(function(r){return r.json()}).then(function(d){
+    if (d.success) loadUsers();
+    else alert(d.message||'操作失败');
+  }).catch(function(e){ alert('出错: '+e.message); });
+}
+
+// ── Toggle enabled ──
+function toggleUser(userId, enabled) {
+  fetch(AUTH_API + '/admin/users/' + userId + '/enabled', {
+    method:'PUT',
+    headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+token},
+    body: JSON.stringify({enabled:enabled})
+  }).then(function(r){return r.json()}).then(function(d){
+    if (d.success) loadUsers();
+    else alert(d.message||'操作失败');
+  }).catch(function(e){ alert('出错: '+e.message); });
+}
+
+// ── Reset password ──
+function resetPwd(userId) {
+  var newPwd = prompt('输入新密码（至少3字符）');
+  if (!newPwd || newPwd.length<3) return;
+  fetch(AUTH_API + '/admin/users/' + userId + '/reset-password', {
+    method:'PUT',
+    headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+token},
+    body: JSON.stringify({newPassword:newPwd})
+  }).then(function(r){return r.json()}).then(function(d){
+    if (d.success) alert('密码已重置');
+    else alert(d.message||'操作失败');
+  }).catch(function(e){ alert('出错: '+e.message); });
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+/* Courses page styles — independent from main app */
+:root {
+  --course-bg: #0f1117;
+  --course-surface: #1a1d27;
+  --course-surface2: #252835;
+  --course-text: #e4e6f0;
+  --course-muted: #8b8fa3;
+  --course-primary: #4a9eff;
+  --course-primary-dark: #2d7dd2;
+  --course-success: #4caf50;
+  --course-warning: #ff9800;
+  --course-danger: #f44336;
+  --course-border: #2a2d3a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  overflow: auto !important;
+  background: var(--course-bg) !important;
+  color: var(--course-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
+  line-height: 1.6;
+}
+
+#courses-app { min-height: 100vh; }
+
+/* Top Bar */
+.course-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--course-surface);
+  border-bottom: 1px solid var(--course-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.course-topbar .back-link {
+  color: var(--course-muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+.course-topbar-title {
+  margin: 0;
+  font-size: 20px;
+  flex: 1;
+}
+.course-topbar-right { font-size: 14px; }
+
+/* Course List */
+.course-filters {
+  display: flex;
+  gap: 8px;
+  padding: 16px 24px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 6px 16px;
+  border: 1px solid var(--course-border);
+  border-radius: 20px;
+  background: var(--course-surface);
+  color: var(--course-muted);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.filter-btn:hover { border-color: var(--course-primary); }
+.filter-btn.active {
+  background: var(--course-primary);
+  color: #fff;
+  border-color: var(--course-primary);
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 0 24px 24px;
+}
+.course-card {
+  background: var(--course-surface);
+  border: 1px solid var(--course-border);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.course-card:hover {
+  border-color: var(--course-primary);
+  transform: translateY(-2px);
+}
+.course-card .card-icon { font-size: 32px; margin-bottom: 8px; }
+.course-card .card-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.course-card .card-desc { font-size: 13px; color: var(--course-muted); margin-bottom: 8px; }
+.course-card .card-meta { display: flex; gap: 12px; font-size: 12px; color: var(--course-muted); }
+.course-card .card-price { color: var(--course-success); font-weight: 600; }
+.course-loading { text-align: center; padding: 40px; color: var(--course-muted); }
+
+/* Course Detail */
+.course-detail-header {
+  padding: 24px;
+  background: var(--course-surface);
+  border-bottom: 1px solid var(--course-border);
+}
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--course-primary);
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.course-detail-header h2 { margin: 0 0 8px; font-size: 24px; }
+.course-detail-header p { margin: 0 0 12px; color: var(--course-muted); }
+.course-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  color: var(--course-muted);
+}
+.enroll-btn {
+  margin-left: auto;
+  padding: 8px 24px;
+  background: var(--course-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+.enroll-btn:hover { background: var(--course-primary-dark); }
+.enroll-btn.enrolled { background: var(--course-success); }
+
+.progress-bar {
+  margin-top: 12px;
+  background: var(--course-surface2);
+  border-radius: 8px;
+  height: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--course-success);
+  border-radius: 8px;
+  transition: width 0.3s;
+}
+.progress-text {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  line-height: 24px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Sections & Lessons */
+.course-content { padding: 24px; }
+.section-block { margin-bottom: 24px; }
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--course-border);
+}
+.lesson-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--course-surface);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lesson-item:hover { background: var(--course-surface2); }
+.lesson-item .lesson-icon { font-size: 18px; }
+.lesson-item .lesson-title { flex: 1; font-size: 14px; }
+.lesson-item .lesson-duration { font-size: 12px; color: var(--course-muted); }
+.lesson-item.completed .lesson-title { color: var(--course-success); }
+.lesson-item .check-mark { color: var(--course-success); }
+
+.exam-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--course-surface);
+  border: 1px solid var(--course-warning);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.exam-item:hover { background: var(--course-surface2); }
+
+/* Lesson Reader */
+.lesson-header {
+  padding: 16px 24px;
+  background: var(--course-surface);
+  border-bottom: 1px solid var(--course-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.lesson-body {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.8;
+}
+.lesson-body img { max-width: 100%; border-radius: 8px; }
+.lesson-body video, .lesson-body iframe { max-width: 100%; border-radius: 8px; }
+.lesson-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid var(--course-border);
+  background: var(--course-surface);
+  position: sticky;
+  bottom: 0;
+}
+.nav-btn, .complete-btn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+.nav-btn { background: var(--course-surface2); color: var(--course-text); }
+.complete-btn { background: var(--course-success); color: #fff; font-weight: 600; }
+.complete-btn:disabled { opacity: 0.5; cursor: default; }
+
+/* Exam */
+.exam-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--course-muted);
+  margin-top: 4px;
+}
+.exam-body {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.exam-question {
+  background: var(--course-surface);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.exam-question .q-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+.exam-question .q-option {
+  display: block;
+  padding: 10px 16px;
+  margin: 4px 0;
+  background: var(--course-surface2);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.exam-question .q-option:hover { border-left: 3px solid var(--course-primary); }
+.exam-question .q-option.selected { background: var(--course-primary); color: #fff; }
+.exam-question textarea {
+  width: 100%;
+  min-height: 120px;
+  background: var(--course-surface2);
+  border: 1px solid var(--course-border);
+  border-radius: 8px;
+  color: var(--course-text);
+  padding: 12px;
+  font-size: 14px;
+  resize: vertical;
+}
+.submit-exam-btn {
+  padding: 12px 32px;
+  background: var(--course-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Certificate */
+.cert-card {
+  background: var(--course-surface);
+  border: 2px solid var(--course-warning);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.cert-code { font-family: monospace; font-size: 14px; color: var(--course-warning); }
+
+/* Grading */
+.grading-item {
+  background: var(--course-surface);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.grading-answer { background: var(--course-surface2); padding: 12px; border-radius: 8px; margin: 8px 0; }
+.grading-input { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.grading-input input { width: 80px; }
+.grading-input button { padding: 6px 16px; background: var(--course-primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; }

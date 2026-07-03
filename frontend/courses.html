@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在线课程 / Courses</title>
+<link rel="stylesheet" href="/css/style.css?v=20260704a">
+<link rel="stylesheet" href="/css/courses.css?v=20260704a">
+</head>
+<body>
+<div id="courses-app">
+  <!-- Top Bar -->
+  <header class="course-topbar">
+    <a href="/" class="back-link">← 首页</a>
+    <h1 class="course-topbar-title">📚 <span data-i18n="coursesTitle">在线课程</span></h1>
+    <div class="course-topbar-right">
+      <span id="courseUserArea"></span>
+    </div>
+  </header>
+
+  <!-- View: Course List -->
+  <div id="view-course-list" class="course-view">
+    <div class="course-filters">
+      <button class="filter-btn active" data-cat="">全部</button>
+      <button class="filter-btn" data-cat="bible">圣经</button>
+      <button class="filter-btn" data-cat="theology">神学</button>
+      <button class="filter-btn" data-cat="discipleship">门徒训练</button>
+      <button class="filter-btn" data-cat="language">语言</button>
+      <button class="filter-btn" data-cat="practice">实践</button>
+    </div>
+    <div id="courseGrid" class="course-grid">
+      <div class="course-loading">加载中...</div>
+    </div>
+  </div>
+
+  <!-- View: Course Detail -->
+  <div id="view-course-detail" class="course-view" style="display:none">
+    <div class="course-detail-header">
+      <button class="back-btn" onclick="showCourseList()">← 返回课程列表</button>
+      <h2 id="detailTitle"></h2>
+      <p id="detailDesc"></p>
+      <div class="course-meta">
+        <span id="detailDifficulty"></span>
+        <span id="detailHours"></span>
+        <span id="detailEnrollment"></span>
+        <button id="enrollBtn" class="enroll-btn" onclick="enrollCourse()">报名学习</button>
+      </div>
+      <div id="progressBar" class="progress-bar" style="display:none">
+        <div id="progressFill" class="progress-fill"></div>
+        <span id="progressText" class="progress-text">0%</span>
+      </div>
+    </div>
+    <div id="courseContent" class="course-content"></div>
+  </div>
+
+  <!-- View: Lesson Reader -->
+  <div id="view-lesson" class="course-view" style="display:none">
+    <div class="lesson-header">
+      <button class="back-btn" onclick="backToCourse()">← 返回课程</button>
+      <h2 id="lessonTitle"></h2>
+    </div>
+    <div id="lessonBody" class="lesson-body"></div>
+    <div class="lesson-footer">
+      <button id="prevLessonBtn" class="nav-btn" onclick="prevLesson()">← 上一课</button>
+      <button id="completeBtn" class="complete-btn" onclick="completeLesson()">✓ 完成本课</button>
+      <button id="nextLessonBtn" class="nav-btn" onclick="nextLesson()">下一课 →</button>
+    </div>
+  </div>
+
+  <!-- View: Exam -->
+  <div id="view-exam" class="course-view" style="display:none">
+    <div class="exam-header">
+      <button class="back-btn" onclick="backToCourse()">← 返回课程</button>
+      <h2 id="examTitle"></h2>
+      <div id="examMeta" class="exam-meta"></div>
+    </div>
+    <div id="examBody" class="exam-body"></div>
+    <div class="exam-footer">
+      <button id="submitExamBtn" class="submit-exam-btn" onclick="submitExam()">提交考试</button>
+    </div>
+  </div>
+
+  <!-- View: My Certificates -->
+  <div id="view-certificates" class="course-view" style="display:none">
+    <h2>我的证书</h2>
+    <div id="certList"></div>
+  </div>
+
+  <!-- View: Teacher Grading -->
+  <div id="view-grading" class="course-view" style="display:none">
+    <h2>待评分题目</h2>
+    <div id="gradingList"></div>
+  </div>
+</div>
+
+<script src="/js/courses.js?v=20260704a"></script>
+</body>
+</html>

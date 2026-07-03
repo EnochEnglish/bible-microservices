@@ -1,10 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bible Reader / 圣经阅读器</title>
-  <script>document.write('<base href="' + (location.pathname.startsWith('/bible/') ? '/bible/' : '/') + '">');</script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,9 +11,6 @@
     <!-- Top Bar -->
     <div class="topbar">
       <div class="logo">📖 Bible / 圣经</div>
-      <a href="library.html" class="topbar-btn" title="Christian Library" data-zh-title="图书馆" data-en-title="Library" style="text-decoration:none;font-size:1.1rem;flex-shrink:0;">📚 <span data-zh="图书馆" data-en="Library">图书馆</span></a>
-      <a href="courses.html" class="topbar-btn" title="Online Courses" data-zh-title="在线课程" data-en-title="Courses" style="text-decoration:none;font-size:1.1rem;flex-shrink:0;">🎓 <span data-zh="在线课程" data-en="Courses">在线课程</span></a>
-  <a id="mobileLink" href="m/" title="Mobile Version" data-zh-title="手机版" data-en-title="Mobile" class="topbar-btn" style="text-decoration:none;font-size:1.1rem;flex-shrink:0;">📱 <span data-zh="手机版" data-en="Mobile">手机版</span></a>
       <select id="translationSelect"></select>
       <span id="interlinearBtn" style="display:none"></span>
       <select id="langToggle">
@@ -26,17 +22,16 @@
         <option value="">📐 对照模式</option>
       </select>
       <div class="search-box"><input type="text" id="searchBox" placeholder="搜索经文..." autocomplete="off"></div>
-      <button id="dictBtn" title="Bible Dictionary" data-zh-title="圣经词典" data-en-title="Bible Dictionary" onclick="openDictPopup()">📚</button>
-      <button id="devotionBtn" title="Daily Devotion" data-zh-title="每日灵修" data-en-title="Daily Devotion" data-zh="灵修" data-en="Devotion" onclick="openDevotionPanel()">🔔 <span data-zh="灵修" data-en="Devotion">灵修</span></button>
-      <button id="genbookBtn" title="General Books" data-zh-title="阅读" data-en-title="Read" data-zh="阅读" data-en="Read" onclick="openGenBookPanel()" style="display:none">📖 <span data-zh="阅读" data-en="Read">阅读</span></button>
-      <button id="mapsBtn" title="Bible Maps" data-zh-title="圣经地图" data-en-title="Bible Maps" data-zh="地图" data-en="Maps" onclick="openMapsPanel()">🗺️ <span data-zh="地图" data-en="Maps">地图</span></button>
-      <button id="planBtn" title="Reading Plan" data-zh-title="读经计划" data-en-title="Reading Plan" data-zh="读经" data-en="Plan" onclick="openPlanPanel()">📅 <span data-zh="读经" data-en="Plan">读经</span></button>
-      <button id="bookmarksBtn" title="Bookmarks" data-zh-title="书签" data-en-title="Bookmarks" data-zh="书签" data-en="Bookmarks" onclick="openBookmarksPanel()" style="display:none">🔖 <span data-zh="书签" data-en="Bookmarks">书签</span></button>
-      <button id="notesBtn" title="Notes" data-zh-title="笔记" data-en-title="Notes" data-zh="笔记" data-en="Notes" onclick="openNotesPanel()" style="display:none">📝 <span data-zh="笔记" data-en="Notes">笔记</span></button>
-      <a id="modulesBtn" href="modules.html" target="_blank" class="topbar-btn" title="Module Manager" data-zh-title="模块管理" data-en-title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" style="display:none;text-decoration:none;">📦 模块</a>
-      <a id="adminBtn" href="admin.html" target="_blank" class="topbar-btn" title="Admin / User Management" data-zh-title="用户管理" data-en-title="Admin" style="display:none;text-decoration:none;">⚙️</a>
-      <button id="loginBtn" title="Login / Register" data-zh-title="登录 / 注册" data-en-title="Login / Register" data-zh="登录" data-en="Login" onclick="openAuthPanel()">👤 <span data-zh="登录" data-en="Login">登录</span></button>
-
+      <button id="dictBtn" title="Bible Dictionary" onclick="openDictPopup()">📚</button>
+      <button id="devotionBtn" title="Daily Devotion" data-zh="🔔 灵修" data-en="🔔 Devotion" onclick="openDevotionPanel()">🔔 灵修</button>
+      <button id="genbookBtn" title="General Books" data-zh="📖 阅读" data-en="📖 Read" onclick="openGenBookPanel()">📖 阅读</button>
+      <button id="mapsBtn" title="Bible Maps" data-zh="🗺️ 地图" data-en="🗺️ Maps" onclick="openMapsPanel()">🗺️ 地图</button>
+      <button id="bookmarksBtn" title="Bookmarks" data-zh="🔖 书签" data-en="🔖 Bookmarks" onclick="openBookmarksPanel()" style="display:none">🔖 书签</button>
+      <button id="notesBtn" title="Notes" data-zh="📝 笔记" data-en="📝 Notes" onclick="openNotesPanel()" style="display:none">📝 笔记</button>
+      <a id="modulesBtn" href="modules.html" target="_blank" class="topbar-btn" title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" style="display:none;text-decoration:none;">📦 模块</a>
+      <a id="adminBtn" href="admin.html" target="_blank" class="topbar-btn" title="Admin / User Management" style="display:none;text-decoration:none;">⚙️</a>
+      <button id="loginBtn" title="Login / Register" data-zh="👤 登录" data-en="👤 Login" onclick="openAuthPanel()">👤 登录</button>
+      <a href="/m/" title="Mobile Version" class="topbar-btn" style="text-decoration:none;font-size:1.1rem;">📱</a>
     </div>
 
     <!-- Sidebar -->
@@ -65,7 +60,9 @@
     <!-- Commentary Panel -->
     <div class="tsk-panel" id="tskContent">
       <div class="commentary-tabs" id="commentaryTabs"></div>
-      <div id="commentaryBody" data-zh="加载中..." data-en="Loading...">加载中...</div>
+      <div id="commentaryBody">
+        <div class="loading">加载中...</div>
+      </div>
     </div>
 
     <!-- Dictionary Panel (Easton/ISBE/Nave) -->
@@ -122,7 +119,7 @@
             <option value="SME" data-zh="Spurgeon 清晨甘露" data-en="Spurgeon M&amp;E">Spurgeon M&amp;E</option>
             <option value="Daily" data-zh="Daily Light 日粮" data-en="Daily Light">Daily Light</option>
           </select>
-          <button onclick="goToToday()" data-zh="今天" data-en="Today">📅 <span data-zh="今天" data-en="Today">今天</span></button>
+          <button onclick="goToToday()" data-zh="📅 今天" data-en="📅 Today">📅 今天</button>
         </div>
         <div id="devotionKeyList" class="book-key-list"></div>
         <div id="devotionCheckBar">
@@ -140,12 +137,12 @@
     <div class="strongs-overlay" id="mapsOverlay" style="display:none" onclick="closeMapsPanel()">
       <div class="maps-panel" onclick="event.stopPropagation()">
         <div class="strongs-popup-header">
-          <span id="mapsTitle" data-zh="🗺️ 圣经地图" data-en="🗺️ Bible Maps">🗺️ 圣经地图</span>
+          <span id="mapsTitle">🗺️ 圣经地图</span>
           <span class="strongs-popup-close" onclick="closeMapsPanel()">✕</span>
         </div>
         <div class="devotion-toolbar">
           <select id="mapsModule" onchange="switchMapsModule()">
-            <option value="" data-zh="-- 选择地图集 --" data-en="-- Select Atlas --">-- 选择地图集 --</option>
+            <option value="">-- 选择地图集 --</option>
           </select>
         </div>
         <div id="mapsThumbnailGrid" class="maps-thumbnail-grid"></div>
@@ -167,28 +164,6 @@
             <img id="mapsFullImage" src="" alt="Map">
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Reading Plan Panel -->
-    <div class="strongs-overlay" id="planOverlay" style="display:none" onclick="closePlanPanel()">
-      <div class="devotion-panel" style="max-width:700px" onclick="event.stopPropagation()">
-        <div class="strongs-popup-header">
-          <span id="planTitle" data-zh="📅 读经计划" data-en="📅 Reading Plan">📅 读经计划</span>
-          <span class="strongs-popup-close" onclick="closePlanPanel()">✕</span>
-        </div>
-        <div class="devotion-toolbar">
-          <select id="planSelect" onchange="switchDesktopPlan(this.value)"></select>
-        </div>
-        <div id="planTodayCard" style="padding:12px"></div>
-        <div id="planProgressBar" style="padding:0 12px 8px"></div>
-        <div class="plan-day-nav-desktop" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:8px">
-          <button onclick="changeDesktopPlanDay(-1)">◀</button>
-          <span id="planDayDisplay">Day 1</span>
-          <button onclick="changeDesktopPlanDay(1)">▶</button>
-          <button id="planTodayBtn" onclick="goToDesktopToday()" data-zh="今天" data-en="Today" style="margin-left:8px;padding:4px 12px;font-size:0.85em">Today</button>
-        </div>
-        <div id="planCalendarDesktop" style="padding:12px;max-height:300px;overflow-y:auto"></div>
       </div>
     </div>
 
@@ -244,39 +219,39 @@
   <div class="strongs-overlay" id="authOverlay" style="display:none" onclick="closeAuthPanel()">
     <div class="auth-panel" onclick="event.stopPropagation()">
       <div class="strongs-popup-header">
-        <span id="authTitle" data-zh="👤 登录" data-en="👤 Login">👤 登录</span>
+        <span id="authTitle">👤 登录</span>
         <span class="strongs-popup-close" onclick="closeAuthPanel()">✕</span>
       </div>
       <div id="authTabs" class="auth-tabs">
-        <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')" data-zh="登录" data-en="Login">登录</button>
-        <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')" data-zh="注册" data-en="Register">注册</button>
+        <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
+        <button class="auth-tab" onclick="switchAuthTab('register')">注册</button>
       </div>
       <div id="authLoginForm" class="auth-form">
-        <input type="text" id="loginUsername" data-zh-ph="用户名" data-en-ph="Username" placeholder="用户名" autocomplete="username">
-        <input type="password" id="loginPassword" data-zh-ph="密码" data-en-ph="Password" placeholder="密码" autocomplete="current-password">
+        <input type="text" id="loginUsername" placeholder="用户名" autocomplete="username">
+        <input type="password" id="loginPassword" placeholder="密码" autocomplete="current-password">
         <div id="authError" class="auth-error" style="display:none"></div>
-        <button class="auth-submit-btn" id="loginSubmitBtn" onclick="doLogin()" data-zh="登录" data-en="Login">登录</button>
-        <a href="javascript:switchAuthTab('forgot')" id="forgotLink" style="display:block;text-align:center;font-size:0.85rem;color:var(--accent-light);margin-top:6px;cursor:pointer" data-zh="忘记密码？" data-en="Forgot password?">忘记密码？</a>
+        <button class="auth-submit-btn" onclick="doLogin()">登录</button>
+        <a href="javascript:switchAuthTab('forgot')" style="display:block;text-align:center;font-size:0.85rem;color:var(--accent-light);margin-top:6px;cursor:pointer">忘记密码？</a>
       </div>
       <div id="authRegisterForm" class="auth-form" style="display:none">
-        <input type="text" id="regUsername" data-zh-ph="用户名 (2-50字符)" data-en-ph="Username (2-50 chars)" placeholder="用户名 (2-50字符)" autocomplete="username">
-        <input type="password" id="regPassword" data-zh-ph="密码 (3-100字符)" data-en-ph="Password (3-100 chars)" placeholder="密码 (3-100字符)" autocomplete="new-password">
+        <input type="text" id="regUsername" placeholder="用户名 (2-50字符)" autocomplete="username">
+        <input type="password" id="regPassword" placeholder="密码 (3-100字符)" autocomplete="new-password">
         <div class="captcha-row">
-          <input type="text" id="regCaptchaAnswer" data-zh-ph="验证码答案" data-en-ph="Captcha answer" placeholder="验证码答案" autocomplete="off" style="flex:1">
-          <span id="captchaQuestion" class="captcha-question" onclick="loadCaptcha()" data-zh="点击加载" data-en="Click to load">点击加载</span>
+          <input type="text" id="regCaptchaAnswer" placeholder="验证码答案" autocomplete="off" style="flex:1">
+          <span id="captchaQuestion" class="captcha-question" onclick="loadCaptcha()">点击加载</span>
         </div>
         <input type="hidden" id="regCaptchaToken">
         <div id="regError" class="auth-error" style="display:none"></div>
-        <button class="auth-submit-btn" id="registerSubmitBtn" onclick="doRegister()" data-zh="注册" data-en="Register">注册</button>
+        <button class="auth-submit-btn" onclick="doRegister()">注册</button>
       </div>
       <!-- Forgot Password Form -->
       <div id="authForgotForm" class="auth-form" style="display:none">
-        <p id="forgotHint" style="text-align:center;color:var(--muted);font-size:0.9rem;margin-bottom:8px" data-zh="请输入用户名，系统将显示密码并重置登录" data-en="Enter username to show password and reset login">请输入用户名，系统将显示密码并重置登录</p>
-        <input type="text" id="forgotUsername" data-zh-ph="用户名" data-en-ph="Username" placeholder="用户名">
+        <p style="text-align:center;color:var(--muted);font-size:0.9rem;margin-bottom:8px">请输入用户名，系统将显示密码并重置登录</p>
+        <input type="text" id="forgotUsername" placeholder="用户名">
         <div id="forgotMsg" class="auth-error" style="display:none"></div>
         <div id="forgotResult" style="display:none;background:#e8f5e9;color:#2e7d32;padding:10px;border-radius:6px;text-align:center;margin-bottom:8px"></div>
-        <button class="auth-submit-btn" id="forgotResetBtn" onclick="doForgotPassword()" data-zh="重置密码" data-en="Reset Password">🔑 <span data-zh="重置密码" data-en="Reset Password">重置密码</span></button>
-        <button class="auth-submit-btn" id="forgotBackBtn" onclick="switchAuthTab('login')" data-zh="返回登录" data-en="Back to Login" style="background:#666;margin-top:4px">🔙 <span data-zh="返回登录" data-en="Back to Login">返回登录</span></button>
+        <button class="auth-submit-btn" onclick="doForgotPassword()">🔑 重置密码</button>
+        <button class="auth-submit-btn" onclick="switchAuthTab('login')" style="background:#666;margin-top:4px">🔙 返回登录</button>
       </div>
       <!-- Profile View (when logged in) -->
       <div id="authProfileView" class="auth-form" style="display:none">
@@ -287,51 +262,42 @@
         </div>
         <div id="profileInfo" style="font-size:0.85rem;margin-top:6px"></div>
         <div style="display:flex;gap:6px;margin-top:10px">
-          <button class="auth-submit-btn" id="profileEditBtn" onclick="showProfileEdit()" style="flex:1" data-zh="编辑资料" data-en="Edit Profile">✏️ <span data-zh="编辑资料" data-en="Edit Profile">编辑资料</span></button>
-          <button class="auth-submit-btn" id="profilePwdBtn" onclick="showPasswordChange()" style="flex:1" data-zh="修改密码" data-en="Change Password">🔒 <span data-zh="修改密码" data-en="Change Password">修改密码</span></button>
+          <button class="auth-submit-btn" onclick="showProfileEdit()" style="flex:1">✏️ 编辑资料</button>
+          <button class="auth-submit-btn" onclick="showPasswordChange()" style="flex:1">🔒 修改密码</button>
         </div>
-        <button class="auth-submit-btn" id="logoutBtn" onclick="doLogout()" style="background:#d32f2f;margin-top:6px" data-zh="退出登录" data-en="Logout">🚪 <span data-zh="退出登录" data-en="Logout">退出登录</span></button>
+        <button class="auth-submit-btn" onclick="doLogout()" style="background:#d32f2f;margin-top:6px">🚪 退出登录</button>
       </div>
       <!-- Profile Edit Form -->
       <div id="authProfileForm" class="auth-form" style="display:none">
-        <input type="email" id="profileEmail" data-zh-ph="邮箱" data-en-ph="Email" placeholder="邮箱">
-        <input type="text" id="profilePhone" data-zh-ph="电话" data-en-ph="Phone" placeholder="电话">
-        <input type="text" id="profileAddress" data-zh-ph="地址" data-en-ph="Address" placeholder="地址">
-        <input type="number" id="profileAge" data-zh-ph="年龄" data-en-ph="Age" placeholder="年龄" min="0" max="150">
-        <select id="profileGender"><option value="" data-zh="性别" data-en="Gender">性别</option><option value="男" data-zh="男" data-en="Male">男</option><option value="女" data-zh="女" data-en="Female">女</option></select>
-        <input type="text" id="profileCountry" data-zh-ph="国家" data-en-ph="Country" placeholder="国家">
-        <input type="text" id="profileCity" data-zh-ph="城市" data-en-ph="City" placeholder="城市">
+        <input type="email" id="profileEmail" placeholder="邮箱">
+        <input type="text" id="profilePhone" placeholder="电话">
+        <input type="text" id="profileAddress" placeholder="地址">
+        <input type="number" id="profileAge" placeholder="年龄" min="0" max="150">
+        <select id="profileGender"><option value="">性别</option><option value="男">男</option><option value="女">女</option></select>
+        <input type="text" id="profileCountry" placeholder="国家">
+        <input type="text" id="profileCity" placeholder="城市">
         <div id="profileEditError" class="auth-error" style="display:none"></div>
         <div style="display:flex;gap:6px;margin-top:6px">
-          <button class="auth-submit-btn" id="profileSaveBtn" onclick="doUpdateProfile()" style="flex:1" data-zh="保存" data-en="Save">💾 <span data-zh="保存" data-en="Save">保存</span></button>
-          <button class="auth-submit-btn" id="profileCancelBtn" onclick="showProfileView()" style="flex:1;background:#666" data-zh="取消" data-en="Cancel">取消</button>
+          <button class="auth-submit-btn" onclick="doUpdateProfile()" style="flex:1">💾 保存</button>
+          <button class="auth-submit-btn" onclick="showProfileView()" style="flex:1;background:#666">取消</button>
         </div>
       </div>
       <!-- Password Change Form -->
       <div id="authPwdForm" class="auth-form" style="display:none">
-        <input type="password" id="pwdOld" data-zh-ph="当前密码" data-en-ph="Current Password" placeholder="当前密码">
-        <input type="password" id="pwdNew" data-zh-ph="新密码" data-en-ph="New Password" placeholder="新密码">
-        <input type="password" id="pwdConfirm" data-zh-ph="确认新密码" data-en-ph="Confirm New Password" placeholder="确认新密码">
+        <input type="password" id="pwdOld" placeholder="当前密码">
+        <input type="password" id="pwdNew" placeholder="新密码">
+        <input type="password" id="pwdConfirm" placeholder="确认新密码">
         <div id="pwdError" class="auth-error" style="display:none"></div>
         <div style="display:flex;gap:6px;margin-top:6px">
-          <button class="auth-submit-btn" id="pwdChangeBtn" onclick="doChangePassword()" style="flex:1" data-zh="修改" data-en="Change">🔒 <span data-zh="修改" data-en="Change">修改</span></button>
-          <button class="auth-submit-btn" id="pwdCancelBtn" onclick="showProfileView()" style="flex:1;background:#666" data-zh="取消" data-en="Cancel">取消</button>
+          <button class="auth-submit-btn" onclick="doChangePassword()" style="flex:1">🔒 修改</button>
+          <button class="auth-submit-btn" onclick="showProfileView()" style="flex:1;background:#666">取消</button>
         </div>
       </div></div>
   </div>
 
-  <script src="js/config.js?v=20260701a"></script>
-  <script src="js/api.js?v=20260701a"></script>
-  <script src="js/morphology.js?v=20260701a"></script>
-  <script src="js/app.js?v=20260701a"></script>
-  <script>
-    // Fix mobile link href with basePath for nginx deployment
-    (function() {
-      var ml = document.getElementById('mobileLink');
-      if (ml && typeof APP_CONFIG !== 'undefined' && APP_CONFIG.basePath) {
-        ml.href = APP_CONFIG.basePath + '/m/';
-      }
-    })();
-  </script>
+  <script src="js/config.js?v=20260625v9"></script>
+  <script src="js/api.js?v=20260625v9"></script>
+  <script src="js/morphology.js?v=20260625v9"></script>
+  <script src="js/app.js?v=20260625v9"></script>
 </body>
 </html>

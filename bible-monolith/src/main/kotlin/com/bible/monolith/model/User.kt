@@ -53,5 +53,5 @@ data class User(
 )
 
 enum class Role {
-    ADMIN, USER
+    ADMIN, TEACHER, USER
 }
