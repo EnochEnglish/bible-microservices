@@ -1,0 +1,32 @@
+{
+  "code": "marriage",
+  "title": "信徒离婚原则汇编",
+  "titleEn": "Believers Divorce Principles",
+  "author": "佚名",
+  "category": "家庭婚姻",
+  "icon": "📜",
+  "language": "en",
+  "totalChapters": 4,
+  "chapters": [
+    {
+      "id": "001",
+      "title": "基督徒可以离婚吗？或可以和离过婚约人结婚吗？",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "002",
+      "title": "结婚、离婚、再结婚",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "003",
+      "title": "婚姻问题解答 — 第四课 婚姻危机",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "004",
+      "title": "问题多多之哥林多　第十四课 - 婚姻的问题",
+      "category": "家庭婚姻"
+    }
+  ]
+}

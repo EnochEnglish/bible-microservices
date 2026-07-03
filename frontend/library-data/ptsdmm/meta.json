@@ -1,0 +1,77 @@
+{
+  "code": "ptsdmm",
+  "title": "葡萄树的秘密",
+  "titleEn": "Secret of the Vine",
+  "author": "佚名",
+  "category": "灵修",
+  "icon": "🍇",
+  "language": "en",
+  "totalChapters": 13,
+  "chapters": [
+    {
+      "id": "001",
+      "title": "作者小传",
+      "category": "灵修"
+    },
+    {
+      "id": "002",
+      "title": "陈序",
+      "category": "灵修"
+    },
+    {
+      "id": "003",
+      "title": "作者序",
+      "category": "灵修"
+    },
+    {
+      "id": "004",
+      "title": "葡萄园里的故事",
+      "category": "灵修"
+    },
+    {
+      "id": "005",
+      "title": "神要的是什么？",
+      "category": "灵修"
+    },
+    {
+      "id": "006",
+      "title": "你不想听的好消息",
+      "category": "灵修"
+    },
+    {
+      "id": "007",
+      "title": "渐进式的爱",
+      "category": "灵修"
+    },
+    {
+      "id": "008",
+      "title": "乡间的觉醒",
+      "category": "灵修"
+    },
+    {
+      "id": "009",
+      "title": "在修剪下发旺",
+      "category": "灵修"
+    },
+    {
+      "id": "010",
+      "title": "更多与神同在",
+      "category": "灵修"
+    },
+    {
+      "id": "011",
+      "title": "活在神的同在中",
+      "category": "灵修"
+    },
+    {
+      "id": "012",
+      "title": "喜乐丰盛的生命",
+      "category": "灵修"
+    },
+    {
+      "id": "013",
+      "title": "葡萄树的秘密--活出丰盛生命的要诀",
+      "category": "灵修"
+    }
+  ]
+}

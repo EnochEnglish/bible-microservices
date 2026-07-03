@@ -1,0 +1,37 @@
+{
+  "code": "gshznzb",
+  "title": "告诉孩子，你真棒！",
+  "titleEn": "Tell Your Child: You Are Great!",
+  "author": "卢勤",
+  "category": "家庭婚姻",
+  "icon": "👍",
+  "language": "en",
+  "totalChapters": 5,
+  "chapters": [
+    {
+      "id": "001",
+      "title": "第一章 不知道的世界--我的孩子",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "002",
+      "title": "第二章 首先改变你自己",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "003",
+      "title": "第三章 关于孩子心灵的成长",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "004",
+      "title": "第四章 给孩子一个什么样的世界",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "005",
+      "title": "第五章 怎样发掘孩子潜能",
+      "category": "家庭婚姻"
+    }
+  ]
+}

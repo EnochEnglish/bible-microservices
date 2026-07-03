@@ -1,0 +1,112 @@
+{
+  "code": "ccdsm",
+  "title": "传承的生命",
+  "titleEn": "Life of Heritage",
+  "author": "佚名",
+  "category": "家庭婚姻",
+  "icon": "🌱",
+  "language": "en",
+  "totalChapters": 20,
+  "chapters": [
+    {
+      "id": "001",
+      "title": "序",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "002",
+      "title": "前言",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "003",
+      "title": "第壹章 父母的榜样",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "004",
+      "title": "壹 一、父母的重要",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "005",
+      "title": "壹 二、父母的智慧",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "006",
+      "title": "壹 三、父母的原则",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "007",
+      "title": "壹 四、父母的言语",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "008",
+      "title": "壹 五、父母的祷告",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "009",
+      "title": "第贰章 儿女的品质",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "010",
+      "title": "贰 一、儿女灵性的培养",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "011",
+      "title": "贰 二、儿女品德的塑造",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "012",
+      "title": "贰 三、恒久毅力的操练",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "013",
+      "title": "第叁章 教育的重要",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "014",
+      "title": "叁 一、出生前期",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "015",
+      "title": "叁 二、学前教育",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "016",
+      "title": "叁 三、学校中的学习",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "017",
+      "title": "第肆章 教会生活的操练",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "018",
+      "title": "肆 一、敬虔生活的操练",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "019",
+      "title": "肆 二、大使命的传递",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "020",
+      "title": "肆 三、顺应神的呼召",
+      "category": "家庭婚姻"
+    }
+  ]
+}

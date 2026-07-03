@@ -93,18 +93,37 @@ var BOOK_META_EN = {
 };
 
 // ─── Static books registry ───
-// Each entry: { code, title, titleEn, author, category, categoryEn, language, icon }
 var STATIC_BOOKS = [
-  {
-    code: 'bible_wenti',
-    title: '圣经问题解答',
-    titleEn: 'Bible Questions & Answers',
-    author: '陈终道',
-    category: 'CHINESE_BOOK',
-    categoryEn: 'Chinese Books',
-    language: 'zh',
-    icon: '❓'
-  }
+  { code: 'bible_wenti', title: '圣经问题解答', titleEn: 'Bible Q&A', author: '陈终道', category: '解经问题', icon: '❓' },
+  { code: 'dsz', title: '圣经中的得胜者', titleEn: 'Victors in the Bible', author: '佚名', category: '解经问题', icon: '📖' },
+  { code: 'deshen', title: '讲道集', titleEn: 'Sermons', author: '佚名', category: '讲道', icon: '🎤' },
+  { code: 'hmgq', title: '荒漠甘泉', titleEn: 'Streams in the Desert', author: '考门夫人', category: '灵修', icon: '🏜️' },
+  { code: 'walk_with_lord', title: '每日与主同行', titleEn: 'Walking with the Lord Daily', author: '佚名', category: '灵修', icon: '🚶' },
+  { code: 'ptsdmm', title: '葡萄树的秘密', titleEn: 'Secret of the Vine', author: '佚名', category: '灵修', icon: '🍇' },
+  { code: 'listening', title: '倾听恩主的声音', titleEn: 'Listening to the Lord', author: '佚名', category: '灵修', icon: '👂' },
+  { code: 'quanwei', title: '劝慰之言', titleEn: 'Words of Comfort', author: '佚名', category: '灵修', icon: '💬' },
+  { code: 'victory_life', title: '胜利生活的秘诀', titleEn: 'Secret of Victorious Living', author: '佚名', category: '灵修', icon: '🏆' },
+  { code: 'jabez', title: '雅比斯的祷告', titleEn: 'Prayer of Jabez', author: '魏肯生', category: '灵修', icon: '🙏' },
+  { code: 'tongzai', title: '与神同在', titleEn: 'Practice of the Presence of God (CN)', author: '劳伦斯弟兄', category: '经典著作', icon: '⛪' },
+  { code: 'kneeling', title: '跪着的基督徒', titleEn: 'The Kneeling Christian', author: '佚名', category: '经典著作', icon: '🧎' },
+  { code: 'martyr_ch', title: '殉道史', titleEn: 'Book of Martyrs (CN)', author: '福克斯', category: '经典著作', icon: '✝️' },
+  { code: 'martyrs', title: "Fox's Book of Martyrs", titleEn: "Fox's Book of Martyrs", author: 'John Foxe', category: '经典著作', icon: '✝️' },
+  { code: 'xtsx', title: '系统神学', titleEn: 'Systematic Theology', author: '佚名', category: '神学', icon: '📚' },
+  { code: 'aizhiyu', title: '爱之语', titleEn: 'The Five Love Languages', author: '盖瑞·巧门', category: '家庭婚姻', icon: '❤️' },
+  { code: 'bless_children', title: '蒙福的儿女', titleEn: 'Blessed Children', author: '佚名', category: '家庭婚姻', icon: '👶' },
+  { code: 'ccdsm', title: '传承的生命', titleEn: 'Life of Heritage', author: '佚名', category: '家庭婚姻', icon: '🌱' },
+  { code: 'clsks', title: '从零岁开始', titleEn: 'From Zero', author: '佚名', category: '家庭婚姻', icon: '🍼' },
+  { code: 'flower', title: '花篮缘', titleEn: 'Flower Basket Story', author: '佚名', category: '家庭婚姻', icon: '🌸' },
+  { code: 'gshznzb', title: '告诉孩子，你真棒！', titleEn: 'Tell Your Child: You Are Great!', author: '卢勤', category: '家庭婚姻', icon: '👍' },
+  { code: 'hywtjd', title: '婚姻问题解答', titleEn: 'Marriage Q&A', author: '佚名', category: '家庭婚姻', icon: '💍' },
+  { code: 'keys', title: '开启幸福婚姻的钥匙', titleEn: 'Keys to Happy Marriage', author: '佚名', category: '家庭婚姻', icon: '🔑' },
+  { code: 'kzndqg', title: '控制你的情感', titleEn: 'Control Your Emotions', author: '佚名', category: '家庭婚姻', icon: '😌' },
+  { code: 'marriage', title: '信徒离婚原则汇编', titleEn: 'Believers Divorce Principles', author: '佚名', category: '家庭婚姻', icon: '📜' },
+  { code: 'sday_men', title: '圣地爱语', titleEn: 'Holy Land Love Words (For Men)', author: '佚名', category: '家庭婚姻', icon: '💪' },
+  { code: 'shufeiyun', title: '属飞云', titleEn: 'Shu Fei Yun', author: '佚名', category: '家庭婚姻', icon: '☁️' },
+  { code: 'teamwork', title: '建立婚姻中的协调合作', titleEn: 'Building Marriage Teamwork', author: '佚名', category: '家庭婚姻', icon: '🤝' },
+  { code: 'wrfmwrsb', title: '为人父母为人师表', titleEn: 'Be Parents Be Teachers', author: '佚名', category: '家庭婚姻', icon: '👨‍🏫' },
+  { code: 'yubeiqincunqi', title: '预备青春期', titleEn: 'Preparing for Adolescence', author: '佚名', category: '家庭婚姻', icon: '🧒' }
 ];
 
 function libT(zh, en) {

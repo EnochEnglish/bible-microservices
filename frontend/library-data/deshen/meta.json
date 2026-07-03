@@ -1,0 +1,47 @@
+{
+  "code": "deshen",
+  "title": "讲道集",
+  "titleEn": "Sermons",
+  "author": "佚名",
+  "category": "讲道",
+  "icon": "🎤",
+  "language": "en",
+  "totalChapters": 7,
+  "chapters": [
+    {
+      "id": "001",
+      "title": "热爱到底的得胜 -- 以弗所教会",
+      "category": "讲道"
+    },
+    {
+      "id": "002",
+      "title": "至死忠心的得胜 -- 士每拿教会",
+      "category": "讲道"
+    },
+    {
+      "id": "003",
+      "title": "脱离世俗的得胜 -- 别迦摩教会",
+      "category": "讲道"
+    },
+    {
+      "id": "004",
+      "title": "行善更多的得胜 -- 推雅推喇教会",
+      "category": "讲道"
+    },
+    {
+      "id": "005",
+      "title": "有名无实的得胜 -- 撒狄教会",
+      "category": "讲道"
+    },
+    {
+      "id": "006",
+      "title": "忠心守道的得胜 -- 非拉铁非教会",
+      "category": "讲道"
+    },
+    {
+      "id": "007",
+      "title": "心中火热的得胜 -- 老底嘉教会",
+      "category": "讲道"
+    }
+  ]
+}

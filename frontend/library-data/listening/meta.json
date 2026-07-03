@@ -1,0 +1,72 @@
+{
+  "code": "listening",
+  "title": "倾听恩主的声音",
+  "titleEn": "Listening to the Lord",
+  "author": "佚名",
+  "category": "灵修",
+  "icon": "👂",
+  "language": "en",
+  "totalChapters": 12,
+  "chapters": [
+    {
+      "id": "001",
+      "title": "一 月",
+      "category": "灵修"
+    },
+    {
+      "id": "002",
+      "title": "二 月",
+      "category": "灵修"
+    },
+    {
+      "id": "003",
+      "title": "三 月",
+      "category": "灵修"
+    },
+    {
+      "id": "004",
+      "title": "四 月",
+      "category": "灵修"
+    },
+    {
+      "id": "005",
+      "title": "五 月",
+      "category": "灵修"
+    },
+    {
+      "id": "006",
+      "title": "六 月",
+      "category": "灵修"
+    },
+    {
+      "id": "007",
+      "title": "七 月",
+      "category": "灵修"
+    },
+    {
+      "id": "008",
+      "title": "八 月",
+      "category": "灵修"
+    },
+    {
+      "id": "009",
+      "title": "九 月",
+      "category": "灵修"
+    },
+    {
+      "id": "010",
+      "title": "十 月",
+      "category": "灵修"
+    },
+    {
+      "id": "011",
+      "title": "十 一 月",
+      "category": "灵修"
+    },
+    {
+      "id": "012",
+      "title": "十 二 月",
+      "category": "灵修"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "code": "flower",
+  "title": "花篮缘",
+  "titleEn": "Flower Basket Story",
+  "author": "佚名",
+  "category": "家庭婚姻",
+  "icon": "🌸",
+  "language": "en",
+  "totalChapters": 13,
+  "chapters": [
+    {
+      "id": "001",
+      "title": "花篮缘",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "002",
+      "title": "花篮缘 第一章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "003",
+      "title": "花篮缘第二章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "004",
+      "title": "花篮缘第三章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "005",
+      "title": "花篮缘第四章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "006",
+      "title": "花篮缘第五章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "007",
+      "title": "花篮缘第六章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "008",
+      "title": "花篮缘第七章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "009",
+      "title": "花篮缘第八章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "010",
+      "title": "花篮缘第九章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "011",
+      "title": "花篮缘第十章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "012",
+      "title": "花篮缘第十一章",
+      "category": "家庭婚姻"
+    },
+    {
+      "id": "013",
+      "title": "花篮缘第十二章",
+      "category": "家庭婚姻"
+    }
+  ]
+}
