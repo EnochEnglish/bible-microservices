@@ -315,3 +315,10 @@ html, body {
 .grading-input { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
 .grading-input input { width: 80px; }
 .grading-input button { padding: 6px 16px; background: var(--course-primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+
+
+/* Domain Tabs */
+.domain-tabs{display:flex;gap:4px;padding:12px 24px 0;max-width:1200px;margin:0 auto}
+.domain-tab{background:none;border:1px solid var(--border,#2a2d3a);color:var(--text,#e4e6f0);opacity:0.6;padding:6px 16px;border-radius:20px;cursor:pointer;font-size:13px}
+.domain-tab.active{opacity:1;border-color:#4a9eff;background:rgba(74,158,255,0.1)}
+.domain-tab:hover{opacity:0.9}

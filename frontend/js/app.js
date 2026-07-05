@@ -3705,7 +3705,7 @@ function doLogout() {
 function showAdminFeatures() {}
 function hideAdminFeatures() {}
 function updateLoginButton() {
-  var btn = document.getElementById("loginBtn");
+  var btn = document.getElementById("topbarLoginBtn");
   if (!btn) return;
   var loggedIn = authState.loggedIn && authState.user;
   var isAdmin = loggedIn && authState.user.role === "ADMIN";
@@ -3725,8 +3725,8 @@ function updateLoginButton() {
   if (bmBtn) bmBtn.style.display = loggedIn ? "inline-block" : "none";
   if (ntBtn) ntBtn.style.display = loggedIn ? "inline-block" : "none";
   // Module + admin buttons: admin-only
-  var modBtn = document.getElementById("modulesBtn");
-  var adBtn = document.getElementById("adminBtn");
+  var modBtn = document.getElementById("topbarModulesBtn");
+  var adBtn = document.getElementById("topbarAdminBtn");
   if (modBtn) modBtn.style.display = isAdmin ? "inline-block" : "none";
   if (adBtn) adBtn.style.display = isAdmin ? "inline-block" : "none";
 }
@@ -4074,3 +4074,25 @@ function saveDesktopPlanProgress() {
     localStorage.setItem("dplan_progress_" + dplanState.currentPlan, JSON.stringify(dplanState.progress));
   }
 }
+
+// ── Topbar Dropdown ──
+function closeTopbarDropdown() {
+  var dd = document.getElementById('moreDropdown');
+  if (dd) dd.style.display = 'none';
+}
+(function initTopbarDropdown() {
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('moreMenuBtn');
+    var dd = document.getElementById('moreDropdown');
+    if (!btn || !dd) return;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+    });
+    document.addEventListener('click', function(e) {
+      if (!dd.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+        dd.style.display = 'none';
+      }
+    });
+  });
+})();

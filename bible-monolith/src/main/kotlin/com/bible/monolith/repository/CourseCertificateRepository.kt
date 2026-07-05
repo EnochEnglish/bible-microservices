@@ -10,4 +10,5 @@ interface CourseCertificateRepository : JpaRepository<CourseCertificate, Long> {
     fun findByUserId(userId: Long): List<CourseCertificate>
     fun findByUserIdAndCourseId(userId: Long, courseId: Long): List<CourseCertificate>
     fun findByCertificateCode(certificateCode: String): Optional<CourseCertificate>
+    fun deleteByCourseId(courseId: Long)
 }

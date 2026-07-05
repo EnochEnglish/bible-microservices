@@ -6,6 +6,7 @@
   <title>Bible Reader / 圣经阅读器</title>
   <script>document.write('<base href="' + (location.pathname.startsWith('/bible/') ? '/bible/' : '/') + '">');</script>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/course-admin.css?v=20260705a">
 </head>
 <body>
     <div id="app">
@@ -27,15 +28,20 @@
       </select>
       <div class="search-box"><input type="text" id="searchBox" placeholder="搜索经文..." autocomplete="off"></div>
       <button id="dictBtn" title="Bible Dictionary" data-zh-title="圣经词典" data-en-title="Bible Dictionary" onclick="openDictPopup()">📚</button>
-      <button id="devotionBtn" title="Daily Devotion" data-zh-title="每日灵修" data-en-title="Daily Devotion" data-zh="灵修" data-en="Devotion" onclick="openDevotionPanel()">🔔 <span data-zh="灵修" data-en="Devotion">灵修</span></button>
-      <button id="genbookBtn" title="General Books" data-zh-title="阅读" data-en-title="Read" data-zh="阅读" data-en="Read" onclick="openGenBookPanel()" style="display:none">📖 <span data-zh="阅读" data-en="Read">阅读</span></button>
-      <button id="mapsBtn" title="Bible Maps" data-zh-title="圣经地图" data-en-title="Bible Maps" data-zh="地图" data-en="Maps" onclick="openMapsPanel()">🗺️ <span data-zh="地图" data-en="Maps">地图</span></button>
-      <button id="planBtn" title="Reading Plan" data-zh-title="读经计划" data-en-title="Reading Plan" data-zh="读经" data-en="Plan" onclick="openPlanPanel()">📅 <span data-zh="读经" data-en="Plan">读经</span></button>
-      <button id="bookmarksBtn" title="Bookmarks" data-zh-title="书签" data-en-title="Bookmarks" data-zh="书签" data-en="Bookmarks" onclick="openBookmarksPanel()" style="display:none">🔖 <span data-zh="书签" data-en="Bookmarks">书签</span></button>
-      <button id="notesBtn" title="Notes" data-zh-title="笔记" data-en-title="Notes" data-zh="笔记" data-en="Notes" onclick="openNotesPanel()" style="display:none">📝 <span data-zh="笔记" data-en="Notes">笔记</span></button>
-      <a id="modulesBtn" href="modules.html" target="_blank" class="topbar-btn" title="Module Manager" data-zh-title="模块管理" data-en-title="Module Manager" data-zh="📦 模块" data-en="📦 Modules" style="display:none;text-decoration:none;">📦 模块</a>
-      <a id="adminBtn" href="admin.html" target="_blank" class="topbar-btn" title="Admin / User Management" data-zh-title="用户管理" data-en-title="Admin" style="display:none;text-decoration:none;">⚙️</a>
-      <button id="loginBtn" title="Login / Register" data-zh-title="登录 / 注册" data-en-title="Login / Register" data-zh="登录" data-en="Login" onclick="openAuthPanel()">👤 <span data-zh="登录" data-en="Login">登录</span></button>
+      <div class="topbar-dropdown">
+        <button id="moreMenuBtn" class="topbar-btn more-trigger" title="More" data-zh-title="更多" data-en-title="More">⚙️ <span data-zh="更多" data-en="More">更多</span> ▾</button>
+        <div id="moreDropdown" class="dropdown-menu" style="display:none">
+          <button class="dropdown-item" onclick="openDevotionPanel(); closeTopbarDropdown();">🔔 <span data-zh="灵修" data-en="Devotion">灵修</span></button>
+          <button class="dropdown-item" onclick="openMapsPanel(); closeTopbarDropdown();">🗺️ <span data-zh="地图" data-en="Maps">地图</span></button>
+          <button class="dropdown-item" onclick="openPlanPanel(); closeTopbarDropdown();">📅 <span data-zh="读经计划" data-en="Reading Plan">读经计划</span></button>
+          <button class="dropdown-item" onclick="openBookmarksPanel(); closeTopbarDropdown();">🔖 <span data-zh="书签" data-en="Bookmarks">书签</span></button>
+          <button class="dropdown-item" onclick="openNotesPanel(); closeTopbarDropdown();">📝 <span data-zh="笔记" data-en="Notes">笔记</span></button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" id="topbarLoginBtn" onclick="openAuthPanel(); closeTopbarDropdown();">👤 <span data-zh="登录" data-en="Login">登录</span></button>
+          <a class="dropdown-item" id="topbarModulesBtn" href="modules.html" target="_blank" style="text-decoration:none;color:inherit;">📦 <span data-zh="模块管理" data-en="Modules">模块管理</span></a>
+          <a class="dropdown-item" id="topbarAdminBtn" href="admin.html" target="_blank" style="text-decoration:none;color:inherit;display:none;">⚙️ <span data-zh="用户管理" data-en="Admin">用户管理</span></a>
+        </div>
+      </div>
 
     </div>
 
@@ -323,7 +329,7 @@
   <script src="js/config.js?v=20260701a"></script>
   <script src="js/api.js?v=20260701a"></script>
   <script src="js/morphology.js?v=20260701a"></script>
-  <script src="js/app.js?v=20260701a"></script>
+  <script src="js/app.js?v=20260705a"></script>
   <script>
     // Fix mobile link href with basePath for nginx deployment
     (function() {

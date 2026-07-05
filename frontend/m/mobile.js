@@ -2267,3 +2267,59 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(function() {});
   } catch(e) {}
 }
+
+
+// ── Courses View ──
+function loadMobileCourses() {
+  fetch('/api/v1/courses?published=true')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var list = document.getElementById('coursesList');
+      if (!list) return;
+      var courses = data.courses || data.data || [];
+      if (!Array.isArray(courses)) courses = [];
+      if (courses.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:#888;padding:20px;">' + (window.currentLang === 'en' ? 'No courses available' : '暂无课程') + '</p>';
+        return;
+      }
+      var html = '';
+      courses.forEach(function(c) {
+        var title = c.title || c.name || 'Untitled';
+        var desc = c.description || '';
+        var cat = c.category || '';
+        var diff = c.difficulty || '';
+        html += '<div class="course-card" data-course-id="' + (c.id || c._id) + '">' +
+          '<div class="course-card-title">' + escapeHtmlMobile(title) + '</div>' +
+          (desc ? '<div class="course-card-desc">' + escapeHtmlMobile(desc.substring(0,100)) + '</div>' : '') +
+          '<div class="course-card-meta">' +
+            (cat ? '<span class="course-tag">' + escapeHtmlMobile(cat) + '</span>' : '') +
+            (diff ? '<span class="course-tag">' + escapeHtmlMobile(diff) + '</span>' : '') +
+          '</div></div>';
+      });
+      list.innerHTML = html;
+      list.querySelectorAll('.course-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          var id = this.getAttribute('data-course-id');
+          window.location.href = '../courses.html?id=' + id;
+        });
+      });
+    })
+    .catch(function(err) {
+      var list = document.getElementById('coursesList');
+      if (list) list.innerHTML = '<p style="text-align:center;color:#888;padding:20px;">' + (window.currentLang === 'en' ? 'Failed to load' : '加载失败') + '</p>';
+      console.error('Load courses error:', err);
+    });
+}
+function escapeHtmlMobile(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+// Patch switchView to handle courses
+(function patchSwitchViewForCourses() {
+  var orig = window.switchView;
+  if (typeof orig !== 'function') return;
+  window.switchView = function(view) {
+    orig(view);
+    if (view === 'courses') loadMobileCourses();
+  };
+})();

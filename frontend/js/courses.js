@@ -13,7 +13,8 @@ var state = {
   currentCourse: null,
   currentLesson: null,
   currentExam: null,
-  filter: ''
+  filter: '',
+  domain: ''
 };
 
 // ─── Init ───
@@ -39,12 +40,16 @@ function renderUserArea() {
     ' <a href="#certs" onclick="showCertificates()" style="margin-left:12px">证书</a>';
   if (state.user.role === 'TEACHER' || state.user.role === 'ADMIN') {
     el.innerHTML += ' <a href="#grading" onclick="showGrading()" style="margin-left:8px">评分</a>';
+    var al = document.getElementById('adminLink');
+    if (al) al.style.display = 'inline';
   }
 }
 
 // ─── Course List ───
 function loadCourses() {
-  fetch(API + '/courses')
+  var url = API + '/courses';
+  if (state.domain) url += '?domain=' + encodeURIComponent(state.domain);
+  fetch(url)
     .then(function(r) { return r.json(); })
     .then(function(data) {
       state.courses = data;
@@ -57,9 +62,9 @@ function loadCourses() {
 
 function renderCourseGrid() {
   var grid = document.getElementById('courseGrid');
-  var filtered = state.filter
-    ? state.courses.filter(function(c) { return c.category === state.filter; })
-    : state.courses;
+  var filtered = state.courses;
+  if (state.filter) filtered = filtered.filter(function(c) { return c.category === state.filter; });
+  if (state.domain) filtered = filtered.filter(function(c) { return c.domain === state.domain; });
 
   if (!filtered.length) {
     grid.innerHTML = '<div class="course-loading">暂无课程</div>';
@@ -90,6 +95,18 @@ document.addEventListener('click', function(e) {
     renderCourseGrid();
   }
 });
+
+// Domain tabs
+if (document.querySelector('.domain-tab')) {
+  document.querySelectorAll('.domain-tab').forEach(function(t) {
+    t.addEventListener('click', function() {
+      document.querySelectorAll('.domain-tab').forEach(function(b) { b.classList.remove('active'); });
+      t.classList.add('active');
+      state.domain = t.dataset.domain;
+      loadCourses();
+    });
+  });
+}
 
 // ─── Course Detail ───
 function openCourse(courseId) {

@@ -9,6 +9,7 @@ data class CourseDto(
     val difficulty: String?, val estimatedHours: Int?,
     val price: Int, val currency: String, val status: String,
     val enrollmentCount: Int, val rating: Double?,
+    val domain: String, val organization: String?, val tags: String?,
     val createdAt: Instant, val updatedAt: Instant
 )
 
@@ -112,6 +113,9 @@ data class CreateCourseRequest(
     val price: Int = 0,
     val currency: String = "CNY",
     val language: String = "zh",
+    val domain: String = "theology",
+    val organization: String? = null,
+    val tags: String? = null,
     val isPublished: Boolean = false
 )
 

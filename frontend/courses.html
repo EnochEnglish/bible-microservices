@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>在线课程 / Courses</title>
-<link rel="stylesheet" href="/css/style.css?v=20260704a">
-<link rel="stylesheet" href="/css/courses.css?v=20260704a">
+<link rel="stylesheet" href="/css/style.css?v=20260705a">
+<link rel="stylesheet" href="/css/courses.css?v=20260705a">
 </head>
 <body>
 <div id="courses-app">
@@ -15,11 +15,19 @@
     <h1 class="course-topbar-title">📚 <span data-i18n="coursesTitle">在线课程</span></h1>
     <div class="course-topbar-right">
       <span id="courseUserArea"></span>
+      <a href="/course-admin.html" id="adminLink" style="display:none;margin-left:12px;color:var(--text)">⚙️ 管理</a>
     </div>
   </header>
 
   <!-- View: Course List -->
   <div id="view-course-list" class="course-view">
+    <div class="domain-tabs">
+      <button class="domain-tab active" data-domain="">🌐 全部 / All</button>
+      <button class="domain-tab" data-domain="theology">✝️ 神学</button>
+      <button class="domain-tab" data-domain="english">📖 英语</button>
+      <button class="domain-tab" data-domain="cs">💻 计算机</button>
+      <button class="domain-tab" data-domain="university">🎓 大学</button>
+    </div>
     <div class="course-filters">
       <button class="filter-btn active" data-cat="">全部</button>
       <button class="filter-btn" data-cat="bible">圣经</button>
@@ -93,6 +101,6 @@
   </div>
 </div>
 
-<script src="/js/courses.js?v=20260704a"></script>
+<script src="/js/courses.js?v=20260705a"></script>
 </body>
 </html>

@@ -60,6 +60,18 @@ data class Course(
     @Column(nullable = false, length = 20)
     val status: String = "draft",
 
+    /** 领域分类: theology / english / cs / university / ...  用于通用化 */
+    @Column(nullable = false, length = 30, columnDefinition = "VARCHAR(30) DEFAULT 'theology'")
+    val domain: String = "theology",
+
+    /** 机构名称（可选） */
+    @Column(name = "organization", length = 100)
+    val organization: String? = null,
+
+    /** 标签（逗号分隔，如 "门徒训练,基础,救恩"） */
+    @Column(length = 500)
+    val tags: String? = null,
+
     @Column(name = "enrollment_count")
     val enrollmentCount: Int = 0,
 

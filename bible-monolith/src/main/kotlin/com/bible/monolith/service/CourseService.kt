@@ -25,11 +25,13 @@ class CourseService(
 
     // ─── Courses ───
 
-    fun listPublishedCourses(category: String?): List<CourseDto> {
-        val courses = if (category != null)
-            courseRepo.findByCategoryAndStatus(category, "published")
-        else
-            courseRepo.findByStatusOrderByCreatedAtDesc("published")
+    fun listPublishedCourses(category: String?, domain: String?): List<CourseDto> {
+        val courses = when {
+            domain != null && category != null -> courseRepo.findByDomainAndCategoryAndStatus(domain, category, "published")
+            domain != null -> courseRepo.findByDomainAndStatusOrderByCreatedAtDesc(domain, "published")
+            category != null -> courseRepo.findByCategoryAndStatus(category, "published")
+            else -> courseRepo.findByStatusOrderByCreatedAtDesc("published")
+        }
         return courses.map { toDto(it) }
     }
 
@@ -53,6 +55,121 @@ class CourseService(
     // ─── Admin: Create Course/Section/Lesson/Exam ───
 
     @Transactional
+    fun deleteCourse(courseId: Long) {
+        // Delete in order: gradings, exam results, exams, lesson progress, lessons, sections, enrollments, certificates, course
+        examRepo.findByCourseIdOrderByOrderIndex(courseId).forEach { exam ->
+            examResultRepo.findByExamId(exam.id).forEach { result ->
+                gradingRepo.deleteByResultId(result.id)
+            }
+            examResultRepo.deleteByExamId(exam.id)
+        }
+        examRepo.deleteByCourseId(courseId)
+        sectionRepo.findByCourseIdOrderByOrderIndex(courseId).forEach { section ->
+            lessonRepo.deleteBySectionId(section.id)
+        }
+        progressRepo.deleteByCourseId(courseId)
+        sectionRepo.deleteByCourseId(courseId)
+        enrollmentRepo.deleteByCourseId(courseId)
+        certRepo.deleteByCourseId(courseId)
+        courseRepo.deleteById(courseId)
+    }
+
+    fun getTeachingCourses(instructorId: Long): List<CourseDto> {
+        return courseRepo.findByInstructorId(instructorId).map { toDto(it) }
+    }
+
+    @Transactional
+    fun updateCourse(courseId: Long, req: CreateCourseRequest): CourseDto {
+        val course = courseRepo.findById(courseId).orElseThrow { NoSuchElementException("Course not found") }
+        val updated = course.copy(
+            title = req.title,
+            titleEn = req.titleEn,
+            description = req.description,
+            descriptionEn = req.descriptionEn,
+            category = req.category,
+            icon = req.icon,
+            difficulty = req.difficulty,
+            estimatedHours = req.estimatedHours,
+            price = req.price,
+            currency = req.currency,
+            domain = req.domain ?: course.domain,
+            organization = req.organization,
+            tags = req.tags,
+            status = if (req.isPublished) "published" else "draft",
+            updatedAt = Instant.now()
+        )
+        return toDto(courseRepo.save(updated))
+    }
+
+    @Transactional
+    fun updateSection(sectionId: Long, req: CreateSectionRequest): SectionDto {
+        val section = sectionRepo.findById(sectionId).orElseThrow { NoSuchElementException("Section not found") }
+        val updated = sectionRepo.save(section.copy(
+            title = req.title,
+            titleEn = req.titleEn,
+            orderIndex = req.orderIndex
+        ))
+        return SectionDto(updated.id, updated.courseId, updated.title, updated.titleEn, updated.orderIndex, emptyList())
+    }
+
+    @Transactional
+    fun deleteSection(sectionId: Long) {
+        lessonRepo.deleteBySectionId(sectionId)
+        sectionRepo.deleteById(sectionId)
+    }
+
+    @Transactional
+    fun updateLesson(lessonId: Long, req: CreateLessonRequest): LessonDto {
+        val lesson = lessonRepo.findById(lessonId).orElseThrow { NoSuchElementException("Lesson not found") }
+        val updated = lessonRepo.save(lesson.copy(
+            title = req.title,
+            titleEn = req.titleEn,
+            lessonType = req.lessonType,
+            content = req.content,
+            videoUrl = req.videoUrl,
+            durationMinutes = req.durationMinutes,
+            orderIndex = req.orderIndex,
+            passingScore = req.passingScore
+        ))
+        return toLessonDto(updated)
+    }
+
+    @Transactional
+    fun deleteLesson(lessonId: Long) {
+        progressRepo.deleteByLessonId(lessonId)
+        lessonRepo.deleteById(lessonId)
+    }
+
+    @Transactional
+    fun updateExam(examId: Long, req: CreateExamRequest): ExamQuestionDto {
+        val exam = examRepo.findById(examId).orElseThrow { NoSuchElementException("Exam not found") }
+        val updated = examRepo.save(exam.copy(
+            title = req.title,
+            titleEn = req.titleEn,
+            examType = req.examType,
+            sectionId = req.sectionId,
+            questions = req.questions,
+            totalScore = req.totalScore,
+            passingScore = req.passingScore,
+            timeLimitMinutes = req.timeLimitMinutes,
+            maxAttempts = req.maxAttempts,
+            orderIndex = req.orderIndex
+        ))
+        return ExamQuestionDto(updated.id, updated.courseId, updated.title, updated.titleEn,
+            updated.examType, updated.sectionId, updated.questions,
+            updated.timeLimitMinutes, updated.passingScore, updated.totalScore, updated.maxAttempts)
+    }
+
+    @Transactional
+    fun deleteExam(examId: Long) {
+        examResultRepo.findByExamId(examId).forEach { result ->
+            gradingRepo.deleteByResultId(result.id)
+        }
+        examResultRepo.deleteByExamId(examId)
+        examRepo.deleteById(examId)
+    }
+
+    @Transactional
     fun createCourse(instructorId: Long, req: CreateCourseRequest): CourseDto {
         val course = Course(
             title = req.title,
@@ -66,6 +183,9 @@ class CourseService(
             estimatedHours = req.estimatedHours,
             price = req.price,
             currency = req.currency,
+            domain = req.domain ?: "theology",
+            organization = req.organization,
+            tags = req.tags,
             status = if (req.isPublished) "published" else "draft"
         )
         return toDto(courseRepo.save(course))
@@ -464,7 +584,9 @@ class CourseService(
 
     private fun toDto(c: Course) = CourseDto(c.id, c.title, c.titleEn, c.description, c.descriptionEn,
         c.instructorId, c.category, c.icon, c.difficulty, c.estimatedHours,
-        c.price, c.currency, c.status, c.enrollmentCount, c.rating, c.createdAt, c.updatedAt)
+        c.price, c.currency, c.status, c.enrollmentCount, c.rating,
+        c.domain, c.organization, c.tags,
+        c.createdAt, c.updatedAt)
 
     private fun toLessonDto(l: CourseLesson) = LessonDto(l.id, l.sectionId, l.title, l.titleEn,
         l.lessonType, l.content, l.videoUrl, l.durationMinutes, l.orderIndex,

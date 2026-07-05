@@ -11,4 +11,5 @@ interface CourseEnrollmentRepository : JpaRepository<CourseEnrollment, Long> {
     fun findByCourseId(courseId: Long): List<CourseEnrollment>
     fun findByUserIdAndCourseId(userId: Long, courseId: Long): Optional<CourseEnrollment>
     fun countByCourseId(courseId: Long): Long
+    fun deleteByCourseId(courseId: Long)
 }

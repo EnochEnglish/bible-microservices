@@ -9,4 +9,5 @@ interface CourseExamResultRepository : JpaRepository<CourseExamResult, Long> {
     fun findByUserIdAndExamIdOrderByAttemptNumberDesc(userId: Long, examId: Long): List<CourseExamResult>
     fun findByExamId(examId: Long): List<CourseExamResult>
     fun countByUserIdAndExamId(userId: Long, examId: Long): Int
+    fun deleteByExamId(examId: Long)
 }

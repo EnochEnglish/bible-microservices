@@ -27,9 +27,13 @@ class SecurityConfig(
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/api/v1/auth/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/api/v1/courses/my/teaching").hasAnyRole("ADMIN", "TEACHER")
                     .requestMatchers("/api/v1/courses/exams/*/results/all").hasAnyRole("ADMIN", "TEACHER")
                     .requestMatchers("/api/v1/courses/gradings/pending").hasAnyRole("ADMIN", "TEACHER")
                     .requestMatchers("/api/v1/courses/gradings/*/grade").hasAnyRole("ADMIN", "TEACHER")
+                    .requestMatchers("/api/v1/courses/*/sections/*", "DELETE").hasAnyRole("ADMIN", "TEACHER")
+                    .requestMatchers("/api/v1/courses/*/lessons/*", "DELETE").hasAnyRole("ADMIN", "TEACHER")
+                    .requestMatchers("/api/v1/courses/*/exams/*", "DELETE").hasAnyRole("ADMIN", "TEACHER")
                     .requestMatchers("/api/v1/**").permitAll()
                     .requestMatchers("/actuator/**").permitAll()
                     .anyRequest().permitAll()

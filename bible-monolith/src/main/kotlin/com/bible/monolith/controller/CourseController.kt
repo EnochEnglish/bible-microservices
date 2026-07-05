@@ -16,8 +16,11 @@ class CourseController(
     // ─── Public (browse) ───
 
     @GetMapping
-    fun listCourses(@RequestParam(required = false) category: String?): List<CourseDto> {
-        return courseService.listPublishedCourses(category)
+    fun listCourses(
+        @RequestParam(required = false) category: String?,
+        @RequestParam(required = false) domain: String?
+    ): List<CourseDto> {
+        return courseService.listPublishedCourses(category, domain)
     }
 
     @GetMapping("/{courseId}")
@@ -147,6 +150,12 @@ class CourseController(
 
     // ─── Admin: Create Course/Section/Lesson/Exam ───
 
+    @GetMapping("/my/teaching")
+    fun myTeachingCourses(@RequestHeader("Authorization") auth: String): List<CourseDto> {
+        val userId = extractUserId(auth)
+        return courseService.getTeachingCourses(userId)
+    }
+
     @PostMapping
     fun createCourse(
         @RequestHeader("Authorization") auth: String,
@@ -154,6 +163,42 @@ class CourseController(
     ): CourseDto {
         val userId = extractUserId(auth)
         return courseService.createCourse(userId, body)
+    }
+
+    @PutMapping("/{courseId}")
+    fun updateCourse(
+        @RequestHeader("Authorization") auth: String,
+        @PathVariable courseId: Long,
+        @RequestBody body: CreateCourseRequest
+    ): CourseDto {
+        return courseService.updateCourse(courseId, body)
+    }
+
+    @DeleteMapping("/{courseId}")
+    fun deleteCourse(
+        @RequestHeader("Authorization") auth: String,
+        @PathVariable courseId: Long
+    ): ResponseEntity<Map<String, Any>> {
+        courseService.deleteCourse(courseId)
+        return ResponseEntity.ok(mapOf("ok" to true, "deleted" to courseId))
+    }
+
+    @PutMapping("/{courseId}/sections/{sectionId}")
+    fun updateSection(
+        @PathVariable courseId: Long,
+        @PathVariable sectionId: Long,
+        @RequestBody body: CreateSectionRequest
+    ): SectionDto {
+        return courseService.updateSection(sectionId, body)
+    }
+
+    @DeleteMapping("/{courseId}/sections/{sectionId}")
+    fun deleteSection(
+        @PathVariable courseId: Long,
+        @PathVariable sectionId: Long
+    ): ResponseEntity<Map<String, Any>> {
+        courseService.deleteSection(sectionId)
+        return ResponseEntity.ok(mapOf("ok" to true, "deleted" to sectionId))
     }
 
     @PostMapping("/{courseId}/sections")
@@ -173,12 +218,48 @@ class CourseController(
         return courseService.createLesson(courseId, sectionId, body)
     }
 
+    @PutMapping("/{courseId}/lessons/{lessonId}")
+    fun updateLesson(
+        @PathVariable courseId: Long,
+        @PathVariable lessonId: Long,
+        @RequestBody body: CreateLessonRequest
+    ): LessonDto {
+        return courseService.updateLesson(lessonId, body)
+    }
+
+    @DeleteMapping("/{courseId}/lessons/{lessonId}")
+    fun deleteLesson(
+        @PathVariable courseId: Long,
+        @PathVariable lessonId: Long
+    ): ResponseEntity<Map<String, Any>> {
+        courseService.deleteLesson(lessonId)
+        return ResponseEntity.ok(mapOf("ok" to true, "deleted" to lessonId))
+    }
+
     @PostMapping("/{courseId}/exams")
     fun createExam(
         @PathVariable courseId: Long,
         @RequestBody body: CreateExamRequest
     ): ExamQuestionDto {
         return courseService.createExam(courseId, body)
+    }
+
+    @PutMapping("/{courseId}/exams/{examId}")
+    fun updateExam(
+        @PathVariable courseId: Long,
+        @PathVariable examId: Long,
+        @RequestBody body: CreateExamRequest
+    ): ExamQuestionDto {
+        return courseService.updateExam(examId, body)
+    }
+
+    @DeleteMapping("/{courseId}/exams/{examId}")
+    fun deleteExam(
+        @PathVariable courseId: Long,
+        @PathVariable examId: Long
+    ): ResponseEntity<Map<String, Any>> {
+        courseService.deleteExam(examId)
+        return ResponseEntity.ok(mapOf("ok" to true, "deleted" to examId))
     }
 
     // ─── Helpers ───

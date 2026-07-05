@@ -10,4 +10,6 @@ interface CourseLessonProgressRepository : JpaRepository<CourseLessonProgress, L
     fun findByUserIdAndCourseId(userId: Long, courseId: Long): List<CourseLessonProgress>
     fun findByUserIdAndLessonId(userId: Long, lessonId: Long): Optional<CourseLessonProgress>
     fun countByUserIdAndCourseIdAndCompleted(userId: Long, courseId: Long, completed: Boolean): Int
+    fun deleteByCourseId(courseId: Long)
+    fun deleteByLessonId(lessonId: Long)
 }

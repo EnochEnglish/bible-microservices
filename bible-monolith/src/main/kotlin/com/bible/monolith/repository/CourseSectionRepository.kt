@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface CourseSectionRepository : JpaRepository<CourseSection, Long> {
     fun findByCourseIdOrderByOrderIndex(courseId: Long): List<CourseSection>
+    fun deleteByCourseId(courseId: Long)
 }

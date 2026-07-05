@@ -10,4 +10,5 @@ interface CourseExamGradingRepository : JpaRepository<CourseExamGrading, Long> {
     fun findByGraderIdAndStatus(graderId: Long, status: String): List<CourseExamGrading>
     fun findByStatus(status: String): List<CourseExamGrading>
     fun countByResultIdAndStatus(resultId: Long, status: String): Int
+    fun deleteByResultId(resultId: Long)
 }

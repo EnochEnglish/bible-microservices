@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>课程管理 / Course Admin</title>
+<link rel="stylesheet" href="/css/style.css?v=20260705a">
+<link rel="stylesheet" href="/css/course-admin.css?v=20260705a">
+</head>
+<body>
+<div id="admin-app">
+  <header class="admin-topbar">
+    <a href="/courses.html" class="back-link">← 返回课程</a>
+    <h1>⚙️ 课程管理</h1>
+    <span id="adminUser"></span>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="admin-tabs">
+    <button class="atab active" data-tab="courses">📚 课程列表</button>
+    <button class="atab" data-tab="create">➕ 创建课程</button>
+    <button class="atab" data-tab="grading">✍️ 评分台</button>
+    <button class="atab" data-tab="students">👥 学员管理</button>
+  </nav>
+
+  <!-- Tab: Course List -->
+  <div id="tab-courses" class="atab-content">
+    <table class="admin-table">
+      <thead><tr><th>ID</th><th>标题</th><th>领域</th><th>分类</th><th>状态</th><th>学员</th><th>操作</th></tr></thead>
+      <tbody id="courseTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Tab: Create/Edit Course -->
+  <div id="tab-create" class="atab-content" style="display:none">
+    <div class="form-card">
+      <h2 id="formTitle">创建新课程</h2>
+      <input type="hidden" id="editCourseId">
+      <div class="form-row"><label>标题</label><input type="text" id="f_title" placeholder="课程标题"></div>
+      <div class="form-row"><label>英文标题</label><input type="text" id="f_titleEn" placeholder="English title (optional)"></div>
+      <div class="form-row"><label>描述</label><textarea id="f_desc" rows="3" placeholder="课程描述"></textarea></div>
+      <div class="form-row"><label>英文描述</label><textarea id="f_descEn" rows="2" placeholder="English description"></textarea></div>
+      <div class="form-row-inline">
+        <div><label>领域</label><select id="f_domain">
+          <option value="theology">神学</option>
+          <option value="english">英语</option>
+          <option value="cs">计算机</option>
+          <option value="university">大学</option>
+        </select></div>
+        <div><label>分类</label><input type="text" id="f_category" placeholder="如 discipleship"></div>
+        <div><label>难度</label><select id="f_difficulty">
+          <option value="beginner">入门</option>
+          <option value="intermediate">中级</option>
+          <option value="advanced">高级</option>
+        </select></div>
+        <div><label>预计时长(h)</label><input type="number" id="f_hours" value="10"></div>
+      </div>
+      <div class="form-row-inline">
+        <div><label>价格</label><input type="number" id="f_price" value="0"></div>
+        <div><label>图标</label><input type="text" id="f_icon" placeholder="📖" value="📖"></div>
+        <div><label>标签</label><input type="text" id="f_tags" placeholder="逗号分隔"></div>
+      </div>
+      <div class="form-row">
+        <label><input type="checkbox" id="f_published" checked> 发布</label>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveCourse()">💾 保存</button>
+        <button class="btn-secondary" onclick="resetForm()">清空</button>
+      </div>
+    </div>
+
+    <!-- Sections & Lessons editor (only when editing) -->
+    <div id="structureEditor" class="form-card" style="display:none;margin-top:20px">
+      <h3>章节管理</h3>
+      <div id="sectionsList"></div>
+      <div class="form-actions">
+        <input type="text" id="newSectionTitle" placeholder="新章节标题">
+        <button class="btn-secondary" onclick="addSection()">➕ 添加章节</button>
+      </div>
+      <div id="lessonsArea" style="margin-top:16px"></div>
+    </div>
+
+    <!-- Exams editor -->
+    <div id="examEditor" class="form-card" style="display:none;margin-top:20px">
+      <h3>考试管理</h3>
+      <div id="examsList"></div>
+      <div class="form-actions">
+        <input type="text" id="newExamTitle" placeholder="考试标题">
+        <button class="btn-secondary" onclick="addExam()">➕ 添加考试</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Grading -->
+  <div id="tab-grading" class="atab-content" style="display:none">
+    <div id="gradingContainer"></div>
+  </div>
+
+  <!-- Tab: Students -->
+  <div id="tab-students" class="atab-content" style="display:none">
+    <p style="color:var(--text);opacity:0.7">选择一门课程查看学员列表和进度</p>
+    <select id="studentCourseSelect" onchange="loadStudents()"></select>
+    <div id="studentList"></div>
+  </div>
+</div>
+
+<script src="/js/course-admin.js?v=20260705a"></script>
+</body>
+</html>

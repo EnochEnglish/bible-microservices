@@ -9,7 +9,7 @@
   <title>Bible Reader</title>
   <script>document.write('<base href="' + (location.pathname.startsWith('/bible/') ? '/bible/m/' : '/m/') + '">');</script>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="mobile.css?v=20260703ba">
+  <link rel="stylesheet" href="mobile.css?v=20260705a">
 </head>
 <body>
 
@@ -64,6 +64,10 @@
   <button class="nav-btn" data-view="plan">
     <span class="nav-icon">&#128197;</span>
     <span class="nav-label" data-i18n="navPlan">Plan</span>
+  </button>
+  <button class="nav-btn" data-view="courses">
+    <span class="nav-icon">&#127891;</span>
+    <span class="nav-label" data-i18n="navCourses">Courses</span>
   </button>
 </nav>
 
@@ -130,6 +134,16 @@
 <!-- Reading Plan View -->
 <div id="planView" class="view" style="display:none"></div>
 
+<!-- Courses View -->
+<div id="coursesView" class="view" style="display:none">
+  <div class="courses-header">
+    <h2 data-i18n="coursesTitle">🎓 Online Courses</h2>
+  </div>
+  <div id="coursesList" class="courses-list">
+    <div class="loading" data-i18n="loading">Loading...</div>
+  </div>
+</div>
+
 <!-- Devotion View -->
 <div id="devotionView" class="view" style="display:none">
   <div class="devotion-header">
@@ -175,6 +189,9 @@
     </button>
     <a class="more-item" href="../library.html">
       <span>📚</span> <span>图书馆 / Library</span>
+    </a>
+    <a class="more-item" href="../courses.html">
+      <span>🎓</span> <span>在线课程 / Courses</span>
     </a>
     <a class="more-item" href="../" id="desktopLink">
       <span>&#128421;&#65039;</span> <span id="desktopLinkLabel">Desktop Version</span>
@@ -241,7 +258,7 @@
 
 <script src="../js/config.js?v=20260703ba"></script>
 <script src="../js/morphology.js?v=20260703ba"></script>
-<script src="mobile.js?v=20260703ba"></script>
+<script src="mobile.js?v=20260705a"></script>
 <script>
   (function() {
     var dl = document.getElementById('desktopLink');
