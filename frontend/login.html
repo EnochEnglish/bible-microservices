@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登录 / Login</title>
+<link rel="stylesheet" href="/css/style.css?v=20260705b">
+<style>
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg,#0f1117)}
+.login-card{background:var(--bg2,#1a1d29);padding:40px;border-radius:16px;border:1px solid var(--border,#2e3348);width:400px;max-width:90vw}
+.login-card h1{text-align:center;margin-bottom:8px;font-size:24px}
+.login-card .subtitle{text-align:center;opacity:0.6;margin-bottom:24px;font-size:14px}
+.login-tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:1px solid var(--border)}
+.login-tab{flex:1;padding:10px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;opacity:0.6;background:none;border-left:none;border-right:none;border-top:none;color:var(--text);font-size:14px}
+.login-tab.active{opacity:1;border-bottom-color:#4a9eff}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;opacity:0.7;margin-bottom:4px}
+.form-row input{width:100%;padding:10px 14px;background:var(--bg,#0f1117);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;box-sizing:border-box}
+.form-row input:focus{outline:none;border-color:#4a9eff}
+.captcha-row{display:flex;gap:8px;align-items:center}
+.captcha-row input{flex:1}
+.captcha-row .captcha-q{padding:10px 14px;background:var(--bg3,#242836);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;white-space:nowrap;cursor:pointer;user-select:none}
+.btn-login{width:100%;padding:12px;background:#4a9eff;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:600;margin-top:8px}
+.btn-login:hover{background:#3a8eff}
+.btn-login:disabled{opacity:0.5;cursor:not-allowed}
+.error-msg{color:#ff5a5a;font-size:13px;text-align:center;margin-top:8px;display:none}
+.back-link{display:block;text-align:center;margin-top:16px;color:var(--text);opacity:0.6;text-decoration:none;font-size:13px}
+.back-link:hover{opacity:1}
+</style>
+</head>
+<body>
+<div class="login-card">
+  <h1>📖 Bible</h1>
+  <div class="subtitle">圣经学习平台 / Bible Study Platform</div>
+
+  <div class="login-tabs">
+    <button class="login-tab active" data-mode="login" onclick="switchMode('login')">登录 / Login</button>
+    <button class="login-tab" data-mode="register" onclick="switchMode('register')">注册 / Register</button>
+  </div>
+
+  <!-- Login Form -->
+  <div id="loginForm">
+    <div class="form-row">
+      <label>用户名 / Username</label>
+      <input type="text" id="loginUsername" placeholder="输入用户名" autocomplete="username">
+    </div>
+    <div class="form-row">
+      <label>密码 / Password</label>
+      <input type="password" id="loginPassword" placeholder="输入密码" autocomplete="current-password">
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="doLogin()">🔐 登录 / Login</button>
+    <div class="error-msg" id="loginError"></div>
+  </div>
+
+  <!-- Register Form -->
+  <div id="registerForm" style="display:none">
+    <div class="form-row">
+      <label>用户名 / Username (≥2字符)</label>
+      <input type="text" id="regUsername" placeholder="设置用户名" autocomplete="username">
+    </div>
+    <div class="form-row">
+      <label>密码 / Password (≥3字符)</label>
+      <input type="password" id="regPassword" placeholder="设置密码" autocomplete="new-password">
+    </div>
+    <div class="form-row">
+      <label>验证码 / Captcha</label>
+      <div class="captcha-row">
+        <span class="captcha-q" id="captchaQuestion" onclick="loadCaptcha()" title="点击刷新">加载中...</span>
+        <input type="number" id="captchaAnswer" placeholder="答案">
+      </div>
+      <input type="hidden" id="captchaToken">
+    </div>
+    <button class="btn-login" id="regBtn" onclick="doRegister()">📝 注册 / Register</button>
+    <div class="error-msg" id="regError"></div>
+  </div>
+
+  <a href="/" class="back-link">← 返回首页 / Back to Home</a>
+</div>
+
+<script>
+var API = '/api/v1';
+var redirect = new URLSearchParams(location.search).get('redirect') || '/';
+
+function switchMode(mode) {
+  document.querySelectorAll('.login-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelector('[data-mode="' + mode + '"]').classList.add('active');
+  document.getElementById('loginForm').style.display = mode === 'login' ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = mode === 'register' ? 'block' : 'none';
+}
+
+// Enter key support
+document.getElementById('loginPassword').addEventListener('keypress', function(e) { if (e.key === 'Enter') doLogin(); });
+document.getElementById('captchaAnswer').addEventListener('keypress', function(e) { if (e.key === 'Enter') doRegister(); });
+
+function doLogin() {
+  var username = document.getElementById('loginUsername').value.trim();
+  var password = document.getElementById('loginPassword').value;
+  if (!username || !password) { showError('loginError', '请输入用户名和密码'); return; }
+
+  var btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = '登录中...';
+
+  fetch(API + '/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: username, password: password })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success && data.token) {
+      localStorage.setItem('jwt_token', data.token);
+      localStorage.setItem('user_info', JSON.stringify(data.user));
+      window.location.href = redirect;
+    } else {
+      showError('loginError', data.message || '登录失败');
+      btn.disabled = false; btn.textContent = '🔐 登录 / Login';
+    }
+  })
+  .catch(function() {
+    showError('loginError', '网络错误，请重试');
+    btn.disabled = false; btn.textContent = '🔐 登录 / Login';
+  });
+}
+
+function loadCaptcha() {
+  fetch(API + '/auth/captcha')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    document.getElementById('captchaQuestion').textContent = data.question;
+    document.getElementById('captchaToken').value = data.token;
+  })
+  .catch(function() {
+    document.getElementById('captchaQuestion').textContent = '验证码加载失败';
+  });
+}
+
+function doRegister() {
+  var username = document.getElementById('regUsername').value.trim();
+  var password = document.getElementById('regPassword').value;
+  var captchaToken = document.getElementById('captchaToken').value;
+  var captchaAnswer = parseInt(document.getElementById('captchaAnswer').value);
+
+  if (username.length < 2) { showError('regError', '用户名至少2个字符'); return; }
+  if (password.length < 3) { showError('regError', '密码至少3个字符'); return; }
+  if (!captchaToken || isNaN(captchaAnswer)) { showError('regError', '请完成验证码'); return; }
+
+  var btn = document.getElementById('regBtn');
+  btn.disabled = true; btn.textContent = '注册中...';
+
+  fetch(API + '/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: username, password: password, captchaToken: captchaToken, captchaAnswer: captchaAnswer })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success && data.token) {
+      localStorage.setItem('jwt_token', data.token);
+      localStorage.setItem('user_info', JSON.stringify(data.user));
+      window.location.href = redirect;
+    } else {
+      showError('regError', data.message || '注册失败');
+      loadCaptcha();
+      btn.disabled = false; btn.textContent = '📝 注册 / Register';
+    }
+  })
+  .catch(function() {
+    showError('regError', '网络错误，请重试');
+    btn.disabled = false; btn.textContent = '📝 注册 / Register';
+  });
+}
+
+function showError(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(function() { el.style.display = 'none'; }, 5000);
+}
+
+// Auto-load captcha on register tab
+loadCaptcha();
+</script>
+</body>
+</html>

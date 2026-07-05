@@ -14,7 +14,7 @@ var state = {
 
 // ─── Init ───
 document.addEventListener('DOMContentLoaded', function() {
-  if (!token) { window.location.href = '/'; return; }
+  if (!token) { window.location.href = '/login.html?redirect=/course-admin.html'; return; }
   loadUser();
   loadMyCourses();
   setupTabs();

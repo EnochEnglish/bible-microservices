@@ -1251,10 +1251,14 @@ function loadCommentaries() {
 
   apiGet("/annotations/commentaries/" + state.currentBook.id.toLowerCase() + "/" + state.currentChapter).then(function(data) {
     state.commentaries = data;
+    var tskEl = document.getElementById('tskContent');
+    if (tskEl) tskEl.style.display = 'block';
     renderCommentaryTabs();
     renderCommentaryBody();
   }).catch(function() {
     state.commentaries = null;
+    var tskEl2 = document.getElementById('tskContent');
+    if (tskEl2) tskEl2.style.display = 'none';
     renderCommentaryTabs();
     body.innerHTML = '<div class="empty-state">' + t("noCommentary") + '</div>';
   });

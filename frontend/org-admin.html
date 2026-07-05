@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>组织管理 / Organization Management</title>
+<link rel="stylesheet" href="/css/style.css?v=20260705b">
+<link rel="stylesheet" href="/css/course-admin.css?v=20260705b">
+<style>
+.org-card{background:var(--bg2,#1a1d29);padding:16px;border-radius:12px;border:1px solid var(--border);margin-bottom:12px;cursor:pointer;transition:border-color .2s}
+.org-card:hover{border-color:#4a9eff}
+.org-card .org-name{font-size:16px;font-weight:700;margin-bottom:4px}
+.org-card .org-meta{font-size:13px;opacity:0.6;display:flex;gap:12px}
+.org-card .org-desc{font-size:13px;opacity:0.7;margin-top:6px}
+.member-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.member-row .m-name{flex:1;font-weight:600}
+.member-row .m-role{padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600}
+.role-OWNER{background:#4a9eff;color:#fff}
+.role-ADMIN{background:#5b8af5;color:#fff}
+.role-TEACHER{background:#d4a574;color:#fff}
+.role-STUDENT{background:#3a8f5b;color:#fff}
+.role-LIBRARIAN{background:#8b5cf6;color:#fff}
+.role-MEMBER{background:var(--bg3);color:var(--text)}
+</style>
+</head>
+<body>
+<div id="admin-app">
+  <header class="admin-topbar">
+    <a href="/" class="back-link">← 返回首页</a>
+    <h1>🏛️ 组织管理</h1>
+    <span id="orgUser"></span>
+  </header>
+
+  <nav class="admin-tabs">
+    <button class="atab active" data-tab="list">📋 组织列表</button>
+    <button class="atab" data-tab="create">➕ 创建组织</button>
+    <button class="atab" data-tab="members">👥 成员管理</button>
+  </nav>
+
+  <!-- Tab: List -->
+  <div id="tab-list" class="atab-content">
+    <div class="domain-tabs">
+      <button class="domain-tab active" data-domain="">🌐 全部</button>
+      <button class="domain-tab" data-domain="theology">✝️ 神学</button>
+      <button class="domain-tab" data-domain="english">📖 英语</button>
+      <button class="domain-tab" data-domain="cs">💻 计算机</button>
+      <button class="domain-tab" data-domain="university">🎓 大学</button>
+    </div>
+    <div id="orgList"></div>
+  </div>
+
+  <!-- Tab: Create -->
+  <div id="tab-create" class="atab-content" style="display:none">
+    <div class="form-card">
+      <h2>创建组织</h2>
+      <div class="form-row"><label>名称 *</label><input type="text" id="f_name" placeholder="组织名称"></div>
+      <div class="form-row"><label>英文名称</label><input type="text" id="f_nameEn" placeholder="English name"></div>
+      <div class="form-row-inline">
+        <div><label>领域</label><select id="f_domain">
+          <option value="theology">神学</option>
+          <option value="english">英语</option>
+          <option value="cs">计算机</option>
+          <option value="university">大学</option>
+        </select></div>
+        <div><label>类型</label><select id="f_type">
+          <option value="community">社区</option>
+          <option value="seminary">神学院</option>
+          <option value="church">教会</option>
+          <option value="university">大学</option>
+          <option value="training">培训机构</option>
+          <option value="company">公司</option>
+        </select></div>
+      </div>
+      <div class="form-row"><label>描述</label><textarea id="f_desc" rows="3" placeholder="组织描述"></textarea></div>
+      <div class="form-row-inline">
+        <div><label>所在地</label><input type="text" id="f_location" placeholder="城市/地区"></div>
+        <div><label>联系邮箱</label><input type="text" id="f_email" placeholder="contact@org.org"></div>
+        <div><label>联系电话</label><input type="text" id="f_phone" placeholder="+86..."></div>
+      </div>
+      <div class="form-row"><label>Logo URL</label><input type="text" id="f_logo" placeholder="https://..."></div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="createOrg()">💾 创建</button>
+        <button class="btn-secondary" onclick="resetForm()">清空</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Members -->
+  <div id="tab-members" class="atab-content" style="display:none">
+    <div style="margin-bottom:16px">
+      <select id="memberOrgSelect" onchange="loadMembers()" style="padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);min-width:200px"></select>
+    </div>
+    <div id="memberList"></div>
+    <div id="addMemberArea" class="form-card" style="margin-top:20px;display:none">
+      <h3>添加成员</h3>
+      <div class="form-row-inline">
+        <div><label>用户名</label><input type="text" id="addMemberUsername" placeholder="输入用户名"></div>
+        <div><label>角色</label><select id="addMemberRole">
+          <option value="MEMBER">成员</option>
+          <option value="STUDENT">学生</option>
+          <option value="TEACHER">教师</option>
+          <option value="LIBRARIAN">图书管理员</option>
+          <option value="ADMIN">管理员</option>
+          <option value="OWNER">所有者</option>
+        </select></div>
+        <div><label>部门</label><input type="text" id="addMemberDept" placeholder="部门（可选）"></div>
+        <div><label>职称</label><input type="text" id="addMemberTitle" placeholder="职称（可选）"></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="addMember()">➕ 添加</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/js/org-admin.js?v=20260705b"></script>
+</body>
+</html>

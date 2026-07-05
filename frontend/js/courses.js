@@ -196,7 +196,7 @@ function isLessonDone(lessonId) {
 }
 
 function enrollCourse() {
-  if (!state.token) { alert('请先登录'); window.location.href = '/'; return; }
+  if (!state.token) { alert('请先登录'); window.location.href = '/login.html?redirect=/courses.html'; return; }
   var courseId = state.currentCourse.course.id;
   fetch(API + '/courses/' + courseId + '/enroll', { method: 'POST', headers: authHeaders() })
     .then(function(r) { return r.json(); })
