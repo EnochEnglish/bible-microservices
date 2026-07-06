@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统设置 / System Settings</title>
+<link rel="stylesheet" href="/css/style.css?v=20260705c">
+<link rel="stylesheet" href="/css/course-admin.css?v=20260705c">
+<style>
+.settings-section{background:var(--bg2,#1a1d29);padding:20px;border-radius:12px;border:1px solid var(--border);margin-bottom:20px}
+.settings-section h2{margin-bottom:16px;font-size:18px}
+.setting-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.setting-item:last-child{border-bottom:none}
+.setting-item .icon{font-size:20px;width:32px;text-align:center}
+.setting-item .label{flex:1}
+.setting-item .label .zh{font-weight:600}
+.setting-item .label .en{opacity:0.6;font-size:13px}
+.setting-item .value{opacity:0.7;font-size:13px;font-family:monospace}
+.info-card{background:var(--bg2);padding:16px;border-radius:12px;border:1px solid var(--border);margin-bottom:20px;display:flex;gap:16px;align-items:center}
+.info-card .logo{font-size:40px}
+.info-card .info h1{font-size:20px;margin-bottom:4px}
+.info-card .info p{opacity:0.6;font-size:13px}
+</style>
+</head>
+<body>
+<div id="admin-app">
+  <header class="admin-topbar">
+    <a href="/" class="back-link">← 返回首页</a>
+    <h1>⚙️ 系统设置</h1>
+    <span id="settingsUser"></span>
+  </header>
+
+  <nav class="admin-tabs">
+    <button class="atab active" data-tab="general">📋 概览</button>
+    <button class="atab" data-tab="domains">📚 领域管理</button>
+    <button class="atab" data-tab="orgs">🏛️ 组织类型</button>
+    <button class="atab" data-tab="roles">👥 角色权限</button>
+    <button class="atab" data-tab="users">👤 用户管理</button>
+  </nav>
+
+  <!-- Tab: General -->
+  <div id="tab-general" class="atab-content">
+    <div id="systemInfo"></div>
+    <div class="settings-section">
+      <h2>🔧 功能模块</h2>
+      <div id="featureList"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Domains -->
+  <div id="tab-domains" class="atab-content" style="display:none">
+    <div class="settings-section">
+      <h2>📚 领域 / Domains</h2>
+      <p style="opacity:0.6;font-size:13px;margin-bottom:16px">系统支持的学科领域。课程和组织按领域分类。</p>
+      <div id="domainList"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Org Types -->
+  <div id="tab-orgs" class="atab-content" style="display:none">
+    <div class="settings-section">
+      <h2>🏛️ 组织类型 / Organization Types</h2>
+      <p style="opacity:0.6;font-size:13px;margin-bottom:16px">组织可按类型分类，不同类型可有不同的功能侧重点。</p>
+      <div id="orgTypeList"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Roles -->
+  <div id="tab-roles" class="atab-content" style="display:none">
+    <div class="settings-section">
+      <h2>👥 组织角色 / Organization Roles</h2>
+      <p style="opacity:0.6;font-size:13px;margin-bottom:16px">组织内的角色层级，决定用户在组织中的权限。</p>
+      <div id="orgRoleList"></div>
+    </div>
+    <div class="settings-section">
+      <h2>🔐 系统角色 / System Roles</h2>
+      <p style="opacity:0.6;font-size:13px;margin-bottom:16px">系统级角色，控制全局管理功能。</p>
+      <div id="sysRoleList"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Users -->
+  <div id="tab-users" class="atab-content" style="display:none">
+    <div class="settings-section">
+      <h2>👤 用户管理 / User Management</h2>
+      <div class="form-actions" style="margin-bottom:16px">
+        <input type="text" id="newUsername" placeholder="用户名" style="padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text)">
+        <input type="password" id="newPassword" placeholder="密码" style="padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text)">
+        <select id="newRole" style="padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text)">
+          <option value="USER">普通用户</option>
+          <option value="TEACHER">教师</option>
+          <option value="ADMIN">管理员</option>
+        </select>
+        <button class="btn-primary" onclick="createUser()">➕ 创建用户</button>
+      </div>
+      <div id="userList"></div>
+    </div>
+  </div>
+</div>
+<script src="/js/settings.js?v=20260705c"></script>
+</body>
+</html>

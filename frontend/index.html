@@ -6,10 +6,10 @@
   <title>Bible Reader / 圣经阅读器</title>
   <script>document.write('<base href="' + (location.pathname.startsWith('/bible/') ? '/bible/' : '/') + '">');</script>
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="/css/course-admin.css?v=20260705b">
+  <link rel="stylesheet" href="/css/course-admin.css?v=20260706a">
 </head>
 <body>
-    <div id="app">
+    <div id="app" class="no-commentary">
     <!-- Top Bar -->
     <div class="topbar">
       <div class="logo">📖 Bible / 圣经</div>
@@ -38,9 +38,11 @@
           <button class="dropdown-item" onclick="openNotesPanel(); closeTopbarDropdown();">📝 <span data-zh="笔记" data-en="Notes">笔记</span></button>
           <div class="dropdown-divider"></div>
           <button class="dropdown-item" id="topbarLoginBtn" onclick="openAuthPanel(); closeTopbarDropdown();">👤 <span data-zh="登录" data-en="Login">登录</span></button>
+          <button class="dropdown-item" id="topbarLogoutBtn" onclick="doLogoutFromTopbar(); closeTopbarDropdown();" style="display:none;">🚪 <span data-zh="退出登录" data-en="Logout">退出登录</span></button>
           <a class="dropdown-item" id="topbarModulesBtn" href="modules.html" target="_blank" style="text-decoration:none;color:inherit;">📦 <span data-zh="模块管理" data-en="Modules">模块管理</span></a>
           <a class="dropdown-item" id="topbarAdminBtn" href="admin.html" target="_blank" style="text-decoration:none;color:inherit;display:none;">⚙️ <span data-zh="用户管理" data-en="Admin">用户管理</span></a>
-          <a class="dropdown-item" href="org-admin.html" target="_blank" style="text-decoration:none;color:inherit;">🏛️ <span data-zh="组织管理" data-en="Organizations">组织管理</span></a>
+          <a class="dropdown-item" id="orgAdminLink" href="org-admin.html" target="_blank" style="text-decoration:none;color:inherit;display:none;">🏛️ <span data-zh="组织管理" data-en="Organizations">组织管理</span></a>
+          <a class="dropdown-item" id="settingsLink" href="settings.html" target="_blank" style="text-decoration:none;color:inherit;display:none;">⚙️ <span data-zh="系统设置" data-en="Settings">系统设置</span></a>
         </div>
       </div>
 
@@ -330,7 +332,7 @@
   <script src="js/config.js?v=20260701a"></script>
   <script src="js/api.js?v=20260701a"></script>
   <script src="js/morphology.js?v=20260701a"></script>
-  <script src="js/app.js?v=20260705b"></script>
+  <script src="js/app.js?v=20260706a"></script>
   <script>
     // Fix mobile link href with basePath for nginx deployment
     (function() {

@@ -1252,13 +1252,13 @@ function loadCommentaries() {
   apiGet("/annotations/commentaries/" + state.currentBook.id.toLowerCase() + "/" + state.currentChapter).then(function(data) {
     state.commentaries = data;
     var tskEl = document.getElementById('tskContent');
-    if (tskEl) tskEl.style.display = 'block';
+    if (tskEl) { tskEl.style.display = 'block'; document.getElementById('app').classList.remove('no-commentary'); }
     renderCommentaryTabs();
     renderCommentaryBody();
   }).catch(function() {
     state.commentaries = null;
     var tskEl2 = document.getElementById('tskContent');
-    if (tskEl2) tskEl2.style.display = 'none';
+    if (tskEl2) { tskEl2.style.display = 'none'; document.getElementById('app').classList.add('no-commentary'); }
     renderCommentaryTabs();
     body.innerHTML = '<div class="empty-state">' + t("noCommentary") + '</div>';
   });
@@ -4100,3 +4100,40 @@ function closeTopbarDropdown() {
     });
   });
 })();
+
+// ═══════════════════════════════════════════
+//  TOPBAR LOGIN STATE VISIBILITY
+// ═══════════════════════════════════════════
+function updateTopbarAuthState() {
+  var token = localStorage.getItem('jwt_token');
+  var loginBtn = document.getElementById('topbarLoginBtn');
+  var logoutBtn = document.getElementById('topbarLogoutBtn');
+  var orgAdminLink = document.getElementById('orgAdminLink');
+  var settingsLink = document.getElementById('settingsLink');
+  var adminBtn = document.getElementById('topbarAdminBtn');
+  
+  if (token) {
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (logoutBtn) logoutBtn.style.display = '';
+    if (orgAdminLink) orgAdminLink.style.display = '';
+    if (settingsLink) settingsLink.style.display = '';
+  } else {
+    if (loginBtn) loginBtn.style.display = '';
+    if (logoutBtn) logoutBtn.style.display = 'none';
+    if (orgAdminLink) orgAdminLink.style.display = 'none';
+    if (settingsLink) settingsLink.style.display = 'none';
+  }
+}
+
+function doLogoutFromTopbar() {
+  localStorage.removeItem('jwt_token');
+  localStorage.removeItem('user_info');
+  updateTopbarAuthState();
+  // Reload to reset state
+  location.reload();
+}
+
+// Call on page load
+document.addEventListener('DOMContentLoaded', function() {
+  updateTopbarAuthState();
+});

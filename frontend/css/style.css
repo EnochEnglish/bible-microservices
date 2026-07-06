@@ -22,6 +22,9 @@ body {
   grid-template-rows:48px 1fr;
   height:100vh;
 }
+#app.no-commentary {
+  grid-template-columns:200px 1fr;
+}
 
 /* ═══════════════════════════════════════════
    TOP BAR

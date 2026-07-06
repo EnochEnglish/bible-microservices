@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -27,6 +28,13 @@ class SecurityConfig(
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/api/v1/auth/admin/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/v1/orgs").hasAnyRole("ADMIN", "TEACHER")
+                    .requestMatchers(HttpMethod.POST, "/api/v1/orgs/*/members").hasAnyRole("ADMIN", "TEACHER")
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/orgs/*").hasAnyRole("ADMIN", "TEACHER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/v1/orgs/*").hasAnyRole("ADMIN", "TEACHER")
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/orgs/memberships/*").hasAnyRole("ADMIN", "TEACHER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/v1/orgs/memberships/*").hasAnyRole("ADMIN", "TEACHER")
+                    .requestMatchers("/api/v1/settings/**").permitAll()
                     .requestMatchers("/api/v1/courses/my/teaching").hasAnyRole("ADMIN", "TEACHER")
                     .requestMatchers("/api/v1/courses/exams/*/results/all").hasAnyRole("ADMIN", "TEACHER")
                     .requestMatchers("/api/v1/courses/gradings/pending").hasAnyRole("ADMIN", "TEACHER")
