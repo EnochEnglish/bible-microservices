@@ -6,15 +6,13 @@
   <title>Bible Reader / 圣经阅读器</title>
   <script>document.write('<base href="' + (location.pathname.startsWith('/bible/') ? '/bible/' : '/') + '">');</script>
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="/css/course-admin.css?v=20260707a">
+  <link rel="stylesheet" href="/css/course-admin.css?v=20260707b">
 </head>
 <body>
     <div id="app" class="no-commentary">
     <!-- Top Bar -->
     <div class="topbar">
       <div class="logo">📖 Bible / 圣经</div>
-      <a href="library.html" class="topbar-btn" title="Christian Library" data-zh-title="图书馆" data-en-title="Library" style="text-decoration:none;font-size:1.1rem;flex-shrink:0;">📚 <span data-zh="图书馆" data-en="Library">图书馆</span></a>
-      <a href="courses.html" class="topbar-btn" title="Online Courses" data-zh-title="在线课程" data-en-title="Courses" style="text-decoration:none;font-size:1.1rem;flex-shrink:0;">🎓 <span data-zh="在线课程" data-en="Courses">在线课程</span></a>
   <a id="mobileLink" href="m/" title="Mobile Version" data-zh-title="手机版" data-en-title="Mobile" class="topbar-btn" style="text-decoration:none;font-size:1.1rem;flex-shrink:0;">📱 <span data-zh="手机版" data-en="Mobile">手机版</span></a>
       <select id="translationSelect"></select>
       <span id="interlinearBtn" style="display:none"></span>
@@ -31,6 +29,9 @@
       <div class="topbar-dropdown">
         <button id="moreMenuBtn" class="topbar-btn more-trigger" title="More" data-zh-title="更多" data-en-title="More">⚙️ <span data-zh="更多" data-en="More">更多</span> ▾</button>
         <div id="moreDropdown" class="dropdown-menu" style="display:none">
+          <a class="dropdown-item" href="library.html" style="text-decoration:none;color:inherit;">📚 <span data-zh="图书馆" data-en="Library">图书馆</span></a>
+          <a class="dropdown-item" href="courses.html" style="text-decoration:none;color:inherit;">📖 <span data-zh="在线课程" data-en="Courses">在线课程</span></a>
+          <div class="dropdown-divider"></div>
           <button class="dropdown-item" onclick="openDevotionPanel(); closeTopbarDropdown();">🔔 <span data-zh="灵修" data-en="Devotion">灵修</span></button>
           <button class="dropdown-item" onclick="openMapsPanel(); closeTopbarDropdown();">🗺️ <span data-zh="地图" data-en="Maps">地图</span></button>
           <button class="dropdown-item" onclick="openPlanPanel(); closeTopbarDropdown();">📅 <span data-zh="读经计划" data-en="Reading Plan">读经计划</span></button>
@@ -329,10 +330,10 @@
       </div></div>
   </div>
 
-  <script src="js/config.js?v=20260707a"></script>
-  <script src="js/api.js?v=20260707a"></script>
-  <script src="js/morphology.js?v=20260707a"></script>
-  <script src="js/app.js?v=20260707a"></script>
+  <script src="js/config.js?v=20260707b"></script>
+  <script src="js/api.js?v=20260707b"></script>
+  <script src="js/morphology.js?v=20260707b"></script>
+  <script src="js/app.js?v=20260707b"></script>
   <script>
     // Fix mobile link href with basePath for nginx deployment
     (function() {
