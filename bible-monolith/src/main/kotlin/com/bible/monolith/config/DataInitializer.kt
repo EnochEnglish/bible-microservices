@@ -7,6 +7,7 @@ import com.bible.monolith.model.UserOrgMembership
 import com.bible.monolith.repository.OrganizationRepository
 import com.bible.monolith.repository.UserOrgMembershipRepository
 import com.bible.monolith.repository.UserRepository
+import com.bible.monolith.service.DomainConfigService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
@@ -20,13 +21,17 @@ import org.springframework.transaction.annotation.Transactional
 class DataInitializer(
     private val userRepo: UserRepository,
     private val orgRepo: OrganizationRepository,
-    private val membershipRepo: UserOrgMembershipRepository
+    private val membershipRepo: UserOrgMembershipRepository,
+    private val domainConfigService: DomainConfigService
 ) {
     private val log = LoggerFactory.getLogger(DataInitializer::class.java)
 
     @Bean
     @Transactional
     fun initDataRunner(): CommandLineRunner = CommandLineRunner {
+        // 0. 初始化领域配置种子数据
+        domainConfigService.ensureSeedData()
+
         // 1. 创建"培训部"组织（如果不存在）
         var org = orgRepo.findAll().find { it.name == "培训部" || it.name == "Training Department" }
         if (org == null) {
