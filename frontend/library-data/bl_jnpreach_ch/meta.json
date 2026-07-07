@@ -6,5 +6,112 @@
   "source": "blessed.org",
   "category": "讲道",
   "icon": "🎙️",
-  "chapters": 1
+  "chapters": [
+    {
+      "id": "001",
+      "title": "第一章",
+      "category": "讲道"
+    },
+    {
+      "id": "002",
+      "title": "第八章",
+      "category": "讲道"
+    },
+    {
+      "id": "003",
+      "title": "第一章",
+      "category": "讲道"
+    },
+    {
+      "id": "004",
+      "title": "第二章",
+      "category": "讲道"
+    },
+    {
+      "id": "005",
+      "title": "第三章",
+      "category": "讲道"
+    },
+    {
+      "id": "006",
+      "title": "第四章",
+      "category": "讲道"
+    },
+    {
+      "id": "007",
+      "title": "第五章",
+      "category": "讲道"
+    },
+    {
+      "id": "008",
+      "title": "第六章",
+      "category": "讲道"
+    },
+    {
+      "id": "009",
+      "title": "第七章",
+      "category": "讲道"
+    },
+    {
+      "id": "010",
+      "title": "第八章",
+      "category": "讲道"
+    },
+    {
+      "id": "011",
+      "title": "第九章",
+      "category": "讲道"
+    },
+    {
+      "id": "012",
+      "title": "第十章",
+      "category": "讲道"
+    },
+    {
+      "id": "013",
+      "title": "第十一章",
+      "category": "讲道"
+    },
+    {
+      "id": "014",
+      "title": "第十二章",
+      "category": "讲道"
+    },
+    {
+      "id": "015",
+      "title": "第十三章",
+      "category": "讲道"
+    },
+    {
+      "id": "016",
+      "title": "第十四章",
+      "category": "讲道"
+    },
+    {
+      "id": "017",
+      "title": "第十五章",
+      "category": "讲道"
+    },
+    {
+      "id": "018",
+      "title": "第十六章",
+      "category": "讲道"
+    },
+    {
+      "id": "019",
+      "title": "第十七章",
+      "category": "讲道"
+    },
+    {
+      "id": "020",
+      "title": "第二十章",
+      "category": "讲道"
+    },
+    {
+      "id": "021",
+      "title": "第二十一章",
+      "category": "讲道"
+    }
+  ],
+  "totalChapters": 21
 }

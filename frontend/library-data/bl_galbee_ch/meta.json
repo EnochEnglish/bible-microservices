@@ -6,5 +6,452 @@
   "source": "blessed.org",
   "category": "BEE课程",
   "icon": "🐝",
-  "chapters": 1
+  "chapters": [
+    {
+      "id": "001",
+      "title": "第一课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "002",
+      "title": "第二课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "003",
+      "title": "第三课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "004",
+      "title": "第四课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "005",
+      "title": "第五课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "006",
+      "title": "第六课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "007",
+      "title": "第七课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "008",
+      "title": "第八课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "009",
+      "title": "第九课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "010",
+      "title": "第十课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "011",
+      "title": "第十一课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "012",
+      "title": "第十二课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "013",
+      "title": "第十三课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "014",
+      "title": "第十四课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "015",
+      "title": "第十五课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "016",
+      "title": "第九章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "017",
+      "title": "第二课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "018",
+      "title": "第二课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "019",
+      "title": "第二课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "020",
+      "title": "第三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "021",
+      "title": "第一章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "022",
+      "title": "第十章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "023",
+      "title": "第十五章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "024",
+      "title": "第四章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "025",
+      "title": "第一章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "026",
+      "title": "第二章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "027",
+      "title": "第三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "028",
+      "title": "第四章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "029",
+      "title": "第五章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "030",
+      "title": "第六章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "031",
+      "title": "第二课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "032",
+      "title": "第三课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "033",
+      "title": "第一章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "034",
+      "title": "第一章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "035",
+      "title": "第一章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "036",
+      "title": "第二课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "037",
+      "title": "第一章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "038",
+      "title": "第九章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "039",
+      "title": "第一章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "040",
+      "title": "第一章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "041",
+      "title": "第二章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "042",
+      "title": "第二章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "043",
+      "title": "第二章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "044",
+      "title": "第一课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "045",
+      "title": "第二章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "046",
+      "title": "第二章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "047",
+      "title": "第一章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "048",
+      "title": "第十六章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "049",
+      "title": "第十六章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "050",
+      "title": "第十五章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "051",
+      "title": "第一课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "052",
+      "title": "第二课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "053",
+      "title": "第二课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "054",
+      "title": "第二课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "055",
+      "title": "第十五章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "056",
+      "title": "第三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "057",
+      "title": "第三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "058",
+      "title": "第三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "059",
+      "title": "第十五章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "060",
+      "title": "第三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "061",
+      "title": "第三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "062",
+      "title": "第四章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "063",
+      "title": "第四章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "064",
+      "title": "第三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "065",
+      "title": "第四章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "066",
+      "title": "第五课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "067",
+      "title": "第三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "068",
+      "title": "第二十三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "069",
+      "title": "第二十三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "070",
+      "title": "第七章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "071",
+      "title": "第七章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "072",
+      "title": "第七章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "073",
+      "title": "第二章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "074",
+      "title": "第四章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "075",
+      "title": "第四章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "076",
+      "title": "第三章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "077",
+      "title": "第五章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "078",
+      "title": "第六章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "079",
+      "title": "第六章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "080",
+      "title": "第六课",
+      "category": "BEE课程"
+    },
+    {
+      "id": "081",
+      "title": "第五章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "082",
+      "title": "第二章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "083",
+      "title": "第四章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "084",
+      "title": "第六章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "085",
+      "title": "第五章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "086",
+      "title": "第五章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "087",
+      "title": "第五章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "088",
+      "title": "第六章",
+      "category": "BEE课程"
+    },
+    {
+      "id": "089",
+      "title": "第三一七课",
+      "category": "BEE课程"
+    }
+  ],
+  "totalChapters": 89
 }

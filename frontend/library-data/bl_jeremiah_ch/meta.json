@@ -6,5 +6,37 @@
   "source": "blessed.org",
   "category": "旧约注释",
   "icon": "📖",
-  "chapters": 1
+  "chapters": [
+    {
+      "id": "001",
+      "title": "第7章",
+      "category": "旧约注释"
+    },
+    {
+      "id": "002",
+      "title": "第1章",
+      "category": "旧约注释"
+    },
+    {
+      "id": "003",
+      "title": "第3章",
+      "category": "旧约注释"
+    },
+    {
+      "id": "004",
+      "title": "第九章",
+      "category": "旧约注释"
+    },
+    {
+      "id": "005",
+      "title": "第40章",
+      "category": "旧约注释"
+    },
+    {
+      "id": "006",
+      "title": "第29章",
+      "category": "旧约注释"
+    }
+  ],
+  "totalChapters": 6
 }

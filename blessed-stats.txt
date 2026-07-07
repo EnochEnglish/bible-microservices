@@ -1,0 +1,6 @@
+Blessed.org books: 64
+Total chapters: 1650
+Total chars: 4,230,814
+Chinese chars: 2,860,090
+Library total books: 94
+Library total chapters: 1650

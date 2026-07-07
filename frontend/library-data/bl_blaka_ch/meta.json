@@ -6,5 +6,12 @@
   "source": "blessed.org",
   "category": "福音",
   "icon": "✅",
-  "chapters": 1
+  "chapters": [
+    {
+      "id": "001",
+      "title": "全文",
+      "category": "福音"
+    }
+  ],
+  "totalChapters": 1
 }

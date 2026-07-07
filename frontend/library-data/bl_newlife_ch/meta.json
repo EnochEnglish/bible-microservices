@@ -6,5 +6,17 @@
   "source": "blessed.org",
   "category": "门徒训练",
   "icon": "👣",
-  "chapters": 1
+  "chapters": [
+    {
+      "id": "001",
+      "title": "第十二课",
+      "category": "门徒训练"
+    },
+    {
+      "id": "002",
+      "title": "第四课",
+      "category": "门徒训练"
+    }
+  ],
+  "totalChapters": 2
 }

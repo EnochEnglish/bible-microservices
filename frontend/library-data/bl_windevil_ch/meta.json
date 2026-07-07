@@ -6,5 +6,37 @@
   "source": "blessed.org",
   "category": "神学",
   "icon": "📚",
-  "chapters": 1
+  "chapters": [
+    {
+      "id": "001",
+      "title": "第一章",
+      "category": "神学"
+    },
+    {
+      "id": "002",
+      "title": "第一章",
+      "category": "神学"
+    },
+    {
+      "id": "003",
+      "title": "第三章",
+      "category": "神学"
+    },
+    {
+      "id": "004",
+      "title": "第四章",
+      "category": "神学"
+    },
+    {
+      "id": "005",
+      "title": "第九章",
+      "category": "神学"
+    },
+    {
+      "id": "006",
+      "title": "第八篇",
+      "category": "神学"
+    }
+  ],
+  "totalChapters": 6
 }

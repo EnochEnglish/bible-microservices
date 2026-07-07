@@ -6,5 +6,12 @@
   "source": "blessed.org",
   "category": "JOY研经",
   "icon": "🌟",
-  "chapters": 1
+  "chapters": [
+    {
+      "id": "001",
+      "title": "第二章",
+      "category": "JOY研经"
+    }
+  ],
+  "totalChapters": 1
 }

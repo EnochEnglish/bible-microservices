@@ -97,64 +97,66 @@ function extractOle2Text(buf) {
     // Parse FIB
     const nFib = wordDoc.readUInt16LE(2);
     
-    // Word 6/95 format (nFib <= 0x00BF)
-    // fcMin at offset 24, fcMac at offset 28
-    const fcMin = wordDoc.readInt32LE(24);
-    const fcMac = wordDoc.readInt32LE(28);
-    
-    if (fcMin > 0 && fcMac > fcMin && fcMac <= wordDoc.length) {
-        const textData = wordDoc.slice(fcMin, fcMac);
+    if (nFib <= 0x00BF) {
+        // Word 6/95 format: fcMin at offset 24, fcMac at offset 28
+        // Chinese text is byte-swapped GBK (big-endian GBK)
+        const fcMin = wordDoc.readInt32LE(24);
+        const fcMac = wordDoc.readInt32LE(28);
         
-        // Word 6/95 Chinese: text is byte-swapped GBK (big-endian GBK)
-        // Swap each byte pair then decode as GBK
-        const swapped = Buffer.alloc(textData.length);
-        for (let i = 0; i < textData.length - 1; i += 2) {
-            swapped[i] = textData[i+1];
-            swapped[i+1] = textData[i];
+        if (fcMin > 0 && fcMac > fcMin && fcMac <= wordDoc.length) {
+            const textData = wordDoc.slice(fcMin, fcMac);
+            
+            // Swap each byte pair then decode as GBK
+            const swapped = Buffer.alloc(textData.length);
+            for (let i = 0; i < textData.length - 1; i += 2) {
+                swapped[i] = textData[i+1];
+                swapped[i+1] = textData[i];
+            }
+            if (textData.length % 2 === 1) swapped[textData.length-1] = textData[textData.length-1];
+            const textGbk = iconv.decode(swapped, 'gbk');
+            const cnGbk = (textGbk.match(/[\u4e00-\u9fff]/g) || []).length;
+            if (cnGbk > 5) return textGbk;
+            
+            // Try straight GBK
+            const textGbkDirect = iconv.decode(textData, 'gbk');
+            const cnGbkDirect = (textGbkDirect.match(/[\u4e00-\u9fff]/g) || []).length;
+            if (cnGbkDirect > 5) return textGbkDirect;
+            
+            // Try UTF-16LE
+            const text16 = textData.toString('utf16le');
+            const cn16 = (text16.match(/[\u4e00-\u9fff]/g) || []).length;
+            if (cn16 > 5) return text16;
+            
+            return iconv.decode(textData, 'cp1252');
         }
-        if (textData.length % 2 === 1) swapped[textData.length-1] = textData[textData.length-1];
-        const textGbk = iconv.decode(swapped, 'gbk');
-        const cnGbk = (textGbk.match(/[\u4e00-\u9fff]/g) || []).length;
-        if (cnGbk > 5) return textGbk;
-        
-        // Try straight GBK (some docs not byte-swapped)
-        const textGbkDirect = iconv.decode(textData, 'gbk');
-        const cnGbkDirect = (textGbkDirect.match(/[\u4e00-\u9fff]/g) || []).length;
-        if (cnGbkDirect > 5) return textGbkDirect;
-        
-        // Try UTF-16LE
-        const text16 = textData.toString('utf16le');
-        const cn16 = (text16.match(/[\u4e00-\u9fff]/g) || []).length;
-        if (cn16 > 5) return text16;
-        
-        // Fallback: CP1252
-        return iconv.decode(textData, 'cp1252');
     }
     
     // Word 97+ format (nFib >= 0x00C1)
-    // Text starts at offset 0x0800, stored as UTF-16LE
-    if (nFib >= 0x00C1) {
-        // Read fibRgLw for ccpText
-        const csw = wordDoc.readUInt16LE(32);
-        const cslwOffset = 32 + 2 + csw * 2;
-        const cslw = wordDoc.readUInt16LE(cslwOffset);
-        const fibRgLwOffset = cslwOffset + 2;
-        const ccpText = wordDoc.readInt32LE(fibRgLwOffset + 12);
+    // Text is stored as UTF-16LE between fcMin and fcMac
+    {
+        const fcMin = wordDoc.readInt32LE(24);
+        const fcMac = wordDoc.readInt32LE(28);
         
+        if (fcMin > 0 && fcMac > fcMin && fcMac <= wordDoc.length) {
+            const textData = wordDoc.slice(fcMin, fcMac);
+            // Word 97+ stores text as UTF-16LE
+            const text16 = textData.toString('utf16le');
+            const cn16 = (text16.match(/[\u4e00-\u9fff]/g) || []).length;
+            if (cn16 > 5) return text16;
+            
+            // Fallback: try GBK (some older docs saved with Word 97 compat mode)
+            const textGbk = iconv.decode(textData, 'gbk');
+            const cnGbk = (textGbk.match(/[\u4e00-\u9fff]/g) || []).length;
+            if (cnGbk > 5) return textGbk;
+            
+            return text16; // Return UTF-16LE even if low Chinese count
+        }
+        
+        // Last resort: try offset 0x0800
         const textStart = 0x0800;
         if (textStart < wordDoc.length) {
-            const flags = wordDoc.readUInt16LE(10);
-            const isComplex = (flags & 0x0004) !== 0;
-            
-            if (!isComplex) {
-                // Unicode (UTF-16LE)
-                const textData = wordDoc.slice(textStart, Math.min(textStart + ccpText * 2, wordDoc.length));
-                return textData.toString('utf16le');
-            } else {
-                // 8-bit encoded, use GBK for Chinese
-                const textData = wordDoc.slice(textStart, Math.min(textStart + ccpText, wordDoc.length));
-                return iconv.decode(textData, 'gbk');
-            }
+            const textData = wordDoc.slice(textStart);
+            return textData.toString('utf16le');
         }
     }
     
