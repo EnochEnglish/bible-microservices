@@ -2,31 +2,16 @@
   "code": "bl_minprophet1_ch",
   "title": "小先知书查经（上）",
   "titleEn": "Minor Prophets Study 1",
-  "author": "Blessed.org",
+  "author": "旧约注释",
   "source": "blessed.org",
   "category": "旧约注释",
   "icon": "📖",
   "chapters": [
     {
       "id": "001",
-      "title": "第一章",
-      "category": "旧约注释"
-    },
-    {
-      "id": "002",
-      "title": "第一章",
-      "category": "旧约注释"
-    },
-    {
-      "id": "003",
-      "title": "第七章",
-      "category": "旧约注释"
-    },
-    {
-      "id": "004",
-      "title": "第一章",
+      "title": "小先知书查经（上）",
       "category": "旧约注释"
     }
   ],
-  "totalChapters": 4
+  "totalChapters": 1
 }

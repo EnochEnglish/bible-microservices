@@ -2,21 +2,16 @@
   "code": "bl_joybook10_ch",
   "title": "JOY研经10：活出神荣耀",
   "titleEn": "JOY Study 10",
-  "author": "Blessed.org",
+  "author": "JOY研经",
   "source": "blessed.org",
   "category": "JOY研经",
   "icon": "🌟",
   "chapters": [
     {
       "id": "001",
-      "title": "第三章",
-      "category": "JOY研经"
-    },
-    {
-      "id": "002",
-      "title": "第三章",
+      "title": "JOY研经10：活出神荣耀",
       "category": "JOY研经"
     }
   ],
-  "totalChapters": 2
+  "totalChapters": 1
 }

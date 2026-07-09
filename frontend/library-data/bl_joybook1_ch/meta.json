@@ -2,26 +2,16 @@
   "code": "bl_joybook1_ch",
   "title": "JOY研经1：认识神之路",
   "titleEn": "JOY Study 1",
-  "author": "Blessed.org",
+  "author": "JOY研经",
   "source": "blessed.org",
   "category": "JOY研经",
   "icon": "🌟",
   "chapters": [
     {
       "id": "001",
-      "title": "第三章",
-      "category": "JOY研经"
-    },
-    {
-      "id": "002",
-      "title": "第3章",
-      "category": "JOY研经"
-    },
-    {
-      "id": "003",
-      "title": "第42章",
+      "title": "JOY研经1：认识神之路",
       "category": "JOY研经"
     }
   ],
-  "totalChapters": 3
+  "totalChapters": 1
 }

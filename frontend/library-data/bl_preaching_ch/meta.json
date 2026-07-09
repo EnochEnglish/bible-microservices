@@ -2,46 +2,16 @@
   "code": "bl_preaching_ch",
   "title": "讲道学",
   "titleEn": "Preaching",
-  "author": "Blessed.org",
+  "author": "查经",
   "source": "blessed.org",
   "category": "查经",
   "icon": "🔍",
   "chapters": [
     {
       "id": "001",
-      "title": "第十课",
-      "category": "查经"
-    },
-    {
-      "id": "002",
-      "title": "第八章",
-      "category": "查经"
-    },
-    {
-      "id": "003",
-      "title": "第一篇",
-      "category": "查经"
-    },
-    {
-      "id": "004",
-      "title": "第一篇",
-      "category": "查经"
-    },
-    {
-      "id": "005",
-      "title": "第二篇",
-      "category": "查经"
-    },
-    {
-      "id": "006",
-      "title": "第三篇",
-      "category": "查经"
-    },
-    {
-      "id": "007",
-      "title": "第四篇",
+      "title": "讲道学",
       "category": "查经"
     }
   ],
-  "totalChapters": 7
+  "totalChapters": 1
 }

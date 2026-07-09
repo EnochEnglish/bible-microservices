@@ -2,14 +2,14 @@
   "code": "bl_romansol_ch",
   "title": "罗马书大纲",
   "titleEn": "Romans Outline",
-  "author": "Blessed.org",
+  "author": "新约注释",
   "source": "blessed.org",
   "category": "新约注释",
   "icon": "📖",
   "chapters": [
     {
       "id": "001",
-      "title": "全文",
+      "title": "罗马书大纲",
       "category": "新约注释"
     }
   ],

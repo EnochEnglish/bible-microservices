@@ -2,111 +2,16 @@
   "code": "bl_heretics_ch",
   "title": "异端",
   "titleEn": "Heretics",
-  "author": "Blessed.org",
+  "author": "护教",
   "source": "blessed.org",
   "category": "护教",
   "icon": "🛡️",
   "chapters": [
     {
       "id": "001",
-      "title": "第一讲",
-      "category": "护教"
-    },
-    {
-      "id": "002",
-      "title": "第一讲",
-      "category": "护教"
-    },
-    {
-      "id": "003",
-      "title": "第八章",
-      "category": "护教"
-    },
-    {
-      "id": "004",
-      "title": "第二十章",
-      "category": "护教"
-    },
-    {
-      "id": "005",
-      "title": "第九章",
-      "category": "护教"
-    },
-    {
-      "id": "006",
-      "title": "第四章",
-      "category": "护教"
-    },
-    {
-      "id": "007",
-      "title": "第四章",
-      "category": "护教"
-    },
-    {
-      "id": "008",
-      "title": "第五章",
-      "category": "护教"
-    },
-    {
-      "id": "009",
-      "title": "第一章",
-      "category": "护教"
-    },
-    {
-      "id": "010",
-      "title": "第二章",
-      "category": "护教"
-    },
-    {
-      "id": "011",
-      "title": "第五十章",
-      "category": "护教"
-    },
-    {
-      "id": "012",
-      "title": "第三章",
-      "category": "护教"
-    },
-    {
-      "id": "013",
-      "title": "第一章",
-      "category": "护教"
-    },
-    {
-      "id": "014",
-      "title": "第三课",
-      "category": "护教"
-    },
-    {
-      "id": "015",
-      "title": "第一章",
-      "category": "护教"
-    },
-    {
-      "id": "016",
-      "title": "第五章",
-      "category": "护教"
-    },
-    {
-      "id": "017",
-      "title": "第一章",
-      "category": "护教"
-    },
-    {
-      "id": "018",
-      "title": "第一章",
-      "category": "护教"
-    },
-    {
-      "id": "019",
-      "title": "第一章",
-      "category": "护教"
-    },
-    {
-      "id": "020",
-      "title": "第十章",
+      "title": "异端",
       "category": "护教"
     }
   ],
-  "totalChapters": 20
+  "totalChapters": 1
 }

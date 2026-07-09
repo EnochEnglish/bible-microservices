@@ -2,31 +2,16 @@
   "code": "bl_jword_ch",
   "title": "耶稣基督之言之行",
   "titleEn": "Words and Deeds of Jesus Christ",
-  "author": "Blessed.org",
+  "author": "圣徒装备",
   "source": "blessed.org",
   "category": "圣徒装备",
   "icon": "🛡️",
   "chapters": [
     {
       "id": "001",
-      "title": "第二篇",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "002",
-      "title": "第二篇",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "003",
-      "title": "第十章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "004",
-      "title": "第七章",
+      "title": "耶稣基督之言之行",
       "category": "圣徒装备"
     }
   ],
-  "totalChapters": 4
+  "totalChapters": 1
 }

@@ -2,56 +2,16 @@
   "code": "bl_revelation_ch",
   "title": "启示录查经",
   "titleEn": "Revelation Study",
-  "author": "Blessed.org",
+  "author": "新约注释",
   "source": "blessed.org",
   "category": "新约注释",
   "icon": "📖",
   "chapters": [
     {
       "id": "001",
-      "title": "第一章",
-      "category": "新约注释"
-    },
-    {
-      "id": "002",
-      "title": "第3章",
-      "category": "新约注释"
-    },
-    {
-      "id": "003",
-      "title": "第3章",
-      "category": "新约注释"
-    },
-    {
-      "id": "004",
-      "title": "第4章",
-      "category": "新约注释"
-    },
-    {
-      "id": "005",
-      "title": "第六章",
-      "category": "新约注释"
-    },
-    {
-      "id": "006",
-      "title": "第七章",
-      "category": "新约注释"
-    },
-    {
-      "id": "007",
-      "title": "第16章",
-      "category": "新约注释"
-    },
-    {
-      "id": "008",
-      "title": "第四章",
-      "category": "新约注释"
-    },
-    {
-      "id": "009",
-      "title": "第20章",
+      "title": "启示录查经",
       "category": "新约注释"
     }
   ],
-  "totalChapters": 9
+  "totalChapters": 1
 }

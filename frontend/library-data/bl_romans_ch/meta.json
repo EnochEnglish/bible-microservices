@@ -2,166 +2,16 @@
   "code": "bl_romans_ch",
   "title": "罗马书查经",
   "titleEn": "Romans Study",
-  "author": "Blessed.org",
+  "author": "新约注释",
   "source": "blessed.org",
   "category": "新约注释",
   "icon": "📖",
   "chapters": [
     {
       "id": "001",
-      "title": "第一章",
-      "category": "新约注释"
-    },
-    {
-      "id": "002",
-      "title": "第二章",
-      "category": "新约注释"
-    },
-    {
-      "id": "003",
-      "title": "第二章",
-      "category": "新约注释"
-    },
-    {
-      "id": "004",
-      "title": "第二章",
-      "category": "新约注释"
-    },
-    {
-      "id": "005",
-      "title": "第四章",
-      "category": "新约注释"
-    },
-    {
-      "id": "006",
-      "title": "第四章",
-      "category": "新约注释"
-    },
-    {
-      "id": "007",
-      "title": "第八章",
-      "category": "新约注释"
-    },
-    {
-      "id": "008",
-      "title": "第六章",
-      "category": "新约注释"
-    },
-    {
-      "id": "009",
-      "title": "第七章",
-      "category": "新约注释"
-    },
-    {
-      "id": "010",
-      "title": "第六章",
-      "category": "新约注释"
-    },
-    {
-      "id": "011",
-      "title": "第七章",
-      "category": "新约注释"
-    },
-    {
-      "id": "012",
-      "title": "第八章",
-      "category": "新约注释"
-    },
-    {
-      "id": "013",
-      "title": "第六章",
-      "category": "新约注释"
-    },
-    {
-      "id": "014",
-      "title": "第八章",
-      "category": "新约注释"
-    },
-    {
-      "id": "015",
-      "title": "第七章",
-      "category": "新约注释"
-    },
-    {
-      "id": "016",
-      "title": "第六章",
-      "category": "新约注释"
-    },
-    {
-      "id": "017",
-      "title": "第六章",
-      "category": "新约注释"
-    },
-    {
-      "id": "018",
-      "title": "第八章",
-      "category": "新约注释"
-    },
-    {
-      "id": "019",
-      "title": "第八章",
-      "category": "新约注释"
-    },
-    {
-      "id": "020",
-      "title": "第八章",
-      "category": "新约注释"
-    },
-    {
-      "id": "021",
-      "title": "第八章",
-      "category": "新约注释"
-    },
-    {
-      "id": "022",
-      "title": "第七章",
-      "category": "新约注释"
-    },
-    {
-      "id": "023",
-      "title": "第七章",
-      "category": "新约注释"
-    },
-    {
-      "id": "024",
-      "title": "第七章",
-      "category": "新约注释"
-    },
-    {
-      "id": "025",
-      "title": "第十章",
-      "category": "新约注释"
-    },
-    {
-      "id": "026",
-      "title": "第八章",
-      "category": "新约注释"
-    },
-    {
-      "id": "027",
-      "title": "第一章",
-      "category": "新约注释"
-    },
-    {
-      "id": "028",
-      "title": "第一章",
-      "category": "新约注释"
-    },
-    {
-      "id": "029",
-      "title": "第十章",
-      "category": "新约注释"
-    },
-    {
-      "id": "030",
-      "title": "第九章",
-      "category": "新约注释"
-    },
-    {
-      "id": "031",
-      "title": "第十章",
+      "title": "罗马书查经",
       "category": "新约注释"
     }
   ],
-  "totalChapters": 31
+  "totalChapters": 1
 }

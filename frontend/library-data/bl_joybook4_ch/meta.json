@@ -2,26 +2,16 @@
   "code": "bl_joybook4_ch",
   "title": "JOY研经4：神的仆人",
   "titleEn": "JOY Study 4",
-  "author": "Blessed.org",
+  "author": "JOY研经",
   "source": "blessed.org",
   "category": "JOY研经",
   "icon": "🌟",
   "chapters": [
     {
       "id": "001",
-      "title": "第2章",
-      "category": "JOY研经"
-    },
-    {
-      "id": "002",
-      "title": "第2章",
-      "category": "JOY研经"
-    },
-    {
-      "id": "003",
-      "title": "第2章",
+      "title": "JOY研经4：神的仆人",
       "category": "JOY研经"
     }
   ],
-  "totalChapters": 3
+  "totalChapters": 1
 }

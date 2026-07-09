@@ -2,41 +2,16 @@
   "code": "bl_bstudymet_ch",
   "title": "查经方法",
   "titleEn": "Bible Study Methods",
-  "author": "Blessed.org",
+  "author": "查经",
   "source": "blessed.org",
   "category": "查经",
   "icon": "🔍",
   "chapters": [
     {
       "id": "001",
-      "title": "第一课",
-      "category": "查经"
-    },
-    {
-      "id": "002",
-      "title": "第十课",
-      "category": "查经"
-    },
-    {
-      "id": "003",
-      "title": "第一课",
-      "category": "查经"
-    },
-    {
-      "id": "004",
-      "title": "第一课",
-      "category": "查经"
-    },
-    {
-      "id": "005",
-      "title": "第五章",
-      "category": "查经"
-    },
-    {
-      "id": "006",
-      "title": "第八章",
+      "title": "查经方法",
       "category": "查经"
     }
   ],
-  "totalChapters": 6
+  "totalChapters": 1
 }

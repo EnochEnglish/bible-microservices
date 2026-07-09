@@ -2,26 +2,16 @@
   "code": "bl_galatian_ch",
   "title": "加拉太书查经",
   "titleEn": "Galatians Study",
-  "author": "Blessed.org",
+  "author": "新约注释",
   "source": "blessed.org",
   "category": "新约注释",
   "icon": "📖",
   "chapters": [
     {
       "id": "001",
-      "title": "第2章",
-      "category": "新约注释"
-    },
-    {
-      "id": "002",
-      "title": "第四章",
-      "category": "新约注释"
-    },
-    {
-      "id": "003",
-      "title": "第6章",
+      "title": "加拉太书查经",
       "category": "新约注释"
     }
   ],
-  "totalChapters": 3
+  "totalChapters": 1
 }

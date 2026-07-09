@@ -2,26 +2,16 @@
   "code": "bl_mark_ch",
   "title": "马可福音查经",
   "titleEn": "Mark Study",
-  "author": "Blessed.org",
+  "author": "新约注释",
   "source": "blessed.org",
   "category": "新约注释",
   "icon": "📖",
   "chapters": [
     {
       "id": "001",
-      "title": "第十三章",
-      "category": "新约注释"
-    },
-    {
-      "id": "002",
-      "title": "第四章",
-      "category": "新约注释"
-    },
-    {
-      "id": "003",
-      "title": "第十三章",
+      "title": "马可福音查经",
       "category": "新约注释"
     }
   ],
-  "totalChapters": 3
+  "totalChapters": 1
 }

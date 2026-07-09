@@ -2,61 +2,16 @@
   "code": "bl_kidteach2_ch",
   "title": "儿童教导法（下）",
   "titleEn": "Children Ministry Teaching 2",
-  "author": "Blessed.org",
+  "author": "儿童教育",
   "source": "blessed.org",
   "category": "儿童教育",
   "icon": "👦",
   "chapters": [
     {
       "id": "001",
-      "title": "第六课",
-      "category": "儿童教育"
-    },
-    {
-      "id": "002",
-      "title": "第一课",
-      "category": "儿童教育"
-    },
-    {
-      "id": "003",
-      "title": "第一课",
-      "category": "儿童教育"
-    },
-    {
-      "id": "004",
-      "title": "第二课",
-      "category": "儿童教育"
-    },
-    {
-      "id": "005",
-      "title": "第一课",
-      "category": "儿童教育"
-    },
-    {
-      "id": "006",
-      "title": "第三课",
-      "category": "儿童教育"
-    },
-    {
-      "id": "007",
-      "title": "第二课",
-      "category": "儿童教育"
-    },
-    {
-      "id": "008",
-      "title": "第四课",
-      "category": "儿童教育"
-    },
-    {
-      "id": "009",
-      "title": "第五课",
-      "category": "儿童教育"
-    },
-    {
-      "id": "010",
-      "title": "第六课",
+      "title": "儿童教导法（下）",
       "category": "儿童教育"
     }
   ],
-  "totalChapters": 10
+  "totalChapters": 1
 }

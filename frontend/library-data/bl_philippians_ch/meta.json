@@ -2,41 +2,16 @@
   "code": "bl_philippians_ch",
   "title": "腓立比书查经",
   "titleEn": "Philippians Study",
-  "author": "Blessed.org",
+  "author": "新约注释",
   "source": "blessed.org",
   "category": "新约注释",
   "icon": "📖",
   "chapters": [
     {
       "id": "001",
-      "title": "第二章",
-      "category": "新约注释"
-    },
-    {
-      "id": "002",
-      "title": "第三章",
-      "category": "新约注释"
-    },
-    {
-      "id": "003",
-      "title": "第三章",
-      "category": "新约注释"
-    },
-    {
-      "id": "004",
-      "title": "第三章",
-      "category": "新约注释"
-    },
-    {
-      "id": "005",
-      "title": "第四章",
-      "category": "新约注释"
-    },
-    {
-      "id": "006",
-      "title": "第三章",
+      "title": "腓立比书查经",
       "category": "新约注释"
     }
   ],
-  "totalChapters": 6
+  "totalChapters": 1
 }

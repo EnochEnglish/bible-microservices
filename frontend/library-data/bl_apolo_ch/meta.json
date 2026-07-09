@@ -2,31 +2,16 @@
   "code": "bl_apolo_ch",
   "title": "护教学",
   "titleEn": "Apologetics",
-  "author": "Blessed.org",
+  "author": "护教",
   "source": "blessed.org",
   "category": "护教",
   "icon": "🛡️",
   "chapters": [
     {
       "id": "001",
-      "title": "前言",
-      "category": "护教"
-    },
-    {
-      "id": "002",
-      "title": "第2部分",
-      "category": "护教"
-    },
-    {
-      "id": "003",
-      "title": "第3部分",
-      "category": "护教"
-    },
-    {
-      "id": "004",
-      "title": "第4部分",
+      "title": "护教学",
       "category": "护教"
     }
   ],
-  "totalChapters": 4
+  "totalChapters": 1
 }

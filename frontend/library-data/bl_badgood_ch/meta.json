@@ -2,14 +2,14 @@
   "code": "bl_badgood_ch",
   "title": "坏消息与好消息",
   "titleEn": "Bad News and Good News",
-  "author": "Blessed.org",
+  "author": "福音",
   "source": "blessed.org",
   "category": "福音",
   "icon": "✅",
   "chapters": [
     {
       "id": "001",
-      "title": "全文",
+      "title": "坏消息与好消息",
       "category": "福音"
     }
   ],

@@ -2,111 +2,16 @@
   "code": "bl_genstudy_ch",
   "title": "创世记研读",
   "titleEn": "Genesis Study",
-  "author": "Blessed.org",
+  "author": "查经",
   "source": "blessed.org",
   "category": "查经",
   "icon": "🔍",
   "chapters": [
     {
       "id": "001",
-      "title": "第3章",
-      "category": "查经"
-    },
-    {
-      "id": "002",
-      "title": "第1章",
-      "category": "查经"
-    },
-    {
-      "id": "003",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "004",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "005",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "006",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "007",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "008",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "009",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "010",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "011",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "012",
-      "title": "第三章",
-      "category": "查经"
-    },
-    {
-      "id": "013",
-      "title": "第六章",
-      "category": "查经"
-    },
-    {
-      "id": "014",
-      "title": "第四章",
-      "category": "查经"
-    },
-    {
-      "id": "015",
-      "title": "第四章",
-      "category": "查经"
-    },
-    {
-      "id": "016",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "017",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "018",
-      "title": "第九章",
-      "category": "查经"
-    },
-    {
-      "id": "019",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "020",
-      "title": "第十章",
+      "title": "创世记研读",
       "category": "查经"
     }
   ],
-  "totalChapters": 20
+  "totalChapters": 1
 }

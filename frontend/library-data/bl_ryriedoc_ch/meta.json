@@ -2,14 +2,14 @@
   "code": "bl_ryriedoc_ch",
   "title": "Ryrie神学摘要",
   "titleEn": "Ryrie Theology Summary",
-  "author": "Blessed.org",
+  "author": "神学",
   "source": "blessed.org",
   "category": "神学",
   "icon": "📚",
   "chapters": [
     {
       "id": "001",
-      "title": "全文",
+      "title": "Ryrie神学摘要",
       "category": "神学"
     }
   ],

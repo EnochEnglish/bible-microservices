@@ -2,161 +2,16 @@
   "code": "bl_followX_ch",
   "title": "跟随基督",
   "titleEn": "Following Christ",
-  "author": "Blessed.org",
+  "author": "查经",
   "source": "blessed.org",
   "category": "查经",
   "icon": "🔍",
   "chapters": [
     {
       "id": "001",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "002",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "003",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "004",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "005",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "006",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "007",
-      "title": "第三章",
-      "category": "查经"
-    },
-    {
-      "id": "008",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "009",
-      "title": "第一章",
-      "category": "查经"
-    },
-    {
-      "id": "010",
-      "title": "第三章",
-      "category": "查经"
-    },
-    {
-      "id": "011",
-      "title": "第四章",
-      "category": "查经"
-    },
-    {
-      "id": "012",
-      "title": "第五章",
-      "category": "查经"
-    },
-    {
-      "id": "013",
-      "title": "第五章",
-      "category": "查经"
-    },
-    {
-      "id": "014",
-      "title": "第五章",
-      "category": "查经"
-    },
-    {
-      "id": "015",
-      "title": "第六章",
-      "category": "查经"
-    },
-    {
-      "id": "016",
-      "title": "第八章",
-      "category": "查经"
-    },
-    {
-      "id": "017",
-      "title": "第九章",
-      "category": "查经"
-    },
-    {
-      "id": "018",
-      "title": "第八章",
-      "category": "查经"
-    },
-    {
-      "id": "019",
-      "title": "第二章",
-      "category": "查经"
-    },
-    {
-      "id": "020",
-      "title": "第十四章",
-      "category": "查经"
-    },
-    {
-      "id": "021",
-      "title": "第十五章",
-      "category": "查经"
-    },
-    {
-      "id": "022",
-      "title": "第二十一章",
-      "category": "查经"
-    },
-    {
-      "id": "023",
-      "title": "第二十一章",
-      "category": "查经"
-    },
-    {
-      "id": "024",
-      "title": "第二十一章",
-      "category": "查经"
-    },
-    {
-      "id": "025",
-      "title": "第二十一章",
-      "category": "查经"
-    },
-    {
-      "id": "026",
-      "title": "第二十一章",
-      "category": "查经"
-    },
-    {
-      "id": "027",
-      "title": "第二十一章",
-      "category": "查经"
-    },
-    {
-      "id": "028",
-      "title": "第二十一章",
-      "category": "查经"
-    },
-    {
-      "id": "029",
-      "title": "第二十二篇",
-      "category": "查经"
-    },
-    {
-      "id": "030",
-      "title": "第二十四章",
+      "title": "跟随基督",
       "category": "查经"
     }
   ],
-  "totalChapters": 30
+  "totalChapters": 1
 }
