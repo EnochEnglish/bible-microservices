@@ -4,124 +4,89 @@
   "titleEn": "Equipping the Saints Vol.2",
   "author": "Blessed.org",
   "source": "blessed.org",
-  "category": "圣徒装备",
+  "category": "门徒训练",
   "icon": "🛡️",
   "chapters": [
     {
       "id": "001",
-      "title": "第一章",
+      "title": "分配时间的原则",
       "category": "圣徒装备"
     },
     {
       "id": "002",
-      "title": "第二课",
+      "title": "如何列出正确的目标",
       "category": "圣徒装备"
     },
     {
       "id": "003",
-      "title": "第三课",
+      "title": "「对症下药」",
       "category": "圣徒装备"
     },
     {
       "id": "004",
-      "title": "第一章",
+      "title": "如何分享见证",
       "category": "圣徒装备"
     },
     {
       "id": "005",
-      "title": "第一课",
+      "title": "运用时间的优先次序",
       "category": "圣徒装备"
     },
     {
       "id": "006",
-      "title": "第一课",
+      "title": "传福音的基本技巧",
       "category": "圣徒装备"
     },
     {
       "id": "007",
-      "title": "第二课",
+      "title": "司提反律与苏格拉底的传福音方法",
       "category": "圣徒装备"
     },
     {
       "id": "008",
-      "title": "第三课",
+      "title": "栽培工作的本质",
       "category": "圣徒装备"
     },
     {
       "id": "009",
-      "title": "第二课",
+      "title": "栽培跟进的原则",
       "category": "圣徒装备"
     },
     {
       "id": "010",
-      "title": "第四课",
+      "title": "教导的原则",
       "category": "圣徒装备"
     },
     {
       "id": "011",
-      "title": "第五课",
+      "title": "学习的原则",
       "category": "圣徒装备"
     },
     {
       "id": "012",
-      "title": "第二课",
+      "title": "栽培的目标",
       "category": "圣徒装备"
     },
     {
       "id": "013",
-      "title": "第三课",
+      "title": "栽培初信者的工具",
       "category": "圣徒装备"
     },
     {
       "id": "014",
-      "title": "第一篇",
+      "title": "栽培主门徒的跟进工具",
       "category": "圣徒装备"
     },
     {
       "id": "015",
-      "title": "第四课",
+      "title": "如何管理财政",
       "category": "圣徒装备"
     },
     {
       "id": "016",
-      "title": "第二课",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "017",
-      "title": "第二章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "018",
-      "title": "第一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "019",
-      "title": "第十一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "020",
-      "title": "第十一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "021",
-      "title": "第一课",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "022",
-      "title": "第三章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "023",
-      "title": "第三章",
+      "title": "检讨与衡量",
       "category": "圣徒装备"
     }
   ],
-  "totalChapters": 23
+  "totalChapters": 16
 }

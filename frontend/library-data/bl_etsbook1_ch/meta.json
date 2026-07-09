@@ -4,49 +4,89 @@
   "titleEn": "Equipping the Saints Vol.1",
   "author": "Blessed.org",
   "source": "blessed.org",
-  "category": "圣徒装备",
+  "category": "门徒训练",
   "icon": "🛡️",
   "chapters": [
     {
       "id": "001",
-      "title": "第三章",
-      "category": "圣徒装备"
+      "title": "第一课：一个明确的异象",
+      "category": "门徒训练"
     },
     {
       "id": "002",
-      "title": "第十一课",
-      "category": "圣徒装备"
+      "title": "第二课：大使命",
+      "category": "门徒训练"
     },
     {
       "id": "003",
-      "title": "第四十五篇",
-      "category": "圣徒装备"
+      "title": "第三课：大使命的实践",
+      "category": "门徒训练"
     },
     {
       "id": "004",
-      "title": "第一章",
-      "category": "圣徒装备"
+      "title": "第四课：按圣经原则来衡量",
+      "category": "门徒训练"
     },
     {
       "id": "005",
-      "title": "第一章",
-      "category": "圣徒装备"
+      "title": "第五课：如何分配时间",
+      "category": "门徒训练"
     },
     {
       "id": "006",
-      "title": "第十一章",
-      "category": "圣徒装备"
+      "title": "第六课：传福音简介",
+      "category": "门徒训练"
     },
     {
       "id": "007",
-      "title": "第三十一章",
-      "category": "圣徒装备"
+      "title": "第七课：福音桥简介",
+      "category": "门徒训练"
     },
     {
       "id": "008",
-      "title": "第一课",
-      "category": "圣徒装备"
+      "title": "第八课：如何传福音和控制话题",
+      "category": "门徒训练"
+    },
+    {
+      "id": "009",
+      "title": "第九课：得救的确据",
+      "category": "门徒训练"
+    },
+    {
+      "id": "010",
+      "title": "第十课：灵修生活",
+      "category": "门徒训练"
+    },
+    {
+      "id": "011",
+      "title": "第十一课：祷告的生活",
+      "category": "门徒训练"
+    },
+    {
+      "id": "012",
+      "title": "第十二课：得胜的生活",
+      "category": "门徒训练"
+    },
+    {
+      "id": "013",
+      "title": "第十三课：神的话语",
+      "category": "门徒训练"
+    },
+    {
+      "id": "014",
+      "title": "第十四课：顺服的生活",
+      "category": "门徒训练"
+    },
+    {
+      "id": "015",
+      "title": "第十五课：基督是主",
+      "category": "门徒训练"
+    },
+    {
+      "id": "016",
+      "title": "第十六课：期考",
+      "category": "门徒训练"
     }
   ],
-  "totalChapters": 8
+  "totalChapters": 16
 }

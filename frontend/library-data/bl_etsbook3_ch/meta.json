@@ -4,234 +4,89 @@
   "titleEn": "Equipping the Saints Vol.3",
   "author": "Blessed.org",
   "source": "blessed.org",
-  "category": "圣徒装备",
+  "category": "门徒训练",
   "icon": "🛡️",
   "chapters": [
     {
       "id": "001",
-      "title": "第一章",
+      "title": "“门徒”的定义",
       "category": "圣徒装备"
     },
     {
       "id": "002",
-      "title": "第二章",
+      "title": "门徒训练的原则",
       "category": "圣徒装备"
     },
     {
       "id": "003",
-      "title": "第三章",
+      "title": "如何带领小组查经（一）",
       "category": "圣徒装备"
     },
     {
       "id": "004",
-      "title": "第一课",
+      "title": "如何带领小组查经（二）",
       "category": "圣徒装备"
     },
     {
       "id": "005",
-      "title": "第十四章",
+      "title": "如何带领小组查经（三）",
       "category": "圣徒装备"
     },
     {
       "id": "006",
-      "title": "第十四章",
+      "title": "如何带领小组查经（四）",
       "category": "圣徒装备"
     },
     {
       "id": "007",
-      "title": "第四章",
+      "title": "门徒信仰的焦点",
       "category": "圣徒装备"
     },
     {
       "id": "008",
-      "title": "第四十章",
+      "title": "委身作主门徒",
       "category": "圣徒装备"
     },
     {
       "id": "009",
-      "title": "第四十二章",
+      "title": "以身作则",
       "category": "圣徒装备"
     },
     {
       "id": "010",
-      "title": "第五章",
+      "title": "如何选择栽培对象",
       "category": "圣徒装备"
     },
     {
       "id": "011",
-      "title": "第一课",
+      "title": "团队与团队工作",
       "category": "圣徒装备"
     },
     {
       "id": "012",
-      "title": "第一课",
+      "title": "确定神的旨意",
       "category": "圣徒装备"
     },
     {
       "id": "013",
-      "title": "第一课",
+      "title": "属灵繁衍",
       "category": "圣徒装备"
     },
     {
       "id": "014",
-      "title": "第四章",
+      "title": "人际关系",
       "category": "圣徒装备"
     },
     {
       "id": "015",
-      "title": "第四章",
+      "title": "「领袖」简介",
       "category": "圣徒装备"
     },
     {
       "id": "016",
-      "title": "第四章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "017",
-      "title": "第三章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "018",
-      "title": "第六章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "019",
-      "title": "第四课",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "020",
-      "title": "第一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "021",
-      "title": "第一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "022",
-      "title": "第七章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "023",
-      "title": "第一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "024",
-      "title": "第八章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "025",
-      "title": "第九章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "026",
-      "title": "第八章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "027",
-      "title": "第六章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "028",
-      "title": "第八章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "029",
-      "title": "第十章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "030",
-      "title": "第十一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "031",
-      "title": "第二十八章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "032",
-      "title": "第十二章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "033",
-      "title": "第十七章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "034",
-      "title": "第一课",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "035",
-      "title": "第三章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "036",
-      "title": "第一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "037",
-      "title": "第一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "038",
-      "title": "第一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "039",
-      "title": "第一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "040",
-      "title": "第一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "041",
-      "title": "第二章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "042",
-      "title": "第一章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "043",
-      "title": "第二章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "044",
-      "title": "第二章",
-      "category": "圣徒装备"
-    },
-    {
-      "id": "045",
-      "title": "第二章",
+      "title": "属灵领袖",
       "category": "圣徒装备"
     }
   ],
-  "totalChapters": 45
+  "totalChapters": 16
 }

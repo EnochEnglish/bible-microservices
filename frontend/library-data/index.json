@@ -1,150 +1,182 @@
 {
   "totalBooks": 94,
-  "totalChapters": 1650,
+  "totalChapters": 2383,
   "books": [
     {
       "code": "bible_wenti",
       "title": "圣经问题解答",
       "titleEn": "Bible Questions & Answers",
       "author": "陈终道",
-      "category": "",
+      "category": "其他",
       "icon": "📕",
-      "chapters": 183
+      "chapters": 183,
+      "name": "圣经问题解答",
+      "nameEn": "Bible Questions & Answers"
     },
     {
       "code": "aizhiyu",
       "title": "爱之语",
       "titleEn": "The Five Love Languages",
       "author": "盖瑞·巧门",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "❤️",
-      "chapters": 17
+      "chapters": 17,
+      "name": "爱之语",
+      "nameEn": "The Five Love Languages"
     },
     {
       "code": "ccdsm",
       "title": "传承的生命",
       "titleEn": "Life of Heritage",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "🌱",
-      "chapters": 20
+      "chapters": 20,
+      "name": "传承的生命",
+      "nameEn": "Life of Heritage"
     },
     {
       "code": "clsks",
       "title": "从零岁开始",
       "titleEn": "From Zero",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "🍼",
-      "chapters": 16
+      "chapters": 16,
+      "name": "从零岁开始",
+      "nameEn": "From Zero"
     },
     {
       "code": "gshznzb",
       "title": "告诉孩子，你真棒！",
       "titleEn": "Tell Your Child: You Are Great!",
       "author": "卢勤",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "👍",
-      "chapters": 5
+      "chapters": 5,
+      "name": "告诉孩子，你真棒！",
+      "nameEn": "Tell Your Child: You Are Great!"
     },
     {
       "code": "flower",
       "title": "花篮缘",
       "titleEn": "Flower Basket Story",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "🌸",
-      "chapters": 13
+      "chapters": 13,
+      "name": "花篮缘",
+      "nameEn": "Flower Basket Story"
     },
     {
       "code": "hywtjd",
       "title": "婚姻问题解答",
       "titleEn": "Marriage Q&A",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "💍",
-      "chapters": 10
+      "chapters": 10,
+      "name": "婚姻问题解答",
+      "nameEn": "Marriage Q&A"
     },
     {
       "code": "teamwork",
       "title": "建立婚姻中的协调合作",
       "titleEn": "Building Marriage Teamwork",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "🤝",
-      "chapters": 16
+      "chapters": 16,
+      "name": "建立婚姻中的协调合作",
+      "nameEn": "Building Marriage Teamwork"
     },
     {
       "code": "keys",
       "title": "开启幸福婚姻的钥匙",
       "titleEn": "Keys to Happy Marriage",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "🔑",
-      "chapters": 1
+      "chapters": 1,
+      "name": "开启幸福婚姻的钥匙",
+      "nameEn": "Keys to Happy Marriage"
     },
     {
       "code": "kzndqg",
       "title": "控制你的情感",
       "titleEn": "Control Your Emotions",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "😌",
-      "chapters": 12
+      "chapters": 12,
+      "name": "控制你的情感",
+      "nameEn": "Control Your Emotions"
     },
     {
       "code": "bless_children",
       "title": "蒙福的儿女",
       "titleEn": "Blessed Children",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "👶",
-      "chapters": 56
+      "chapters": 56,
+      "name": "蒙福的儿女",
+      "nameEn": "Blessed Children"
     },
     {
       "code": "sday_men",
       "title": "圣地爱语",
       "titleEn": "Holy Land Love Words (For Men)",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "💪",
-      "chapters": 31
+      "chapters": 31,
+      "name": "圣地爱语",
+      "nameEn": "Holy Land Love Words (For Men)"
     },
     {
       "code": "shufeiyun",
       "title": "属飞云",
       "titleEn": "Shu Fei Yun",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "☁️",
-      "chapters": 74
+      "chapters": 74,
+      "name": "属飞云",
+      "nameEn": "Shu Fei Yun"
     },
     {
       "code": "wrfmwrsb",
       "title": "为人父母为人师表",
       "titleEn": "Be Parents Be Teachers",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "👨‍🏫",
-      "chapters": 7
+      "chapters": 7,
+      "name": "为人父母为人师表",
+      "nameEn": "Be Parents Be Teachers"
     },
     {
       "code": "marriage",
       "title": "信徒离婚原则汇编",
       "titleEn": "Believers Divorce Principles",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "📜",
-      "chapters": 4
+      "chapters": 4,
+      "name": "信徒离婚原则汇编",
+      "nameEn": "Believers Divorce Principles"
     },
     {
       "code": "yubeiqincunqi",
       "title": "预备青春期",
       "titleEn": "Preparing for Adolescence",
       "author": "佚名",
-      "category": "家庭婚姻",
+      "category": "家庭",
       "icon": "🧒",
-      "chapters": 7
+      "chapters": 7,
+      "name": "预备青春期",
+      "nameEn": "Preparing for Adolescence"
     },
     {
       "code": "deshen",
@@ -153,52 +185,64 @@
       "author": "佚名",
       "category": "讲道",
       "icon": "🎤",
-      "chapters": 7
+      "chapters": 7,
+      "name": "讲道集",
+      "nameEn": "Sermons"
     },
     {
       "code": "dsz",
       "title": "圣经中的得胜者",
       "titleEn": "Victors in the Bible",
       "author": "佚名",
-      "category": "解经问题",
+      "category": "解经",
       "icon": "📖",
-      "chapters": 35
+      "chapters": 35,
+      "name": "圣经中的得胜者",
+      "nameEn": "Victors in the Bible"
     },
     {
       "code": "kneeling",
       "title": "跪着的基督徒",
       "titleEn": "The Kneeling Christian",
       "author": "佚名",
-      "category": "经典著作",
+      "category": "经典",
       "icon": "🧎",
-      "chapters": 29
+      "chapters": 29,
+      "name": "跪着的基督徒",
+      "nameEn": "The Kneeling Christian"
     },
     {
       "code": "martyr_ch",
       "title": "殉道史",
       "titleEn": "Book of Martyrs (CN)",
       "author": "福克斯",
-      "category": "经典著作",
+      "category": "经典",
       "icon": "✝️",
-      "chapters": 19
+      "chapters": 19,
+      "name": "殉道史",
+      "nameEn": "Book of Martyrs (CN)"
     },
     {
       "code": "tongzai",
       "title": "与神同在",
       "titleEn": "Practice of the Presence of God (CN)",
       "author": "劳伦斯弟兄",
-      "category": "经典著作",
+      "category": "经典",
       "icon": "⛪",
-      "chapters": 23
+      "chapters": 23,
+      "name": "与神同在",
+      "nameEn": "Practice of the Presence of God (CN)"
     },
     {
       "code": "martyrs",
       "title": "Fox's Book of Martyrs",
       "titleEn": "Fox's Book of Martyrs",
       "author": "John Foxe",
-      "category": "经典著作",
+      "category": "经典",
       "icon": "✝️",
-      "chapters": 23
+      "chapters": 23,
+      "name": "Fox's Book of Martyrs",
+      "nameEn": "Fox's Book of Martyrs"
     },
     {
       "code": "hmgq",
@@ -207,7 +251,9 @@
       "author": "考门夫人",
       "category": "灵修",
       "icon": "🏜️",
-      "chapters": 38
+      "chapters": 38,
+      "name": "荒漠甘泉",
+      "nameEn": "Streams in the Desert"
     },
     {
       "code": "walk_with_lord",
@@ -216,7 +262,9 @@
       "author": "佚名",
       "category": "灵修",
       "icon": "🚶",
-      "chapters": 54
+      "chapters": 54,
+      "name": "每日与主同行",
+      "nameEn": "Walking with the Lord Daily"
     },
     {
       "code": "ptsdmm",
@@ -225,7 +273,9 @@
       "author": "佚名",
       "category": "灵修",
       "icon": "🍇",
-      "chapters": 13
+      "chapters": 13,
+      "name": "葡萄树的秘密",
+      "nameEn": "Secret of the Vine"
     },
     {
       "code": "listening",
@@ -234,7 +284,9 @@
       "author": "佚名",
       "category": "灵修",
       "icon": "👂",
-      "chapters": 12
+      "chapters": 12,
+      "name": "倾听恩主的声音",
+      "nameEn": "Listening to the Lord"
     },
     {
       "code": "quanwei",
@@ -243,7 +295,9 @@
       "author": "佚名",
       "category": "灵修",
       "icon": "💬",
-      "chapters": 25
+      "chapters": 25,
+      "name": "劝慰之言",
+      "nameEn": "Words of Comfort"
     },
     {
       "code": "victory_life",
@@ -252,7 +306,9 @@
       "author": "佚名",
       "category": "灵修",
       "icon": "🏆",
-      "chapters": 16
+      "chapters": 16,
+      "name": "胜利生活的秘诀",
+      "nameEn": "Secret of Victorious Living"
     },
     {
       "code": "jabez",
@@ -261,7 +317,9 @@
       "author": "魏肯生",
       "category": "灵修",
       "icon": "🙏",
-      "chapters": 13
+      "chapters": 13,
+      "name": "雅比斯的祷告",
+      "nameEn": "Prayer of Jabez"
     },
     {
       "code": "xtsx",
@@ -270,7 +328,9 @@
       "author": "佚名",
       "category": "神学",
       "icon": "📚",
-      "chapters": 46
+      "chapters": 46,
+      "name": "系统神学",
+      "nameEn": "Systematic Theology"
     },
     {
       "code": "bl_1jn_ch",
@@ -564,7 +624,9 @@
           "title": "第五章",
           "category": "查经"
         }
-      ]
+      ],
+      "titleEn": "1 John Inductive Study",
+      "title": "约翰一书归纳法查经"
     },
     {
       "code": "bl_1thes_ch",
@@ -823,7 +885,9 @@
           "title": "第五章",
           "category": "查经"
         }
-      ]
+      ],
+      "titleEn": "1 Thessalonians Study",
+      "title": "帖撒罗尼迦前书查经"
     },
     {
       "code": "bl_1timothy_ch",
@@ -831,7 +895,7 @@
       "name": "提摩太前书查经",
       "nameEn": "1 Timothy Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -842,7 +906,9 @@
           "title": "全文",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "1 Timothy Study",
+      "title": "提摩太前书查经"
     },
     {
       "code": "bl_acts_ch",
@@ -850,7 +916,7 @@
       "name": "使徒行传查经",
       "nameEn": "Acts Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -976,7 +1042,9 @@
           "title": "第二十七章",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Acts Study",
+      "title": "使徒行传查经"
     },
     {
       "code": "bl_apolo_ch",
@@ -1010,7 +1078,9 @@
           "title": "第4部分",
           "category": "护教"
         }
-      ]
+      ],
+      "titleEn": "Apologetics",
+      "title": "护教学"
     },
     {
       "code": "bl_ashcraft_ch",
@@ -1044,7 +1114,9 @@
           "title": "第一课",
           "category": "讲道"
         }
-      ]
+      ],
+      "titleEn": "Sermon Collection",
+      "title": "讲道集"
     },
     {
       "code": "bl_badgood_ch",
@@ -1063,7 +1135,9 @@
           "title": "全文",
           "category": "福音"
         }
-      ]
+      ],
+      "titleEn": "Bad News and Good News",
+      "title": "坏消息与好消息"
     },
     {
       "code": "bl_bcf_ch",
@@ -4447,7 +4521,9 @@
           "title": "第二十二课",
           "category": "神学"
         }
-      ]
+      ],
+      "titleEn": "Self-Confrontation",
+      "title": "自我面对"
     },
     {
       "code": "bl_blaka_ch",
@@ -4466,7 +4542,9 @@
           "title": "全文",
           "category": "福音"
         }
-      ]
+      ],
+      "titleEn": "Light in the Darkness",
+      "title": "黑暗中的光"
     },
     {
       "code": "bl_bog_ch",
@@ -4485,7 +4563,9 @@
           "title": "全文",
           "category": "福音"
         }
-      ]
+      ],
+      "titleEn": "Bridge of the Gospel",
+      "title": "福音桥"
     },
     {
       "code": "bl_bstudymet_ch",
@@ -4529,7 +4609,9 @@
           "title": "第八章",
           "category": "查经"
         }
-      ]
+      ],
+      "titleEn": "Bible Study Methods",
+      "title": "查经方法"
     },
     {
       "code": "bl_colossians_ch",
@@ -4537,7 +4619,7 @@
       "name": "歌罗西书查经",
       "nameEn": "Colossians Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -4548,7 +4630,9 @@
           "title": "全文",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Colossians Study",
+      "title": "歌罗西书查经"
     },
     {
       "code": "bl_cor_ch",
@@ -4587,7 +4671,9 @@
           "title": "第十二章",
           "category": "讲道"
         }
-      ]
+      ],
+      "titleEn": "1 Corinthians Sermons",
+      "title": "哥林多前书讲道"
     },
     {
       "code": "bl_daniel_ch",
@@ -4595,7 +4681,7 @@
       "name": "但以理书查经",
       "nameEn": "Daniel Study",
       "author": "Blessed.org",
-      "category": "旧约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -4661,7 +4747,9 @@
           "title": "第29章",
           "category": "旧约注释"
         }
-      ]
+      ],
+      "titleEn": "Daniel Study",
+      "title": "但以理书查经"
     },
     {
       "code": "bl_ephetians_ch",
@@ -4669,7 +4757,7 @@
       "name": "以弗所书查经",
       "nameEn": "Ephesians Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -4680,7 +4768,9 @@
           "title": "全文",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Ephesians Study",
+      "title": "以弗所书查经"
     },
     {
       "code": "bl_etsbook1_ch",
@@ -4688,53 +4778,95 @@
       "name": "圣徒装备（第一册）",
       "nameEn": "Equipping the Saints Vol.1",
       "author": "Blessed.org",
-      "category": "圣徒装备",
+      "category": "门徒训练",
       "icon": "🛡️",
       "source": "blessed.org",
       "isStatic": true,
-      "totalChapters": 8,
+      "totalChapters": 16,
       "chapters": [
         {
           "id": "001",
-          "title": "第三章",
-          "category": "圣徒装备"
+          "title": "第一课：一个明确的异象",
+          "category": "门徒训练"
         },
         {
           "id": "002",
-          "title": "第十一课",
-          "category": "圣徒装备"
+          "title": "第二课：大使命",
+          "category": "门徒训练"
         },
         {
           "id": "003",
-          "title": "第四十五篇",
-          "category": "圣徒装备"
+          "title": "第三课：大使命的实践",
+          "category": "门徒训练"
         },
         {
           "id": "004",
-          "title": "第一章",
-          "category": "圣徒装备"
+          "title": "第四课：按圣经原则来衡量",
+          "category": "门徒训练"
         },
         {
           "id": "005",
-          "title": "第一章",
-          "category": "圣徒装备"
+          "title": "第五课：如何分配时间",
+          "category": "门徒训练"
         },
         {
           "id": "006",
-          "title": "第十一章",
-          "category": "圣徒装备"
+          "title": "第六课：传福音简介",
+          "category": "门徒训练"
         },
         {
           "id": "007",
-          "title": "第三十一章",
-          "category": "圣徒装备"
+          "title": "第七课：福音桥简介",
+          "category": "门徒训练"
         },
         {
           "id": "008",
-          "title": "第一课",
-          "category": "圣徒装备"
+          "title": "第八课：如何传福音和控制话题",
+          "category": "门徒训练"
+        },
+        {
+          "id": "009",
+          "title": "第九课：得救的确据",
+          "category": "门徒训练"
+        },
+        {
+          "id": "010",
+          "title": "第十课：灵修生活",
+          "category": "门徒训练"
+        },
+        {
+          "id": "011",
+          "title": "第十一课：祷告的生活",
+          "category": "门徒训练"
+        },
+        {
+          "id": "012",
+          "title": "第十二课：得胜的生活",
+          "category": "门徒训练"
+        },
+        {
+          "id": "013",
+          "title": "第十三课：神的话语",
+          "category": "门徒训练"
+        },
+        {
+          "id": "014",
+          "title": "第十四课：顺服的生活",
+          "category": "门徒训练"
+        },
+        {
+          "id": "015",
+          "title": "第十五课：基督是主",
+          "category": "门徒训练"
+        },
+        {
+          "id": "016",
+          "title": "第十六课：期考",
+          "category": "门徒训练"
         }
-      ]
+      ],
+      "titleEn": "Equipping the Saints Vol.1",
+      "title": "圣徒装备（第一册）"
     },
     {
       "code": "bl_etsbook2_ch",
@@ -4742,128 +4874,95 @@
       "name": "圣徒装备（第二册）",
       "nameEn": "Equipping the Saints Vol.2",
       "author": "Blessed.org",
-      "category": "圣徒装备",
+      "category": "门徒训练",
       "icon": "🛡️",
       "source": "blessed.org",
       "isStatic": true,
-      "totalChapters": 23,
+      "totalChapters": 16,
       "chapters": [
         {
           "id": "001",
-          "title": "第一章",
+          "title": "分配时间的原则",
           "category": "圣徒装备"
         },
         {
           "id": "002",
-          "title": "第二课",
+          "title": "如何列出正确的目标",
           "category": "圣徒装备"
         },
         {
           "id": "003",
-          "title": "第三课",
+          "title": "「对症下药」",
           "category": "圣徒装备"
         },
         {
           "id": "004",
-          "title": "第一章",
+          "title": "如何分享见证",
           "category": "圣徒装备"
         },
         {
           "id": "005",
-          "title": "第一课",
+          "title": "运用时间的优先次序",
           "category": "圣徒装备"
         },
         {
           "id": "006",
-          "title": "第一课",
+          "title": "传福音的基本技巧",
           "category": "圣徒装备"
         },
         {
           "id": "007",
-          "title": "第二课",
+          "title": "司提反律与苏格拉底的传福音方法",
           "category": "圣徒装备"
         },
         {
           "id": "008",
-          "title": "第三课",
+          "title": "栽培工作的本质",
           "category": "圣徒装备"
         },
         {
           "id": "009",
-          "title": "第二课",
+          "title": "栽培跟进的原则",
           "category": "圣徒装备"
         },
         {
           "id": "010",
-          "title": "第四课",
+          "title": "教导的原则",
           "category": "圣徒装备"
         },
         {
           "id": "011",
-          "title": "第五课",
+          "title": "学习的原则",
           "category": "圣徒装备"
         },
         {
           "id": "012",
-          "title": "第二课",
+          "title": "栽培的目标",
           "category": "圣徒装备"
         },
         {
           "id": "013",
-          "title": "第三课",
+          "title": "栽培初信者的工具",
           "category": "圣徒装备"
         },
         {
           "id": "014",
-          "title": "第一篇",
+          "title": "栽培主门徒的跟进工具",
           "category": "圣徒装备"
         },
         {
           "id": "015",
-          "title": "第四课",
+          "title": "如何管理财政",
           "category": "圣徒装备"
         },
         {
           "id": "016",
-          "title": "第二课",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "017",
-          "title": "第二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "018",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "019",
-          "title": "第十一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "020",
-          "title": "第十一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "021",
-          "title": "第一课",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "022",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "023",
-          "title": "第三章",
+          "title": "检讨与衡量",
           "category": "圣徒装备"
         }
-      ]
+      ],
+      "titleEn": "Equipping the Saints Vol.2",
+      "title": "圣徒装备（第二册）"
     },
     {
       "code": "bl_etsbook3_ch",
@@ -4871,238 +4970,95 @@
       "name": "圣徒装备（第三册）",
       "nameEn": "Equipping the Saints Vol.3",
       "author": "Blessed.org",
-      "category": "圣徒装备",
+      "category": "门徒训练",
       "icon": "🛡️",
       "source": "blessed.org",
       "isStatic": true,
-      "totalChapters": 45,
+      "totalChapters": 16,
       "chapters": [
         {
           "id": "001",
-          "title": "第一章",
+          "title": "“门徒”的定义",
           "category": "圣徒装备"
         },
         {
           "id": "002",
-          "title": "第二章",
+          "title": "门徒训练的原则",
           "category": "圣徒装备"
         },
         {
           "id": "003",
-          "title": "第三章",
+          "title": "如何带领小组查经（一）",
           "category": "圣徒装备"
         },
         {
           "id": "004",
-          "title": "第一课",
+          "title": "如何带领小组查经（二）",
           "category": "圣徒装备"
         },
         {
           "id": "005",
-          "title": "第十四章",
+          "title": "如何带领小组查经（三）",
           "category": "圣徒装备"
         },
         {
           "id": "006",
-          "title": "第十四章",
+          "title": "如何带领小组查经（四）",
           "category": "圣徒装备"
         },
         {
           "id": "007",
-          "title": "第四章",
+          "title": "门徒信仰的焦点",
           "category": "圣徒装备"
         },
         {
           "id": "008",
-          "title": "第四十章",
+          "title": "委身作主门徒",
           "category": "圣徒装备"
         },
         {
           "id": "009",
-          "title": "第四十二章",
+          "title": "以身作则",
           "category": "圣徒装备"
         },
         {
           "id": "010",
-          "title": "第五章",
+          "title": "如何选择栽培对象",
           "category": "圣徒装备"
         },
         {
           "id": "011",
-          "title": "第一课",
+          "title": "团队与团队工作",
           "category": "圣徒装备"
         },
         {
           "id": "012",
-          "title": "第一课",
+          "title": "确定神的旨意",
           "category": "圣徒装备"
         },
         {
           "id": "013",
-          "title": "第一课",
+          "title": "属灵繁衍",
           "category": "圣徒装备"
         },
         {
           "id": "014",
-          "title": "第四章",
+          "title": "人际关系",
           "category": "圣徒装备"
         },
         {
           "id": "015",
-          "title": "第四章",
+          "title": "「领袖」简介",
           "category": "圣徒装备"
         },
         {
           "id": "016",
-          "title": "第四章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "017",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "018",
-          "title": "第六章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "019",
-          "title": "第四课",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "020",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "021",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "022",
-          "title": "第七章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "023",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "024",
-          "title": "第八章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "025",
-          "title": "第九章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "026",
-          "title": "第八章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "027",
-          "title": "第六章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "028",
-          "title": "第八章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "029",
-          "title": "第十章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "030",
-          "title": "第十一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "031",
-          "title": "第二十八章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "032",
-          "title": "第十二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "033",
-          "title": "第十七章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "034",
-          "title": "第一课",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "035",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "036",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "037",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "038",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "039",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "040",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "041",
-          "title": "第二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "042",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "043",
-          "title": "第二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "044",
-          "title": "第二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "045",
-          "title": "第二章",
+          "title": "属灵领袖",
           "category": "圣徒装备"
         }
-      ]
+      ],
+      "titleEn": "Equipping the Saints Vol.3",
+      "title": "圣徒装备（第三册）"
     },
     {
       "code": "bl_etsbook4_ch",
@@ -5110,398 +5066,80 @@
       "name": "圣徒装备（第四册）",
       "nameEn": "Equipping the Saints Vol.4",
       "author": "Blessed.org",
-      "category": "圣徒装备",
+      "category": "门徒训练",
       "icon": "🛡️",
       "source": "blessed.org",
       "isStatic": true,
-      "totalChapters": 77,
+      "totalChapters": 13,
       "chapters": [
         {
           "id": "001",
-          "title": "第三章",
+          "title": "品格的培养，骄傲与谦卑",
           "category": "圣徒装备"
         },
         {
           "id": "002",
-          "title": "第一章",
+          "title": "信心，正直",
           "category": "圣徒装备"
         },
         {
           "id": "003",
-          "title": "第三章",
+          "title": "仆人的心志，圣洁",
           "category": "圣徒装备"
         },
         {
           "id": "004",
-          "title": "第三章",
+          "title": "领袖与计划能力",
           "category": "圣徒装备"
         },
         {
           "id": "005",
-          "title": "第一章",
+          "title": "领袖与组织能力",
           "category": "圣徒装备"
         },
         {
           "id": "006",
-          "title": "第四章",
+          "title": "领袖与领导能力",
           "category": "圣徒装备"
         },
         {
           "id": "007",
-          "title": "第二章",
+          "title": "领袖与审核能力",
           "category": "圣徒装备"
         },
         {
           "id": "008",
-          "title": "第四章",
+          "title": "领袖与带动能力",
           "category": "圣徒装备"
         },
         {
           "id": "009",
-          "title": "第四章",
+          "title": "创世纪至启示录",
           "category": "圣徒装备"
         },
         {
           "id": "010",
-          "title": "第二章",
+          "title": "亚当之应许",
           "category": "圣徒装备"
         },
         {
           "id": "011",
-          "title": "第五章",
+          "title": "亚伯拉罕之应许",
           "category": "圣徒装备"
         },
         {
           "id": "012",
-          "title": "第三章",
+          "title": "大卫之应许",
           "category": "圣徒装备"
         },
         {
           "id": "013",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "014",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "015",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "016",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "017",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "018",
-          "title": "第四章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "019",
-          "title": "第七章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "020",
-          "title": "第四章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "021",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "022",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "023",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "024",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "025",
-          "title": "第六章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "026",
-          "title": "第六章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "027",
-          "title": "第二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "028",
-          "title": "第六章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "029",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "030",
-          "title": "第六章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "031",
-          "title": "第七章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "032",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "033",
-          "title": "第七章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "034",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "035",
-          "title": "第七章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "036",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "037",
-          "title": "第六章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "038",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "039",
-          "title": "第四章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "040",
-          "title": "第八章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "041",
-          "title": "第四章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "042",
-          "title": "第八章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "043",
-          "title": "第六章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "044",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "045",
-          "title": "第八章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "046",
-          "title": "第四章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "047",
-          "title": "第十二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "048",
-          "title": "第二十章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "049",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "050",
-          "title": "第五章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "051",
-          "title": "第九章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "052",
-          "title": "第十章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "053",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "054",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "055",
-          "title": "第十章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "056",
-          "title": "第八章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "057",
-          "title": "第七章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "058",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "059",
-          "title": "第十一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "060",
-          "title": "第二十八章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "061",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "062",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "063",
-          "title": "第一章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "064",
-          "title": "第二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "065",
-          "title": "第十二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "066",
-          "title": "第七章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "067",
-          "title": "第二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "068",
-          "title": "第十二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "069",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "070",
-          "title": "第十三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "071",
-          "title": "第二章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "072",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "073",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "074",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "075",
-          "title": "第三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "076",
-          "title": "第十三章",
-          "category": "圣徒装备"
-        },
-        {
-          "id": "077",
-          "title": "第六章",
+          "title": "新约之应许",
           "category": "圣徒装备"
         }
-      ]
+      ],
+      "titleEn": "Equipping the Saints Vol.4",
+      "title": "圣徒装备（第四册）"
     },
     {
       "code": "bl_ezekiel_ch",
@@ -5509,7 +5147,7 @@
       "name": "以西结书查经",
       "nameEn": "Ezekiel Study",
       "author": "Blessed.org",
-      "category": "旧约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -5555,7 +5193,9 @@
           "title": "第10章",
           "category": "旧约注释"
         }
-      ]
+      ],
+      "titleEn": "Ezekiel Study",
+      "title": "以西结书查经"
     },
     {
       "code": "bl_followX_ch",
@@ -5719,7 +5359,9 @@
           "title": "第二十四章",
           "category": "查经"
         }
-      ]
+      ],
+      "titleEn": "Following Christ",
+      "title": "跟随基督"
     },
     {
       "code": "bl_galatian_ch",
@@ -5727,7 +5369,7 @@
       "name": "加拉太书查经",
       "nameEn": "Galatians Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -5748,7 +5390,9 @@
           "title": "第6章",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Galatians Study",
+      "title": "加拉太书查经"
     },
     {
       "code": "bl_galbee_ch",
@@ -5756,7 +5400,7 @@
       "name": "BEE加拉太书",
       "nameEn": "BEE Galatians",
       "author": "Blessed.org",
-      "category": "BEE课程",
+      "category": "门徒训练",
       "icon": "🐝",
       "source": "blessed.org",
       "isStatic": true,
@@ -6207,7 +5851,9 @@
           "title": "第三一七课",
           "category": "BEE课程"
         }
-      ]
+      ],
+      "titleEn": "BEE Galatians",
+      "title": "BEE加拉太书"
     },
     {
       "code": "bl_genstudy_ch",
@@ -6321,7 +5967,9 @@
           "title": "第十章",
           "category": "查经"
         }
-      ]
+      ],
+      "titleEn": "Genesis Study",
+      "title": "创世记研读"
     },
     {
       "code": "bl_gifts_ch",
@@ -6660,7 +6308,9 @@
           "title": "第十六章",
           "category": "查经"
         }
-      ]
+      ],
+      "titleEn": "Spiritual Gifts",
+      "title": "圣灵的恩赐"
     },
     {
       "code": "bl_heretics_ch",
@@ -6774,7 +6424,9 @@
           "title": "第十章",
           "category": "护教"
         }
-      ]
+      ],
+      "titleEn": "Heretics",
+      "title": "异端"
     },
     {
       "code": "bl_isaiah_ch",
@@ -6782,7 +6434,7 @@
       "name": "以赛亚书查经",
       "nameEn": "Isaiah Study",
       "author": "Blessed.org",
-      "category": "旧约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -6923,7 +6575,9 @@
           "title": "第一章",
           "category": "旧约注释"
         }
-      ]
+      ],
+      "titleEn": "Isaiah Study",
+      "title": "以赛亚书查经"
     },
     {
       "code": "bl_james_ch",
@@ -6931,7 +6585,7 @@
       "name": "雅各书查经",
       "nameEn": "James Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -6987,7 +6641,9 @@
           "title": "第五章",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "James Study",
+      "title": "雅各书查经"
     },
     {
       "code": "bl_jeremiah_ch",
@@ -6995,7 +6651,7 @@
       "name": "耶利米书查经",
       "nameEn": "Jeremiah Study",
       "author": "Blessed.org",
-      "category": "旧约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -7031,7 +6687,9 @@
           "title": "第29章",
           "category": "旧约注释"
         }
-      ]
+      ],
+      "titleEn": "Jeremiah Study",
+      "title": "耶利米书查经"
     },
     {
       "code": "bl_jnpreach_ch",
@@ -7150,7 +6808,9 @@
           "title": "第二十一章",
           "category": "讲道"
         }
-      ]
+      ],
+      "titleEn": "John Sermons",
+      "title": "约翰福音讲道"
     },
     {
       "code": "bl_johnstudy_ch",
@@ -7194,7 +6854,9 @@
           "title": "第四课",
           "category": "福音"
         }
-      ]
+      ],
+      "titleEn": "John Bible Study",
+      "title": "约翰福音学习"
     },
     {
       "code": "bl_joybook10_ch",
@@ -7202,7 +6864,7 @@
       "name": "JOY研经10：活出神荣耀",
       "nameEn": "JOY Study 10",
       "author": "Blessed.org",
-      "category": "JOY研经",
+      "category": "门徒训练",
       "icon": "🌟",
       "source": "blessed.org",
       "isStatic": true,
@@ -7218,7 +6880,9 @@
           "title": "第三章",
           "category": "JOY研经"
         }
-      ]
+      ],
+      "titleEn": "JOY Study 10",
+      "title": "JOY研经10：活出神荣耀"
     },
     {
       "code": "bl_joybook1_ch",
@@ -7226,7 +6890,7 @@
       "name": "JOY研经1：认识神之路",
       "nameEn": "JOY Study 1",
       "author": "Blessed.org",
-      "category": "JOY研经",
+      "category": "门徒训练",
       "icon": "🌟",
       "source": "blessed.org",
       "isStatic": true,
@@ -7247,7 +6911,9 @@
           "title": "第42章",
           "category": "JOY研经"
         }
-      ]
+      ],
+      "titleEn": "JOY Study 1",
+      "title": "JOY研经1：认识神之路"
     },
     {
       "code": "bl_joybook2_ch",
@@ -7255,7 +6921,7 @@
       "name": "JOY研经2：信徒的改变",
       "nameEn": "JOY Study 2",
       "author": "Blessed.org",
-      "category": "JOY研经",
+      "category": "门徒训练",
       "icon": "🌟",
       "source": "blessed.org",
       "isStatic": true,
@@ -7266,7 +6932,9 @@
           "title": "第二章",
           "category": "JOY研经"
         }
-      ]
+      ],
+      "titleEn": "JOY Study 2",
+      "title": "JOY研经2：信徒的改变"
     },
     {
       "code": "bl_joybook3_ch",
@@ -7274,7 +6942,7 @@
       "name": "JOY研经3：信徒的价值观",
       "nameEn": "JOY Study 3",
       "author": "Blessed.org",
-      "category": "JOY研经",
+      "category": "门徒训练",
       "icon": "🌟",
       "source": "blessed.org",
       "isStatic": true,
@@ -7285,7 +6953,9 @@
           "title": "全文",
           "category": "JOY研经"
         }
-      ]
+      ],
+      "titleEn": "JOY Study 3",
+      "title": "JOY研经3：信徒的价值观"
     },
     {
       "code": "bl_joybook4_ch",
@@ -7293,7 +6963,7 @@
       "name": "JOY研经4：神的仆人",
       "nameEn": "JOY Study 4",
       "author": "Blessed.org",
-      "category": "JOY研经",
+      "category": "门徒训练",
       "icon": "🌟",
       "source": "blessed.org",
       "isStatic": true,
@@ -7314,7 +6984,9 @@
           "title": "第2章",
           "category": "JOY研经"
         }
-      ]
+      ],
+      "titleEn": "JOY Study 4",
+      "title": "JOY研经4：神的仆人"
     },
     {
       "code": "bl_joybook5_ch",
@@ -7322,7 +6994,7 @@
       "name": "JOY研经5：合神心意",
       "nameEn": "JOY Study 5",
       "author": "Blessed.org",
-      "category": "JOY研经",
+      "category": "门徒训练",
       "icon": "🌟",
       "source": "blessed.org",
       "isStatic": true,
@@ -7333,7 +7005,9 @@
           "title": "全文",
           "category": "JOY研经"
         }
-      ]
+      ],
+      "titleEn": "JOY Study 5",
+      "title": "JOY研经5：合神心意"
     },
     {
       "code": "bl_joybook6_ch",
@@ -7341,7 +7015,7 @@
       "name": "JOY研经6：以神为中心",
       "nameEn": "JOY Study 6",
       "author": "Blessed.org",
-      "category": "JOY研经",
+      "category": "门徒训练",
       "icon": "🌟",
       "source": "blessed.org",
       "isStatic": true,
@@ -7352,7 +7026,9 @@
           "title": "全文",
           "category": "JOY研经"
         }
-      ]
+      ],
+      "titleEn": "JOY Study 6",
+      "title": "JOY研经6：以神为中心"
     },
     {
       "code": "bl_joybook7_ch",
@@ -7360,7 +7036,7 @@
       "name": "JOY研经7：作个好领袖",
       "nameEn": "JOY Study 7",
       "author": "Blessed.org",
-      "category": "JOY研经",
+      "category": "门徒训练",
       "icon": "🌟",
       "source": "blessed.org",
       "isStatic": true,
@@ -7371,7 +7047,9 @@
           "title": "全文",
           "category": "JOY研经"
         }
-      ]
+      ],
+      "titleEn": "JOY Study 7",
+      "title": "JOY研经7：作个好领袖"
     },
     {
       "code": "bl_joybook8_ch",
@@ -7379,7 +7057,7 @@
       "name": "JOY研经8：完整的门徒训练",
       "nameEn": "JOY Study 8",
       "author": "Blessed.org",
-      "category": "JOY研经",
+      "category": "门徒训练",
       "icon": "🌟",
       "source": "blessed.org",
       "isStatic": true,
@@ -7390,7 +7068,9 @@
           "title": "全文",
           "category": "JOY研经"
         }
-      ]
+      ],
+      "titleEn": "JOY Study 8",
+      "title": "JOY研经8：完整的门徒训练"
     },
     {
       "code": "bl_jword_ch",
@@ -7398,7 +7078,7 @@
       "name": "耶稣基督之言之行",
       "nameEn": "Words and Deeds of Jesus Christ",
       "author": "Blessed.org",
-      "category": "圣徒装备",
+      "category": "门徒训练",
       "icon": "🛡️",
       "source": "blessed.org",
       "isStatic": true,
@@ -7424,7 +7104,9 @@
           "title": "第七章",
           "category": "圣徒装备"
         }
-      ]
+      ],
+      "titleEn": "Words and Deeds of Jesus Christ",
+      "title": "耶稣基督之言之行"
     },
     {
       "code": "bl_kidteach2_ch",
@@ -7432,7 +7114,7 @@
       "name": "儿童教导法（下）",
       "nameEn": "Children Ministry Teaching 2",
       "author": "Blessed.org",
-      "category": "儿童教育",
+      "category": "家庭",
       "icon": "👦",
       "source": "blessed.org",
       "isStatic": true,
@@ -7488,7 +7170,9 @@
           "title": "第六课",
           "category": "儿童教育"
         }
-      ]
+      ],
+      "titleEn": "Children Ministry Teaching 2",
+      "title": "儿童教导法（下）"
     },
     {
       "code": "bl_kidteach_ch",
@@ -7496,7 +7180,7 @@
       "name": "儿童教导法（上）",
       "nameEn": "Children Ministry Teaching 1",
       "author": "Blessed.org",
-      "category": "儿童教育",
+      "category": "家庭",
       "icon": "👦",
       "source": "blessed.org",
       "isStatic": true,
@@ -7512,7 +7196,9 @@
           "title": "第一课",
           "category": "儿童教育"
         }
-      ]
+      ],
+      "titleEn": "Children Ministry Teaching 1",
+      "title": "儿童教导法（上）"
     },
     {
       "code": "bl_lam_miproph2_ch",
@@ -7520,7 +7206,7 @@
       "name": "小先知书查经（下）",
       "nameEn": "Minor Prophets Study 2",
       "author": "Blessed.org",
-      "category": "旧约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -7626,7 +7312,9 @@
           "title": "第二章",
           "category": "旧约注释"
         }
-      ]
+      ],
+      "titleEn": "Minor Prophets Study 2",
+      "title": "小先知书查经（下）"
     },
     {
       "code": "bl_luke_ch",
@@ -7634,7 +7322,7 @@
       "name": "路加福音归纳法查经",
       "nameEn": "Luke Inductive Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -7685,7 +7373,9 @@
           "title": "第二十四章",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Luke Inductive Study",
+      "title": "路加福音归纳法查经"
     },
     {
       "code": "bl_mark_ch",
@@ -7693,7 +7383,7 @@
       "name": "马可福音查经",
       "nameEn": "Mark Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -7714,7 +7404,9 @@
           "title": "第十三章",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Mark Study",
+      "title": "马可福音查经"
     },
     {
       "code": "bl_minprophet1_ch",
@@ -7722,7 +7414,7 @@
       "name": "小先知书查经（上）",
       "nameEn": "Minor Prophets Study 1",
       "author": "Blessed.org",
-      "category": "旧约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -7748,7 +7440,9 @@
           "title": "第一章",
           "category": "旧约注释"
         }
-      ]
+      ],
+      "titleEn": "Minor Prophets Study 1",
+      "title": "小先知书查经（上）"
     },
     {
       "code": "bl_murheir_ch",
@@ -7756,7 +7450,7 @@
       "name": "信徒的基业",
       "nameEn": "Heir of the Believer",
       "author": "Blessed.org",
-      "category": "圣徒装备",
+      "category": "门徒训练",
       "icon": "🛡️",
       "source": "blessed.org",
       "isStatic": true,
@@ -7887,7 +7581,9 @@
           "title": "第二十四章",
           "category": "圣徒装备"
         }
-      ]
+      ],
+      "titleEn": "Heir of the Believer",
+      "title": "信徒的基业"
     },
     {
       "code": "bl_newlife_ch",
@@ -7911,7 +7607,9 @@
           "title": "第四课",
           "category": "门徒训练"
         }
-      ]
+      ],
+      "titleEn": "New Life",
+      "title": "新生命"
     },
     {
       "code": "bl_newlive_ch",
@@ -7995,7 +7693,9 @@
           "title": "第十二课",
           "category": "门徒训练"
         }
-      ]
+      ],
+      "titleEn": "New Living",
+      "title": "新生活"
     },
     {
       "code": "bl_onetoone_ch",
@@ -8184,7 +7884,9 @@
           "title": "第九课",
           "category": "门徒训练"
         }
-      ]
+      ],
+      "titleEn": "One-to-One Discipleship",
+      "title": "一对一门徒训练"
     },
     {
       "code": "bl_otwenti_ch",
@@ -8192,7 +7894,7 @@
       "name": "旧约概览",
       "nameEn": "OT Survey",
       "author": "Blessed.org",
-      "category": "旧约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -8203,7 +7905,9 @@
           "title": "全文",
           "category": "旧约注释"
         }
-      ]
+      ],
+      "titleEn": "OT Survey",
+      "title": "旧约概览"
     },
     {
       "code": "bl_philemon_ch",
@@ -8211,7 +7915,7 @@
       "name": "腐利门书查经",
       "nameEn": "Philemon Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -8222,7 +7926,9 @@
           "title": "全文",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Philemon Study",
+      "title": "腐利门书查经"
     },
     {
       "code": "bl_philippians_ch",
@@ -8230,7 +7936,7 @@
       "name": "腓立比书查经",
       "nameEn": "Philippians Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -8266,7 +7972,9 @@
           "title": "第三章",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Philippians Study",
+      "title": "腓立比书查经"
     },
     {
       "code": "bl_preaching_ch",
@@ -8315,7 +8023,9 @@
           "title": "第四篇",
           "category": "查经"
         }
-      ]
+      ],
+      "titleEn": "Preaching",
+      "title": "讲道学"
     },
     {
       "code": "bl_psalm_ch",
@@ -8549,7 +8259,9 @@
           "title": "第九十篇",
           "category": "讲道"
         }
-      ]
+      ],
+      "titleEn": "Psalms Sermons",
+      "title": "诗篇讲道"
     },
     {
       "code": "bl_revelation_ch",
@@ -8557,7 +8269,7 @@
       "name": "启示录查经",
       "nameEn": "Revelation Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -8608,7 +8320,9 @@
           "title": "第20章",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Revelation Study",
+      "title": "启示录查经"
     },
     {
       "code": "bl_romansol_ch",
@@ -8616,7 +8330,7 @@
       "name": "罗马书大纲",
       "nameEn": "Romans Outline",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -8627,7 +8341,9 @@
           "title": "全文",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Romans Outline",
+      "title": "罗马书大纲"
     },
     {
       "code": "bl_romans_ch",
@@ -8635,7 +8351,7 @@
       "name": "罗马书查经",
       "nameEn": "Romans Study",
       "author": "Blessed.org",
-      "category": "新约注释",
+      "category": "解经",
       "icon": "📖",
       "source": "blessed.org",
       "isStatic": true,
@@ -8796,7 +8512,9 @@
           "title": "第十章",
           "category": "新约注释"
         }
-      ]
+      ],
+      "titleEn": "Romans Study",
+      "title": "罗马书查经"
     },
     {
       "code": "bl_rombee_ch",
@@ -8804,7 +8522,7 @@
       "name": "BEE罗马书",
       "nameEn": "BEE Romans",
       "author": "Blessed.org",
-      "category": "BEE课程",
+      "category": "门徒训练",
       "icon": "🐝",
       "source": "blessed.org",
       "isStatic": true,
@@ -9315,7 +9033,9 @@
           "title": "第八章",
           "category": "BEE课程"
         }
-      ]
+      ],
+      "titleEn": "BEE Romans",
+      "title": "BEE罗马书"
     },
     {
       "code": "bl_ryriedoc_ch",
@@ -9334,7 +9054,9 @@
           "title": "全文",
           "category": "神学"
         }
-      ]
+      ],
+      "titleEn": "Ryrie Theology Summary",
+      "title": "Ryrie神学摘要"
     },
     {
       "code": "bl_theology_ch",
@@ -9353,7 +9075,9 @@
           "title": "全文",
           "category": "神学"
         }
-      ]
+      ],
+      "titleEn": "Systematic Theology",
+      "title": "系统神学"
     },
     {
       "code": "bl_windevil_ch",
@@ -9397,7 +9121,9 @@
           "title": "第八篇",
           "category": "神学"
         }
-      ]
+      ],
+      "titleEn": "Winning Over the Devil",
+      "title": "胜过魔鬼"
     },
     {
       "code": "bl_yuwen_ch",
@@ -9416,7 +9142,9 @@
           "title": "全文",
           "category": "资源"
         }
-      ]
+      ],
+      "titleEn": "Four Chinese Bible Versions",
+      "title": "四个版本的中文阅读"
     }
   ]
 }
