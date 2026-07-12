@@ -1,0 +1,222 @@
+/* quiz.css — 答题模块样式 / Quiz Module Styles */
+/* Deep dark theme, consistent with courses.css CSS variables */
+
+/* ─── Quiz Input Elements ─── */
+.quiz-blank-input {
+  display: inline-block;
+  min-width: 80px;
+  padding: 4px 10px;
+  margin: 0 4px;
+  background: var(--course-surface2, #252835);
+  border: 1px solid var(--course-primary, #4a9eff);
+  border-radius: 6px;
+  color: var(--course-text, #e4e6f0);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.quiz-blank-input:focus {
+  border-color: var(--course-primary, #4a9eff);
+  box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+}
+.quiz-blank-input::placeholder {
+  color: var(--course-muted, #8b8fa3);
+  font-size: 12px;
+}
+.quiz-blank-cjk {
+  border-color: var(--course-warning, #ff9800);
+  min-width: 60px;
+}
+.quiz-blank-marked {
+  border-color: var(--course-success, #4caf50);
+}
+
+/* ─── Choice (是...不是...) Inline ─── */
+.quiz-choice-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 4px;
+}
+.quiz-choice-inline .quiz-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  padding: 2px 8px;
+  background: var(--course-surface2, #252835);
+  border-radius: 6px;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+.quiz-choice-inline .quiz-radio:hover {
+  background: var(--course-primary, #4a9eff);
+}
+.quiz-choice-inline .quiz-radio input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--course-primary, #4a9eff);
+}
+.quiz-choice-inline .quiz-radio:has(input:checked) {
+  background: var(--course-primary, #4a9eff);
+  color: #fff;
+}
+
+/* ─── Quiz Toolbar ─── */
+.quiz-toolbar {
+  margin-top: 32px;
+  padding: 20px;
+  background: var(--course-surface, #1a1d27);
+  border: 1px solid var(--course-border, #2a2d3a);
+  border-radius: 12px;
+}
+.quiz-toolbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.quiz-status {
+  flex: 1;
+  font-size: 14px;
+  color: var(--course-muted, #8b8fa3);
+  min-width: 120px;
+}
+.quiz-status.quiz-passed {
+  color: var(--course-success, #4caf50);
+  font-weight: 600;
+}
+.quiz-status.quiz-failed {
+  color: var(--course-danger, #f44336);
+  font-weight: 600;
+}
+.quiz-submit-btn {
+  padding: 10px 28px;
+  background: var(--course-primary, #4a9eff);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.quiz-submit-btn:hover:not(:disabled) {
+  background: var(--course-primary-dark, #2d7dd2);
+}
+.quiz-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.quiz-results-btn {
+  padding: 8px 20px;
+  background: var(--course-surface2, #252835);
+  color: var(--course-text, #e4e6f0);
+  border: 1px solid var(--course-border, #2a2d3a);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* ─── Results Panel ─── */
+.quiz-results-panel {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--course-border, #2a2d3a);
+}
+.quiz-results-panel h4 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  color: var(--course-text, #e4e6f0);
+}
+.quiz-result-item {
+  display: flex;
+  gap: 16px;
+  padding: 10px 14px;
+  background: var(--course-surface2, #252835);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  align-items: center;
+}
+.quiz-result-item span {
+  white-space: nowrap;
+}
+.quiz-result-date {
+  color: var(--course-muted, #8b8fa3);
+  margin-left: auto !important;
+  font-size: 12px;
+}
+.quiz-no-results {
+  color: var(--course-muted, #8b8fa3);
+  text-align: center;
+  padding: 16px;
+}
+
+/* ─── Login Prompt in Quiz ─── */
+.quiz-status a {
+  color: var(--course-primary, #4a9eff);
+  text-decoration: underline;
+}
+
+/* ─── Exam Section (below lesson) ─── */
+.quiz-exam-section {
+  margin-top: 40px;
+  padding: 24px;
+  background: var(--course-surface, #1a1d27);
+  border: 1px solid var(--course-border, #2a2d3a);
+  border-radius: 12px;
+}
+.quiz-exam-section h3 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  color: var(--course-primary, #4a9eff);
+  border-bottom: 1px solid var(--course-border, #2a2d3a);
+  padding-bottom: 8px;
+}
+.quiz-exam-question {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--course-surface2, #252835);
+  border-radius: 8px;
+}
+.quiz-exam-question .q-num {
+  font-weight: 600;
+  color: var(--course-primary, #4a9eff);
+  margin-right: 8px;
+}
+.quiz-exam-question .q-score {
+  float: right;
+  font-size: 12px;
+  color: var(--course-muted, #8b8fa3);
+  background: var(--course-bg, #0f1117);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 600px) {
+  .quiz-blank-input {
+    min-width: 60px;
+    width: 80px;
+  }
+  .quiz-choice-inline {
+    flex-wrap: wrap;
+  }
+  .quiz-toolbar-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .quiz-submit-btn, .quiz-results-btn {
+    width: 100%;
+    text-align: center;
+  }
+  .quiz-result-item {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .quiz-result-date {
+    margin-left: 0 !important;
+  }
+}

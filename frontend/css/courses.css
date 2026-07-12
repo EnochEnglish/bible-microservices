@@ -322,3 +322,21 @@ html, body {
 .domain-tab{background:none;border:1px solid var(--border,#2a2d3a);color:var(--text,#e4e6f0);opacity:0.6;padding:6px 16px;border-radius:20px;cursor:pointer;font-size:13px}
 .domain-tab.active{opacity:1;border-color:#4a9eff;background:rgba(74,158,255,0.1)}
 .domain-tab:hover{opacity:0.9}
+
+/* ─── Markdown Lesson Body ─── */
+.lesson-body{max-width:820px;margin:0 auto;padding:24px 20px 60px;line-height:1.8;font-size:16px;color:var(--course-text)}
+.lesson-body .md-h1{font-size:24px;font-weight:700;margin:28px 0 16px;padding-bottom:8px;border-bottom:2px solid var(--course-primary);color:var(--course-primary)}
+.lesson-body .md-h2{font-size:20px;font-weight:600;margin:24px 0 12px;color:var(--course-text);border-left:4px solid var(--course-primary);padding-left:12px}
+.lesson-body .md-h3{font-size:17px;font-weight:600;margin:20px 0 8px;color:var(--course-muted)}
+.lesson-body .md-p{margin:0 0 14px}
+.lesson-body .md-ul{margin:8px 0 16px;padding-left:24px;list-style:disc}
+.lesson-body .md-ul li{margin:4px 0;line-height:1.7}
+.lesson-body .md-ol-item{list-style:decimal;margin-left:24px;margin-bottom:6px}
+.lesson-body .md-quote{border-left:3px solid var(--course-primary);background:var(--course-surface2);padding:10px 16px;margin:12px 0;border-radius:0 8px 8px 0;color:var(--course-muted);font-style:italic}
+.lesson-body .md-code{background:var(--course-surface2);border-radius:8px;padding:14px 16px;margin:12px 0;overflow-x:auto;font-size:14px}
+.lesson-body .md-inline-code{background:var(--course-surface2);padding:2px 6px;border-radius:4px;font-size:14px;font-family:'Fira Code',Consolas,monospace}
+.lesson-body .md-hr{border:none;border-top:1px solid var(--course-border);margin:24px 0}
+.lesson-body .md-img{max-width:100%;height:auto;border-radius:8px;margin:12px 0;display:block;background:var(--course-surface2)}
+.lesson-body .md-link{color:var(--course-primary);text-decoration:underline;cursor:pointer}
+.lesson-body strong{color:var(--course-primary);font-weight:600}
+.lesson-body em{font-style:italic;color:var(--course-warning)}

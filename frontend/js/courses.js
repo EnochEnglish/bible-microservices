@@ -220,7 +220,7 @@ function openLesson(lessonId) {
         body.innerHTML = '<iframe src="' + escAttr(lesson.videoUrl) + '" width="100%" height="450" frameborder="0" allowfullscreen></iframe>' +
           '<div style="margin-top:16px">' + (lesson.content || '') + '</div>';
       } else {
-        body.innerHTML = lesson.content || '';
+        body.innerHTML = renderMarkdown(lesson.content || '');
       }
       showView('view-lesson');
     });
@@ -391,6 +391,49 @@ function submitGrade(gradingId) {
     .then(function(r) { return r.json(); })
     .then(function() { showGrading(); })
     .catch(function() { alert('提交失败'); });
+}
+
+// ─── Markdown Renderer (lightweight) ───
+function renderMarkdown(text) {
+  if (!text) return '';
+  var html = escHtml(text);
+  // Images: ![alt](url) -> <img>
+  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function(m, alt, url) {
+    return '<img class="md-img" src="' + url + '" alt="' + alt + '" loading="lazy">';
+  });
+  // Links: [text](url) -> <a>
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(m, txt, url) {
+    return '<a class="md-link" href="' + url + '" target="_blank">' + txt + '</a>';
+  });
+  // Code blocks
+  html = html.replace(/```([\s\S]*?)```/g, function(m, code) {
+    return '<pre class="md-code"><code>' + code.trim() + '</code></pre>';
+  });
+  // Headers
+  html = html.replace(/^###\s+(.+)$/gm, '<h3 class="md-h3">$1</h3>');
+  html = html.replace(/^##\s+(.+)$/gm, '<h2 class="md-h2">$1</h2>');
+  html = html.replace(/^#\s+(.+)$/gm, '<h1 class="md-h1">$1</h1>');
+  // Bold
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, '<code class="md-inline-code">$1</code>');
+  // Blockquote
+  html = html.replace(/^&gt;\s+(.+)$/gm, '<blockquote class="md-quote">$1</blockquote>');
+  // Unordered list items
+  html = html.replace(/^([\t ]*)[-\u2022]\s+(.+)$/gm, '$1<li>$2</li>');
+  // Wrap consecutive <li> in <ul>
+  html = html.replace(/((?:<li>[^<]*<\/li>\n?)+)/g, '<ul class="md-ul">$1</ul>');
+  // Ordered list items
+  html = html.replace(/^(\d+)[.\u3001]\s+(.+)$/gm, '<li class="md-ol-item">$2</li>');
+  // Horizontal rule
+  html = html.replace(/^(---|___)$/gm, '<hr class="md-hr">');
+  // Paragraphs
+  var blocks = html.split(/\n\n+/);
+  html = blocks.map(function(block) {
+    if (/^<(h[1-6]|ul|ol|pre|blockquote|hr|li|img)/.test(block.trim())) return block;
+    return '<p class="md-p">' + block.replace(/\n/g, '<br>') + '</p>';
+  }).join('\n');
+  return html;
 }
 
 // ─── Helpers ───

@@ -224,12 +224,24 @@ function renderBookshelf() {
   var grid = document.getElementById('bookGrid');
   var books = libState.books;
 
+  // Category mapping for SWORD modules
+  var swordCatMap = {
+    'GENERAL_BOOK': '经典',
+    'DAILY_DEVOTIONS': '灵修',
+    'ESSAYS': '其他'
+  };
+
+  // Normalize category for each book
+  books = books.map(function(b) {
+    var cat = b.category || '';
+    if (!b.isStatic && swordCatMap[cat]) cat = swordCatMap[cat];
+    b._normalizedCat = cat;
+    return b;
+  });
+
   // Filter
   if (libState.filter !== 'all') {
-    books = books.filter(function(b) {
-      if (libState.filter === 'CHINESE_BOOK') return b.isStatic;
-      return b.category === libState.filter;
-    });
+    books = books.filter(function(b) { return b._normalizedCat === libState.filter; });
   }
 
   // Search

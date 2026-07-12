@@ -1,0 +1,361 @@
+/* grading.css — 教师阅卷模块样式 / Teacher Grading Module Styles */
+
+/* ─── Grading Tabs ─── */
+.grading-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--course-border, #2a2d3a);
+  padding-bottom: 0;
+}
+.grading-tab {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--course-muted, #8b8fa3);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s, border-color 0.2s;
+}
+.grading-tab:hover {
+  color: var(--course-text, #e4e6f0);
+}
+.grading-tab.active {
+  color: var(--course-primary, #4a9eff);
+  border-bottom-color: var(--course-primary, #4a9eff);
+}
+
+/* ─── Grading Count ─── */
+.grading-count {
+  padding: 8px 16px;
+  background: var(--course-surface2, #252835);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--course-muted, #8b8fa3);
+}
+
+/* ─── Grading Card ─── */
+.grading-card {
+  background: var(--course-surface, #1a1d27);
+  border: 1px solid var(--course-border, #2a2d3a);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.grading-card-graded {
+  border-color: var(--course-success, #4caf50);
+}
+.grading-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.grading-q-num {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--course-primary, #4a9eff);
+}
+.grading-status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+.grading-status-pending {
+  background: rgba(255, 152, 0, 0.15);
+  color: var(--course-warning, #ff9800);
+}
+
+/* ─── Student Answer ─── */
+.grading-student-answer {
+  margin-bottom: 16px;
+}
+.grading-student-answer label {
+  display: block;
+  font-size: 12px;
+  color: var(--course-muted, #8b8fa3);
+  margin-bottom: 6px;
+}
+.grading-answer-text {
+  background: var(--course-surface2, #252835);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--course-text, #e4e6f0);
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-left: 3px solid var(--course-primary, #4a9eff);
+}
+
+/* ─── Score Row ─── */
+.grading-score-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.grading-score-input,
+.grading-comment-input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.grading-score-input label,
+.grading-comment-input label {
+  font-size: 12px;
+  color: var(--course-muted, #8b8fa3);
+}
+.grading-score-field {
+  width: 80px;
+  padding: 8px 10px;
+  background: var(--course-surface2, #252835);
+  border: 1px solid var(--course-border, #2a2d3a);
+  border-radius: 6px;
+  color: var(--course-text, #e4e6f0);
+  font-size: 14px;
+  outline: none;
+}
+.grading-score-field:focus {
+  border-color: var(--course-primary, #4a9eff);
+}
+.grading-comment-field {
+  width: 250px;
+  padding: 8px 10px;
+  background: var(--course-surface2, #252835);
+  border: 1px solid var(--course-border, #2a2d3a);
+  border-radius: 6px;
+  color: var(--course-text, #e4e6f0);
+  font-size: 14px;
+  outline: none;
+}
+.grading-comment-field:focus {
+  border-color: var(--course-primary, #4a9eff);
+}
+.grading-grade-btn {
+  padding: 9px 20px;
+  background: var(--course-primary, #4a9eff);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.grading-grade-btn:hover {
+  background: var(--course-primary-dark, #2d7dd2);
+}
+
+/* ─── Graded Message ─── */
+.grading-graded-msg {
+  text-align: center;
+  padding: 12px;
+  color: var(--course-success, #4caf50);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ─── Empty / Loading / Error ─── */
+.grading-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--course-muted, #8b8fa3);
+}
+.grading-empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+.grading-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--course-muted, #8b8fa3);
+}
+.grading-error {
+  text-align: center;
+  padding: 20px;
+  color: var(--course-danger, #f44336);
+}
+
+/* ─── Statistics View ─── */
+.grading-stats-input {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--course-surface, #1a1d27);
+  border-radius: 8px;
+}
+.grading-stats-input label {
+  font-size: 14px;
+  color: var(--course-muted, #8b8fa3);
+  white-space: nowrap;
+}
+.grading-stats-input-field {
+  width: 120px;
+  padding: 8px 10px;
+  background: var(--course-surface2, #252835);
+  border: 1px solid var(--course-border, #2a2d3a);
+  border-radius: 6px;
+  color: var(--course-text, #e4e6f0);
+  font-size: 14px;
+  outline: none;
+}
+.grading-stats-load-btn {
+  padding: 8px 20px;
+  background: var(--course-primary, #4a9eff);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ─── Stats Summary Cards ─── */
+.grading-stats-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--course-surface, #1a1d27);
+  border: 1px solid var(--course-border, #2a2d3a);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--course-primary, #4a9eff);
+  line-height: 1.2;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--course-muted, #8b8fa3);
+  margin-top: 4px;
+}
+
+/* ─── Score Distribution ─── */
+.grading-distribution {
+  background: var(--course-surface, #1a1d27);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+.grading-distribution h4 {
+  margin: 0 0 16px;
+  font-size: 16px;
+}
+.dist-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.dist-label {
+  width: 60px;
+  font-size: 13px;
+  color: var(--course-muted, #8b8fa3);
+  text-align: right;
+}
+.dist-bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--course-surface2, #252835);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.dist-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  transition: width 0.5s ease;
+  min-width: 30px;
+}
+
+/* ─── Student Results Table ─── */
+.grading-student-list {
+  background: var(--course-surface, #1a1d27);
+  border-radius: 12px;
+  padding: 20px;
+}
+.grading-student-list h4 {
+  margin: 0 0 16px;
+  font-size: 16px;
+}
+.grading-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.grading-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--course-surface2, #252835);
+  color: var(--course-muted, #8b8fa3);
+  font-weight: 500;
+  border-bottom: 1px solid var(--course-border, #2a2d3a);
+}
+.grading-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--course-border, #2a2d3a);
+}
+.grading-table tr:hover td {
+  background: var(--course-surface2, #252835);
+}
+.grading-table .score-cell {
+  font-weight: 600;
+  color: var(--course-primary, #4a9eff);
+}
+.grading-table .date-cell {
+  color: var(--course-muted, #8b8fa3);
+  font-size: 12px;
+}
+.grading-status-passed {
+  color: var(--course-success, #4caf50);
+  font-weight: 500;
+}
+.grading-status-failed {
+  color: var(--course-danger, #f44336);
+  font-weight: 500;
+}
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 700px) {
+  .grading-score-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .grading-comment-field {
+    width: 100%;
+  }
+  .grading-grade-btn {
+    width: 100%;
+  }
+  .grading-stats-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grading-table {
+    font-size: 12px;
+  }
+  .grading-table th,
+  .grading-table td {
+    padding: 6px 8px;
+  }
+}
