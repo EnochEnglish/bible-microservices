@@ -75,6 +75,26 @@ h.createServer(function(rq, rs) {
     }
   }
 
+  // Zvec bridge — vector database endpoints
+  if (url.startsWith('/zvec/')) {
+    if (rq.method === 'POST' || rq.method === 'PUT') {
+      var zbody = [];
+      rq.on('data', function(c) { zbody.push(c); });
+      rq.on('end', function() {
+        try {
+          var zjson = JSON.parse(Buffer.concat(zbody).toString());
+          require('./zvec-bridge').handleZvec(url, rq.method, zjson, rs);
+        } catch(e) {
+          rs.writeHead(400, {'Content-Type':'application/json'});
+          rs.end(JSON.stringify({error: 'Invalid JSON: ' + e.message}));
+        }
+      });
+    } else {
+      require('./zvec-bridge').handleZvec(url, rq.method, {}, rs);
+    }
+    return;
+  }
+
   // Proxy ALL /api/* requests to monolith (:8080)
   if (url.startsWith('/api/')) {
     proxy(MONOLITH, rq, rs); return;
