@@ -93,3 +93,5 @@ Thumbs.db
 
 # Logs
 *.log
+
+inject-script.js

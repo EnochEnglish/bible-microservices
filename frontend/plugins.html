@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>插件管理 / Plugin Management</title>
+<link rel="stylesheet" href="css/style.css?v=20260713a">
+<style>
+body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 20px; }
+.plugin-admin { max-width: 900px; margin: 0 auto; }
+.plugin-admin h1 { font-size: 1.4rem; margin-bottom: 20px; }
+.plugin-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+.plugin-icon { font-size: 1.8rem; flex-shrink: 0; }
+.plugin-info { flex: 1; }
+.plugin-info h3 { margin: 0 0 4px 0; font-size: 1rem; }
+.plugin-info p { margin: 0; font-size: 0.85rem; color: var(--text2); }
+.plugin-info .meta { font-size: 0.75rem; color: var(--text2); margin-top: 4px; }
+.plugin-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg3); color: var(--text); cursor: pointer; font-size: 0.85rem; }
+.btn:hover { background: var(--highlight); }
+.btn-danger { border-color: #e74c3c; color: #e74c3c; }
+.btn-primary { background: var(--accent, #4a9); color: #fff; border-color: transparent; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; }
+.badge-active { background: #2ecc71; color: #fff; }
+.badge-inactive { background: #95a5a6; color: #fff; }
+.add-form { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+.add-form h2 { font-size: 1.1rem; margin: 0 0 12px 0; }
+.form-row { display: flex; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.form-field { flex: 1; min-width: 150px; }
+.form-field label { display: block; font-size: 0.8rem; margin-bottom: 2px; color: var(--text2); }
+.form-field input, .form-field select { width: 100%; padding: 6px 8px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; font-size: 0.85rem; box-sizing: border-box; }
+.back-link { margin-bottom: 16px; }
+.back-link a { color: var(--text2); text-decoration: none; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="plugin-admin">
+  <div class="back-link"><a href="settings.html">← 系统设置</a></div>
+  <h1>🔌 插件管理 / Plugin Management</h1>
+
+  <div class="add-form" id="addForm" style="display:none;">
+    <h2>新增插件 / New Plugin</h2>
+    <div class="form-row">
+      <div class="form-field"><label>编码 Code *</label><input id="f_code" placeholder="my-plugin"></div>
+      <div class="form-field"><label>中文名 *</label><input id="f_nameZh" placeholder="我的插件"></div>
+      <div class="form-field"><label>英文名</label><input id="f_nameEn" placeholder="My Plugin"></div>
+      <div class="form-field"><label>图标 Emoji</label><input id="f_icon" placeholder="🔌" maxlength="4"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>入口 URL *</label><input id="f_entryUrl" placeholder="plugins/my-plugin/index.html"></div>
+      <div class="form-field"><label>API 前缀</label><input id="f_apiPrefix" placeholder="/api/v1/my-plugin"></div>
+      <div class="form-field"><label>排序</label><input id="f_sortOrder" type="number" value="0"></div>
+      <div class="form-field"><label>所需角色</label><select id="f_requiredRole"><option value="USER">USER</option><option value="TEACHER">TEACHER</option><option value="ADMIN">ADMIN</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-field"><label>描述</label><input id="f_description" placeholder="插件描述"></div>
+      <div class="form-field" style="flex:0; align-self:flex-end;"><label><input type="checkbox" id="f_openInNewTab"> 新标签打开</label></div>
+    </div>
+    <div style="margin-top:12px;">
+      <button class="btn btn-primary" onclick="createPlugin()">创建</button>
+      <button class="btn" onclick="toggleAddForm()">取消</button>
+    </div>
+  </div>
+
+  <div style="margin-bottom:16px;">
+    <button class="btn btn-primary" id="addBtn" onclick="toggleAddForm()">+ 新增插件</button>
+  </div>
+
+  <div id="pluginList"></div>
+</div>
+
+<script>
+var token = localStorage.getItem('bible_token') || localStorage.getItem('jwt_token');
+var headers = { 'Content-Type': 'application/json' };
+if (token) headers['Authorization'] = 'Bearer ' + token;
+
+function api(path, method, body) {
+  return fetch('/api/v1/plugins' + path, { method: method || 'GET', headers: headers, body: body ? JSON.stringify(body) : undefined })
+    .then(function(r) { return r.json(); });
+}
+
+function loadPlugins() {
+  api('/all').then(function(plugins) {
+    var list = document.getElementById('pluginList');
+    if (!plugins || plugins.length === 0) {
+      list.innerHTML = '<p style="color:var(--text2);">暂无插件</p>';
+      return;
+    }
+    list.innerHTML = plugins.map(function(p) {
+      var badge = p.isActive ? '<span class="badge badge-active">启用</span>' : '<span class="badge badge-inactive">禁用</span>';
+      return '<div class="plugin-card">' +
+        '<div class="plugin-icon">' + (p.icon || '🔌') + '</div>' +
+        '<div class="plugin-info">' +
+          '<h3>' + esc(p.nameZh) + ' / ' + esc(p.nameEn || '') + ' ' + badge + '</h3>' +
+          '<p>' + esc(p.description || '') + '</p>' +
+          '<div class="meta">code: ' + esc(p.code) + ' | url: ' + esc(p.entryUrl) + ' | role: ' + esc(p.requiredRole) + ' | sort: ' + p.sortOrder + '</div>' +
+        '</div>' +
+        '<div class="plugin-actions">' +
+          '<button class="btn" onclick="togglePlugin(' + p.id + ')">' + (p.isActive ? '禁用' : '启用') + '</button>' +
+          '<button class="btn btn-danger" onclick="deletePlugin(' + p.id + ')">删除</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }).catch(function(e) { document.getElementById('pluginList').innerHTML = '<p>加载失败: ' + esc(e.message) + '</p>'; });
+}
+
+function toggleAddForm() {
+  var f = document.getElementById('addForm');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+function createPlugin() {
+  var body = {
+    code: document.getElementById('f_code').value.trim(),
+    nameZh: document.getElementById('f_nameZh').value.trim(),
+    nameEn: document.getElementById('f_nameEn').value.trim() || null,
+    icon: document.getElementById('f_icon').value.trim() || null,
+    description: document.getElementById('f_description').value.trim() || null,
+    entryUrl: document.getElementById('f_entryUrl').value.trim(),
+    apiPrefix: document.getElementById('f_apiPrefix').value.trim() || null,
+    sortOrder: parseInt(document.getElementById('f_sortOrder').value) || 0,
+    requiredRole: document.getElementById('f_requiredRole').value,
+    openInNewTab: document.getElementById('f_openInNewTab').checked
+  };
+  if (!body.code || !body.nameZh || !body.entryUrl) { alert('编码、中文名、入口URL为必填项'); return; }
+  api('', 'POST', body).then(function(r) {
+    if (r.ok) { toggleAddForm(); loadPlugins(); } else { alert(r.error || '创建失败'); }
+  });
+}
+
+function togglePlugin(id) { api('/' + id + '/toggle', 'PUT').then(function() { loadPlugins(); }); }
+function deletePlugin(id) { if (confirm('确认删除？')) api('/' + id, 'DELETE').then(function() { loadPlugins(); }); }
+
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+loadPlugins();
+</script>
+</body>
+</html>

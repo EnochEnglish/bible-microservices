@@ -27,8 +27,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
  */
 @SpringBootApplication
 @EnableCaching
-@EntityScan(basePackages = ["com.bible.monolith.model"])
-@EnableJpaRepositories(basePackages = ["com.bible.monolith.repository"])
+@EntityScan(basePackages = ["com.bible.monolith.model", "com.bible.monolith.plugin"])
+@EnableJpaRepositories(basePackages = ["com.bible.monolith.repository", "com.bible.monolith.plugin"])
 class BibleMonolithApplication {
     // CORS configured in config/CorsConfig.kt
     // Security configured in config/SecurityConfig.kt
