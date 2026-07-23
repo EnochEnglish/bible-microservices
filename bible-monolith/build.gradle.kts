@@ -59,6 +59,9 @@ dependencies {
     implementation("org.apache.commons:commons-compress:1.21")
     implementation("org.slf4j:slf4j-api:2.0.9")
 
+    // ===== Spring Security Crypto (BCrypt) =====
+    implementation("org.springframework.security:spring-security-crypto:6.2.3")
+
     // ===== Caffeine Cache =====
     implementation("com.github.ben-manes.caffeine:caffeine")
 

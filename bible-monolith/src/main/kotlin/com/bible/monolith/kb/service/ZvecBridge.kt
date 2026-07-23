@@ -232,4 +232,17 @@ class ZvecBridge(
             }
         }
     }
+
+    fun dropCollection(collection: String) {
+        val body = objectMapper.writeValueAsString(mapOf("collection" to collection))
+        val req = Request.Builder()
+            .url("$nodeServiceUrl/zvec/drop")
+            .post(body.toRequestBody(json))
+            .build()
+        client.newCall(req).execute().use { resp ->
+            if (!resp.isSuccessful) {
+                log.warn("Drop {} failed: {}", collection, resp.code)
+            }
+        }
+    }
 }

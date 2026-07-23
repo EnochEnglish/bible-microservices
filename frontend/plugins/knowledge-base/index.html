@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知识库 / Knowledge Base</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%; margin: 0; padding: 0;
+    }
+    body {
+      background: var(--bg, #0f1117);
+      color: var(--text, #e4e6f0);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+    .kb-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+    .kb-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0; border-bottom: 1px solid var(--border, #333); margin-bottom: 20px;
+    }
+    .kb-header h1 { font-size: 1.4rem; }
+    .kb-header a { color: var(--accent, #6b8afd); text-decoration: none; font-size: 0.9rem; }
+
+    .kb-search-box { display: flex; gap: 8px; margin-bottom: 12px; }
+    .kb-search-box input {
+      flex: 1; padding: 12px 16px; font-size: 1rem;
+      background: var(--bg2, #1a1d29); color: var(--text, #e4e6f0);
+      border: 1px solid var(--border, #333); border-radius: 8px; outline: none;
+    }
+    .kb-search-box input:focus { border-color: var(--accent, #6b8afd); }
+    .kb-search-box button {
+      padding: 12px 24px; font-size: 0.95rem; cursor: pointer;
+      background: var(--accent, #6b8afd); color: #fff; border: none; border-radius: 8px;
+    }
+    .kb-search-box button:hover { opacity: 0.9; }
+
+    .kb-filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.85rem; }
+    .kb-filters label { display: flex; align-items: center; gap: 4px; color: var(--muted, #888); }
+    .kb-filters select {
+      padding: 4px 8px; font-size: 0.85rem;
+      background: var(--bg2, #1a1d29); color: var(--text, #e4e6f0);
+      border: 1px solid var(--border, #333); border-radius: 4px;
+    }
+
+    .kb-results { display: flex; flex-direction: column; gap: 12px; }
+    .kb-result-card {
+      padding: 16px; background: var(--bg2, #1a1d29);
+      border: 1px solid var(--border, #333); border-radius: 8px;
+      transition: border-color 0.2s;
+    }
+    .kb-result-card:hover { border-color: var(--accent, #6b8afd); }
+    .kb-result-card.clickable { cursor: pointer; }
+
+    .kb-result-meta {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      font-size: 0.75rem; color: var(--muted, #888); margin-bottom: 8px;
+    }
+    .kb-result-meta .badge {
+      padding: 2px 8px; border-radius: 10px; background: var(--bg3, #252836);
+    }
+    .kb-result-meta .score { color: var(--accent-light, #8aa6ff); font-weight: 600; }
+    .kb-result-meta .model-tag { color: var(--accent, #6b8afd); font-style: italic; }
+
+    .kb-result-title {
+      font-size: 0.95rem; font-weight: 600; margin-bottom: 6px;
+      color: var(--accent, #6b8afd);
+    }
+    .kb-result-title a { color: inherit; text-decoration: none; }
+    .kb-result-title a:hover { text-decoration: underline; }
+
+    .kb-result-content {
+      font-size: 0.88rem; line-height: 1.7; color: var(--text, #e4e6f0);
+      max-height: 140px; overflow: hidden; position: relative;
+    }
+    .kb-result-content::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 30px;
+      background: linear-gradient(transparent, var(--bg2, #1a1d29));
+    }
+    .kb-result-content.expanded { max-height: none; }
+    .kb-result-content.expanded::after { display: none; }
+
+    .kb-result-content mark {
+      background: rgba(255, 200, 0, 0.3); color: #ffd700; padding: 0 2px; border-radius: 2px;
+    }
+
+    .kb-result-content .kb-ref {
+      color: var(--muted, #888); font-size: 0.8em; font-style: italic;
+    }
+
+    .kb-result-toggle {
+      margin-top: 6px; font-size: 0.75rem; color: var(--accent, #6b8afd);
+      cursor: pointer; user-select: none; display: inline-block;
+    }
+
+    .kb-result-link {
+      margin-top: 8px; font-size: 0.8rem;
+    }
+    .kb-result-link a {
+      color: var(--accent, #6b8afd); text-decoration: none;
+      padding: 4px 10px; border: 1px solid var(--border, #333); border-radius: 4px;
+      display: inline-block;
+    }
+    .kb-result-link a:hover { background: var(--bg3, #252836); }
+
+    .kb-stats {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      padding: 12px 16px; background: var(--bg2, #1a1d29);
+      border: 1px solid var(--border, #333); border-radius: 8px;
+      margin-bottom: 16px; font-size: 0.8rem; color: var(--muted, #888);
+    }
+    .kb-stats .stat-item { display: flex; gap: 4px; }
+    .kb-stats .stat-value { color: var(--text, #e4e6f0); font-weight: 600; }
+
+    .kb-loading { text-align: center; padding: 40px; color: var(--muted, #888); }
+    .kb-error { text-align: center; padding: 20px; color: #f56565; }
+    .kb-empty { text-align: center; padding: 40px; color: var(--muted, #888); }
+  </style>
+</head>
+<body>
+  <div class="kb-container">
+    <div class="kb-header">
+      <h1>&#128218; 知识库 / Knowledge Base</h1>
+      <a href="/">&larr; 返回 / Back</a>
+    </div>
+
+    <div class="kb-stats" id="kbStats"><span class="stat-item">加载中...</span></div>
+
+    <div class="kb-search-box">
+      <input type="text" id="kbQuery" placeholder="搜索经文、注释、词典、书籍..." autocomplete="off">
+      <button onclick="kbSearch()">搜索</button>
+    </div>
+
+    <div class="kb-filters">
+      <label>来源:
+        <select id="kbSource">
+          <option value="">全部</option>
+          <option value="bible">圣经</option>
+          <option value="dictionary">词典</option>
+          <option value="commentary">注释</option>
+          <option value="devotion">灵修</option>
+          <option value="genbook">通用书</option>
+          <option value="library">图书馆</option>
+        </select>
+      </label>
+      <label>模型:
+        <select id="kbModel">
+          <option value="">默认</option>
+          <option value="bgesmall_512">BGE-small (512d)</option>
+          <option value="tfidf_256">TF-IDF (256d)</option>
+          <option value="bgebase_768">BGE-base (768d)</option>
+        </select>
+      </label>
+      <label>模式:
+        <select id="kbMode">
+          <option value="hybrid">混合搜索</option>
+          <option value="vector">语义搜索</option>
+          <option value="keyword">关键词搜索</option>
+        </select>
+      </label>
+      <label>数量:
+        <select id="kbTopK">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="kb-results" id="kbResults">
+      <div class="kb-empty">输入关键词开始搜索</div>
+    </div>
+  </div>
+
+  <script>
+    var API = '/api/v1/kb';
+
+    // Load stats
+    (function loadStats() {
+      fetch(API + '/stats').then(function(r) { return r.json(); }).then(function(data) {
+        var el = document.getElementById('kbStats');
+        el.innerHTML = '';
+        var sources = data.sources || {};
+        Object.keys(sources).forEach(function(key) {
+          var s = sources[key];
+          var label = {bible:'圣经',dictionary:'词典',commentary:'注释',devotion:'灵修',genbook:'通用书',library:'图书馆'}[key] || key;
+          var item = document.createElement('span');
+          item.className = 'stat-item';
+          item.innerHTML = label + ': <span class="stat-value">' + (s.total || 0) + '</span>';
+          el.appendChild(item);
+        });
+        var zvecEl = document.createElement('span');
+        zvecEl.className = 'stat-item';
+        zvecEl.innerHTML = 'Zvec: <span class="stat-value">' + (data.zvecAvailable ? '&#9989;' : '&#10060;') + '</span>';
+        el.appendChild(zvecEl);
+      }).catch(function() {
+        document.getElementById('kbStats').innerHTML = '<span class="stat-item" style="color:#f56565">统计加载失败</span>';
+      });
+    })();
+
+    document.getElementById('kbQuery').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') kbSearch();
+    });
+
+    function kbSearch() {
+      var query = document.getElementById('kbQuery').value.trim();
+      if (!query) return;
+      var source = document.getElementById('kbSource').value;
+      var mode = document.getElementById('kbMode').value;
+      var model = document.getElementById('kbModel').value;
+      var topK = parseInt(document.getElementById('kbTopK').value);
+
+      var body = { query: query, topK: topK, mode: mode };
+      if (source) body.sourceTypes = [source];
+      if (model) body.modelId = model;
+
+      var resultsEl = document.getElementById('kbResults');
+      resultsEl.innerHTML = '<div class="kb-loading">搜索中...</div>';
+
+      fetch(API + '/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        renderResults(data, query);
+      }).catch(function(e) {
+        resultsEl.innerHTML = '<div class="kb-error">搜索失败: ' + e.message + '</div>';
+      });
+    }
+
+    // Strip SWORD/OSIS XML tags, convert some to HTML equivalents
+    function cleanSwordTags(text) {
+      if (!text) return '';
+      return text
+        .replace(/<lb\s*\/?>/g, '<br>')
+        .replace(/<p\s*\/?>/g, '</p><p>')
+        .replace(/<hi\s+type="bold"[^>]*>/g, '<b>').replace(/<\/hi>/g, '</b>')
+        .replace(/<hi\s+type="italic"[^>]*>/g, '<i>')
+        .replace(/<hi\s+[^>]*>/g, '<b>')
+        .replace(/<\/hi>/g, '</b>')
+        .replace(/<ref[^>]*>/g, '<span class="kb-ref">').replace(/<\/ref>/g, '</span>')
+        .replace(/<note[^>]*>[\s\S]*?<\/note>/g, '')
+        .replace(/<[^>]+>/g, '')  // strip all remaining XML tags
+        .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')  // un-escape entities that were in original
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');  // re-escape for safe HTML
+    }
+
+    function highlightKeywords(text, query) {
+      if (!text || !query) return text || '';
+      // Clean SWORD/OSIS tags first
+      text = cleanSwordTags(text);
+      // Split query into terms (for Chinese, each char; for words, split by space)
+      var terms = [];
+      query.split(/\s+/).forEach(function(q) {
+        if (q.length >= 2) terms.push(q);
+        else if (q.length === 1 && /[\u4e00-\u9fff]/.test(q)) terms.push(q);
+      });
+      if (terms.length === 0) return text;
+      
+      var result = text;
+      terms.forEach(function(term) {
+        var escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        var regex = new RegExp(escaped, 'gi');
+        result = result.replace(regex, function(m) {
+          return '<mark>' + m + '</mark>';
+        });
+      });
+      return result;
+    }
+
+    function buildResultLink(r) {
+      // Build clickable link based on sourceType
+      if (r.sourceType === 'bible' && r.book && r.chapter) {
+        // Link to Bible reading page
+        var trans = r.translation || 'cuv_gb';
+        var ref = r.book + '/' + r.chapter;
+        if (r.verseStart && r.verseEnd && r.verseStart !== r.verseEnd) {
+          // Just link to chapter, verse highlight not supported in main app
+        }
+        var label = r.displayRef || (r.bookName + ' ' + r.chapter);
+        return '<div class="kb-result-link"><a href="/?translation=' + encodeURIComponent(trans) + '&book=' + encodeURIComponent(r.book) + '&chapter=' + r.chapter + '" target="_blank">&#128279; 打开经文 ' + escHtml(label) + '</a></div>';
+      }
+      if (r.sourceType === 'library' && r.sourceRef) {
+        // Link to library book reader
+        var parts = r.sourceRef.split('/');
+        var bookId = parts[0] || '';
+        var chapterId = parts[1] || '';
+        return '<div class="kb-result-link"><a href="/library/book/' + encodeURIComponent(bookId) + '/' + encodeURIComponent(chapterId) + '" target="_blank">&#128279; 打开图书 ' + escHtml(r.title) + '</a></div>';
+      }
+      if (r.sourceType === 'dictionary' && r.sourceRef) {
+        // sourceRef format: "dictionary/{module}/{key}"
+        var dparts = r.sourceRef.split('/');
+        var mod = '', key = '';
+        if (dparts.length >= 3) { mod = dparts[1]; key = dparts[2]; }
+        else if (dparts.length >= 2) { mod = dparts[0]; key = dparts[1]; }
+        mod = mod || r.module || '';
+        return '<div class="kb-result-link"><a href="/dictionary.html?dict=' + encodeURIComponent(mod) + '&key=' + encodeURIComponent(key) + '" target="_blank">&#128279; 查看词典条目</a></div>';
+      }
+      if (r.sourceRef) {
+        return '<div class="kb-result-link"><a href="/api/v1/kb/document?sourceRef=' + encodeURIComponent(r.sourceRef) + '" target="_blank">&#128279; 查看原文</a></div>';
+      }
+      return '';
+    }
+
+    function escHtml(s) {
+      if (!s) return '';
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function renderResults(data, query) {
+      var el = document.getElementById('kbResults');
+      var results = data.results || [];
+      var modelId = data.modelId || '';
+
+      if (!Array.isArray(results) || results.length === 0) {
+        el.innerHTML = '<div class="kb-empty">未找到 "' + escHtml(query) + '" 的相关结果</div>';
+        return;
+      }
+
+      el.innerHTML = '';
+      results.forEach(function(r, idx) {
+        var card = document.createElement('div');
+        card.className = 'kb-result-card';
+
+        // Meta line
+        var meta = document.createElement('div');
+        meta.className = 'kb-result-meta';
+
+        var sourceLabel = {bible:'圣经',dictionary:'词典',commentary:'注释',devotion:'灵修',genbook:'通用书',library:'图书馆'}[r.sourceType] || r.sourceType || '';
+        // Dictionary Chinese name lookup
+        var DICT_ZH = {'2BabDict':'巴比伦双城记符号词典','AbbottSmith':'阿博特-史密斯希腊语新约词典','AbbottSmithStrongs':'阿博特-史密斯希腊语词典(含Strong)','AmTract':'美国传道会圣经词典','BDBGlosses_Strongs':'BDB词汇表(含Strong)','Cawdrey':'考德雷字母表(1604)','CBC':'简明圣经百科','ChisStrongsGreek':'CBOL希腊语Strong词典(简体)','ChitStrongsGreek':'CBOL希腊语Strong词典(繁体)','ChisStrongsHebrew':'CBOL希伯来语Strong词典(简体)','ChitStrongsHebrew':'CBOL希伯来语Strong词典(繁体)','Dodson':'道德森希腊语-英语词典','Easton':'伊斯顿圣经词典','FVDPVietAnh':'FVDP越英词典','GreekHebrew':'希腊语-希伯来语词典(七十士译本)','HebrewGreek':'希伯来语-希腊语词典(七十士译本)','Hitchcock':'海奇科克圣经人名词典','ISBE':'国际标准圣经百科全书','MLStrong':'中级希腊语-英语词典(含Strong)','Nave':'Nave主题圣经','OSHM':'开放经文希伯来语形态分析','Packard':'帕卡德形态分析代码','Robinson':'罗宾逊形态分析代码','SAOA':'圣经动物字母集','Smith':'史密斯圣经词典','StrongsGreek':'Strong希腊语圣经词典','StrongsHebrew':'Strong希伯来语圣经词典','TCR':'汤普森连锁主题','Torrey':'托雷新主题文本','Webster1828':'韦氏词典(1828版)','Webster1806':'韦氏简明词典(1806版)','Webster1913':'韦氏修订版词典(1913版)','ZhEnglish':'英汉词典','ZhHanzi':'汉英词典','ZhPinyin':'拼音汉英词典'};
+        var modZh = DICT_ZH[r.module] || '';
+        if (sourceLabel) {
+          var badge = document.createElement('span');
+          badge.className = 'badge';
+          badge.textContent = sourceLabel;
+          meta.appendChild(badge);
+        }
+        if (r.translation) { var t = document.createElement('span'); t.className = 'badge'; t.textContent = r.translation; meta.appendChild(t); }
+        if (r.moduleName) { var m = document.createElement('span'); m.className = 'badge'; m.textContent = modZh ? modZh + ' / ' + r.moduleName : r.moduleName; meta.appendChild(m); }
+        if (r.score !== undefined) {
+          var sc = document.createElement('span');
+          sc.className = 'score';
+          sc.textContent = 'Score: ' + (r.score * 100).toFixed(1) + '%';
+          meta.appendChild(sc);
+        }
+        if (modelId) {
+          var mt = document.createElement('span');
+          mt.className = 'model-tag';
+          mt.textContent = modelId;
+          meta.appendChild(mt);
+        }
+        card.appendChild(meta);
+
+        // Title (clickable for bible)
+        var titleEl = document.createElement('div');
+        titleEl.className = 'kb-result-title';
+        if (r.sourceType === 'bible' && r.book && r.chapter) {
+          var trans = r.translation || 'cuv_gb';
+          titleEl.innerHTML = '<a href="/?translation=' + encodeURIComponent(trans) + '&book=' + encodeURIComponent(r.book) + '&chapter=' + r.chapter + '" target="_blank">' + escHtml(r.displayRef || r.title) + '</a>';
+        } else {
+          titleEl.textContent = r.displayRef || r.title || '';
+        }
+        card.appendChild(titleEl);
+
+        // Content with keyword highlight
+        var content = document.createElement('div');
+        content.className = 'kb-result-content';
+        var rawText = r.snippet || r.content || r.text || '';
+        content.innerHTML = highlightKeywords(rawText, query);
+        card.appendChild(content);
+
+        // Expand toggle for long content
+        if (rawText.length > 140) {
+          var toggle = document.createElement('div');
+          toggle.className = 'kb-result-toggle';
+          toggle.textContent = '展开全文 ▼';
+          toggle.onclick = function() {
+            if (content.classList.contains('expanded')) {
+              content.classList.remove('expanded');
+              toggle.textContent = '展开全文 ▼';
+            } else {
+              content.classList.add('expanded');
+              toggle.textContent = '收起 ▲';
+            }
+          };
+          card.appendChild(toggle);
+        }
+
+        // Link to source page
+        var linkHtml = buildResultLink(r);
+        if (linkHtml) {
+          var linkDiv = document.createElement('div');
+          linkDiv.innerHTML = linkHtml;
+          card.appendChild(linkDiv.firstElementChild);
+        }
+
+        el.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>

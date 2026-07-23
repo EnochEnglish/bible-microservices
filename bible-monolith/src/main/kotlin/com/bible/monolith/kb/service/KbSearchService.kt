@@ -60,7 +60,8 @@ class KbSearchService(
         val verseEnd: Int?,
         val bookCode: String?,
         val category: String?,
-        val language: String?
+        val language: String?,
+        val sourceRef: String? = null    // e.g. "bible/cuv_gb/jhn/7/51-53"
     )
 
     data class SearchResponse(
@@ -96,7 +97,7 @@ class KbSearchService(
         log.debug("  Keyword channel: {} results", keywordResults.size)
 
         // 4. Fuse results
-        val fused = fuseResults(refResults, vectorResults, keywordResults, req.topK)
+        val fused = fuseResults(refResults, vectorResults, keywordResults, req.topK, req.mode)
 
         val tookMs = System.currentTimeMillis() - start
         log.info("KB search complete: {} results in {}ms", fused.size, tookMs)
@@ -148,9 +149,37 @@ class KbSearchService(
                 val zvecResults = zvecBridge.search(collection, queryVec, req.topK * 2, filters)
                 for (r in zvecResults) {
                     val meta = r.metadata
+                    val sourceRef = meta["source_ref"] as? String ?: ""
+                    
+                    // Fetch content from H2 for snippet
+                    val contentText = try {
+                        if (sourceRef.isNotEmpty()) {
+                            val sourceTypeDb = meta["source_type"] as? String ?: sourceType
+                            val chunkIdx = (meta["chunk_index"] as? Number)?.toInt() ?: 0
+                            val doc = docRepo.findFirstBySourceTypeAndSourceRefAndChunkIndex(sourceTypeDb, sourceRef, chunkIdx)
+                            doc?.content ?: doc?.chunkText ?: ""
+                        } else ""
+                    } catch (e: Exception) { "" }
+                    
+                    val snippetText = if (contentText.isNotEmpty()) contentText.take(300) else {
+                        // Fallback to metadata-based snippet
+                        val snippetParts = mutableListOf<String>()
+                        when (sourceType) {
+                            "bible" -> {
+                                meta["display_ref"]?.let { snippetParts.add(it as String) }
+                                meta["translation"]?.let { snippetParts.add(it as String) }
+                            }
+                            else -> {
+                                meta["display_ref"]?.let { snippetParts.add(it as String) }
+                                meta["title"]?.let { snippetParts.add(it as String) }
+                            }
+                        }
+                        if (snippetParts.isNotEmpty()) snippetParts.joinToString(" — ") else (meta["title"] as? String ?: "")
+                    }
+                    
                     allResults.add(SearchResult(
                         title = meta["title"] as? String ?: "",
-                        snippet = (meta["title"] as? String ?: "").take(200),
+                        snippet = snippetText,
                         score = r.score,
                         sourceType = meta["source_type"] as? String ?: sourceType,
                         displayRef = meta["display_ref"] as? String,
@@ -164,7 +193,8 @@ class KbSearchService(
                         verseEnd = (meta["verse_end"] as? Number)?.toInt(),
                         bookCode = meta["book_code"] as? String,
                         category = meta["category"] as? String,
-                        language = meta["language"] as? String
+                        language = meta["language"] as? String,
+                        sourceRef = sourceRef
                     ))
                 }
             } catch (e: Exception) {
@@ -177,8 +207,12 @@ class KbSearchService(
 
     // ─── Keyword search (Lucene) ───
 
-    /** Keyword search via Lucene */
+    /** Keyword search via Lucene (Bible only) */
     private fun keywordSearch(req: SearchRequest): List<SearchResult> {
+        // Skip if sourceTypes doesn't include bible
+        val types = req.sourceTypes ?: setOf("bible", "commentary", "dictionary", "devotion", "genbook", "library")
+        if ("bible" !in types) return emptyList()
+
         return try {
             val transCode = req.translation ?: "cuv_gb"
             val luceneResult = luceneSearch.search(req.query, transCode, 0, req.topK)
@@ -208,7 +242,8 @@ class KbSearchService(
                     verseEnd = verse,
                     bookCode = null,
                     category = null,
-                    language = if (transCode.startsWith("chi") || transCode == "cuv_gb") "zh" else "en"
+                    language = if (transCode.startsWith("chi") || transCode == "cuv_gb") "zh" else "en",
+                    sourceRef = "bible/$transCode/$bookId/$chapter/$verse"
                 )
             }
         } catch (e: Exception) {
@@ -260,7 +295,8 @@ class KbSearchService(
             verseEnd = verseEnd,
             bookCode = null,
             category = null,
-            language = if (transCode.startsWith("chi") || transCode == "cuv_gb") "zh" else "en"
+            language = if (transCode.startsWith("chi") || transCode == "cuv_gb") "zh" else "en",
+            sourceRef = "bible/${trans.code}/${book.bookId}/$chapter/$verseStart-$verseEnd"
         ))
     }
 
@@ -270,30 +306,33 @@ class KbSearchService(
         metadata: List<SearchResult>,
         vector: List<SearchResult>,
         keyword: List<SearchResult>,
-        topK: Int
+        topK: Int,
+        mode: String = "hybrid"
     ): List<SearchResult> {
         // Weighted score map (by title for dedup)
         val scoreMap = mutableMapOf<String, Float>()
         val resultMap = mutableMapOf<String, SearchResult>()
 
-        // Metadata: weight 0.2
+        // Weights based on search mode
+        val (metaW, vecW, kwW) = when (mode) {
+            "vector" -> Triple(0f, 1.0f, 0f)
+            "keyword" -> Triple(0f, 0f, 1.0f)
+            else -> Triple(0.2f, 0.5f, 0.3f)
+        }
+
         for (r in metadata) {
             val key = r.title
-            scoreMap[key] = (scoreMap[key] ?: 0f) + r.score * 0.2f
+            scoreMap[key] = (scoreMap[key] ?: 0f) + r.score * metaW
             resultMap[key] = r
         }
-
-        // Vector: weight 0.5
         for (r in vector) {
             val key = r.title
-            scoreMap[key] = (scoreMap[key] ?: 0f) + r.score * 0.5f
+            scoreMap[key] = (scoreMap[key] ?: 0f) + r.score * vecW
             if (key !in resultMap) resultMap[key] = r
         }
-
-        // Keyword: weight 0.3
         for (r in keyword) {
             val key = r.title
-            scoreMap[key] = (scoreMap[key] ?: 0f) + r.score * 0.3f
+            scoreMap[key] = (scoreMap[key] ?: 0f) + r.score * kwW
             if (key !in resultMap) resultMap[key] = r
         }
 

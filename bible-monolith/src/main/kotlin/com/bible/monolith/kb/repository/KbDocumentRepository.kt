@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param
 
 interface KbDocumentRepository : JpaRepository<KbDocument, Long> {
 
-    fun findBySourceTypeAndSourceRefAndChunkIndex(
+    fun findFirstBySourceTypeAndSourceRefAndChunkIndex(
         sourceType: String, sourceRef: String, chunkIndex: Int
     ): KbDocument?
 

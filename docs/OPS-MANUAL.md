@@ -1,6 +1,6 @@
-# Bible Microservices — 运维人员手册
+# Bible Monolith — 运维人员手册
 
-> 版本：v1.0 | 更新日期：2026-07-23 | 适用版本：v=20260722c
+> 版本：v2.0 | 更新日期：2026-07-23
 
 ---
 
@@ -8,20 +8,20 @@
 
 1. [系统概述](#1-系统概述)
 2. [环境要求](#2-环境要求)
-3. [部署架构](#3-部署架构)
-4. [安装与初始化](#4-安装与初始化)
-5. [服务管理](#5-服务管理)
-6. [数据库管理](#6-数据库管理)
-7. [SWORD 模块管理](#7-sword-模块管理)
-8. [知识库索引管理](#8-知识库索引管理)
-9. [nginx 配置](#9-nginx-配置)
-10. [备份与恢复](#10-备份与恢复)
-11. [监控与告警](#11-监控与告警)
-12. [日志管理](#12-日志管理)
-13. [故障排查](#13-故障排查)
-14. [常见运维任务](#14-常见运维任务)
-15. [安全注意事项](#15-安全注意事项)
-16. [服务器部署清单](#16-服务器部署清单)
+3. [环境配置体系](#3-环境配置体系)
+4. [环境变量设置](#4-环境变量设置)
+5. [安装与部署](#5-安装与部署)
+6. [服务管理](#6-服务管理)
+7. [数据库管理](#7-数据库管理)
+8. [SWORD 模块管理](#8-sword-模块管理)
+9. [知识库索引管理](#9-知识库索引管理)
+10. [nginx 配置](#10-nginx-配置)
+11. [备份与恢复](#11-备份与恢复)
+12. [监控与告警](#12-监控与告警)
+13. [日志管理](#13-日志管理)
+14. [故障排查](#14-故障排查)
+15. [常见运维任务](#15-常见运维任务)
+16. [部署清单](#16-部署清单)
 
 ---
 
@@ -38,13 +38,11 @@
                            │                      │
                      ┌─────┴─────┐         ┌──────┴──────┐
                      │  Zvec 向量 │         │  H2 数据库  │
-                     │  433K 向量 │         │   231MB    │
-                     │  BIN 持久化│         │  text-db   │
+                     │  BIN 持久化│         │  文件模式   │
                      └───────────┘         └─────────────┘
                                                  │
                                          ┌───────┴───────┐
                                          │ SWORD 模块    │
-                                         │ 123 个/410MB  │
                                          └───────────────┘
 ```
 
@@ -55,20 +53,7 @@
 | nginx | 80/443 | 反向代理、静态文件 |
 | 前端 Node.js | 3000 | 静态文件服务 + API 代理 + Zvec 向量数据库 |
 | 后端 JAR | 8080 | Spring Boot 单体应用 |
-| H2 数据库 | - | 内嵌模式，文件存储 |
-
-### 1.3 关键路径
-
-| 路径 | 说明 |
-|------|------|
-| `/opt/bible-microservices/` | 服务器部署根目录 |
-| `bible-monolith/build/libs/bible-monolith.jar` | 后端 JAR (75MB) |
-| `frontend/` | 前端文件目录 |
-| `data/text-db.mv.db` | H2 数据库 (231MB) |
-| `data/sword-mods/` | SWORD 模块 (410MB) |
-| `data/search-index/` | Lucene 搜索索引 |
-| `frontend/data/*.bin` | Zvec 向量 BIN 文件 |
-| `/etc/nginx/sites-enabled/default` | nginx 配置 |
+| H2 数据库 | — | 内嵌模式，文件存储 |
 
 ---
 
@@ -90,67 +75,254 @@
 | CPU | 1 核 | 2 核 |
 | 内存 | 1 GiB | 2 GiB |
 | 磁盘 | 2 GB | 5 GB |
-| 带宽 | 1 Mbps | 5 Mbps |
 
 ### 2.3 JVM 参数
 
+| 场景 | 参数 | 说明 |
+|------|------|------|
+| 正常运行 | `-Xms128m -Xmx512m` | 日常服务 |
+| 索引构建 | `-Xms128m -Xmx2g` | KB 全量索引需 2GB |
+
+---
+
+## 3. 环境配置体系
+
+### 3.1 三环境配置文件
+
+| 环境 | Profile | 配置文件 | 提交代码库 |
+|------|---------|----------|------------|
+| 开发 | dev | `application.yml` | ✅ |
+| 测试 | uat | `application-uat.yml` | ❌ |
+| 生产 | prod | `application-prod.yml` | ❌ |
+
+> uat/prod 配置文件需手动放置到服务器 JAR 同目录，Spring Boot 自动加载。
+
+### 3.2 启动命令
+
 ```bash
-java -Dfile.encoding=UTF-8 \
-  -Xms48m -Xmx2g \
+java -jar bible-monolith.jar                              # dev
+java -jar bible-monolith.jar --spring.profiles.active=uat  # uat
+java -jar bible-monolith.jar --spring.profiles.active=prod # prod
+```
+
+### 3.3 环境差异对照
+
+| 配置项 | dev | uat | prod |
+|--------|-----|-----|------|
+| 密码存储 | 明文 | BCrypt | BCrypt |
+| H2 控制台 | 开启 | 关闭 | 关闭 |
+| JWT 有效期 | 24h | 8h | 2h |
+| 日志级别 | DEBUG | INFO | WARN |
+| Actuator | 全量 | health,info | 仅 health |
+| 上传限制 | 100MB | 50MB | 10MB |
+| 敏感值 | 硬编码 | 环境变量 | 环境变量 |
+
+---
+
+## 4. 环境变量设置
+
+### 4.1 变量清单
+
+uat/prod 环境必须设置：
+
+| 变量名 | 用途 | 生成方式 |
+|--------|------|----------|
+| `JWT_SECRET` | JWT 签名密钥 | `openssl rand -base64 64` |
+| `H2_PASSWORD` | H2 数据库密码 | `openssl rand -base64 32` |
+| `ADMIN_PASSWORD` | 管理员密码 | `openssl rand -base64 12` |
+| `PRINCIPAL_PASSWORD` | 校长密码 | `openssl rand -base64 12` |
+
+可选：
+
+| 变量名 | 默认值 | 说明 |
+|--------|--------|------|
+| `ADMIN_USERNAME` | admin | 管理员用户名 |
+| `PRINCIPAL_USERNAME` | principal | 校长用户名 |
+
+### 4.2 Linux 设置方法
+
+**方式一：密钥文件 + 启动脚本（推荐）**
+
+```bash
+# 1. 创建密钥目录
+sudo mkdir -p /etc/bible/secrets
+sudo chmod 700 /etc/bible/secrets
+
+# 2. 生成随机密钥
+openssl rand -base64 64 | sudo tee /etc/bible/secrets/jwt-secret.txt
+openssl rand -base64 32 | sudo tee /etc/bible/secrets/h2-password.txt
+openssl rand -base64 12 | sudo tee /etc/bible/secrets/admin-password.txt
+openssl rand -base64 12 | sudo tee /etc/bible/secrets/principal-password.txt
+
+# 3. 设置权限
+sudo chmod 600 /etc/bible/secrets/*.txt
+
+# 4. 创建启动脚本
+cat > /opt/bible-microservices/start.sh << 'EOF'
+#!/bin/bash
+export JWT_SECRET=$(cat /etc/bible/secrets/jwt-secret.txt)
+export H2_PASSWORD=$(cat /etc/bible/secrets/h2-password.txt)
+export ADMIN_PASSWORD=$(cat /etc/bible/secrets/admin-password.txt)
+export PRINCIPAL_PASSWORD=$(cat /etc/bible/secrets/principal-password.txt)
+
+cd /opt/bible-microservices
+nohup java -Dfile.encoding=UTF-8 -Xms128m -Xmx1g \
   -jar bible-monolith.jar \
-  --sword.modules-path=/opt/bible-microservices/data/sword-mods
+  --spring.profiles.active=prod \
+  > logs/monolith.log 2>&1 &
+echo "Started PID: $!"
+EOF
+chmod +x /opt/bible-microservices/start.sh
+
+# 5. 启动
+/opt/bible-microservices/start.sh
 ```
 
-| 参数 | 说明 |
-|------|------|
-| -Xms48m | 初始堆内存 |
-| -Xmx2g | 最大堆内存（索引构建需 2GB） |
-| -Dfile.encoding=UTF-8 | 文件编码 |
+**方式二：systemd 服务（生产推荐）**
 
-> ⚠️ H2 索引构建时需 2GB 堆内存，正常运行 256MB 足够
+```bash
+# 1. 创建环境变量文件
+sudo tee /etc/bible/secrets/env << 'EOF'
+JWT_SECRET=你的密钥
+H2_PASSWORD=你的密码
+ADMIN_PASSWORD=你的密码
+PRINCIPAL_PASSWORD=你的密码
+EOF
+sudo chmod 600 /etc/bible/secrets/env
+
+# 2. 创建服务
+sudo tee /etc/systemd/system/bible-monolith.service << 'EOF'
+[Unit]
+Description=Bible Monolith
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/bible-microservices
+EnvironmentFile=/etc/bible/secrets/env
+ExecStart=/usr/bin/java -Dfile.encoding=UTF-8 -Xms128m -Xmx1g -jar bible-monolith.jar --spring.profiles.active=prod
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# 3. 启动
+sudo systemctl daemon-reload
+sudo systemctl enable bible-monolith
+sudo systemctl start bible-monolith
+
+# 4. 查看状态
+sudo systemctl status bible-monolith
+```
+
+**方式三：临时 export（调试用）**
+
+```bash
+export JWT_SECRET=$(openssl rand -base64 64)
+export H2_PASSWORD=$(openssl rand -base64 32)
+export ADMIN_PASSWORD=$(openssl rand -base64 12)
+export PRINCIPAL_PASSWORD=$(openssl rand -base64 12)
+
+java -jar bible-monolith.jar --spring.profiles.active=prod
+```
+
+### 4.3 Windows 设置方法
+
+**方式一：PowerShell 密钥文件 + 启动脚本（推荐）**
+
+```powershell
+# 1. 创建密钥目录
+$secretDir = "C:\secrets\bible"
+New-Item -ItemType Directory -Path $secretDir -Force
+
+# 2. 生成密钥
+function New-Secret($size) {
+    $b = [byte[]]::new($size)
+    [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b)
+    [Convert]::ToBase64String($b)
+}
+
+New-Secret 64 | Out-File -Encoding ascii "$secretDir\jwt-secret.txt"
+New-Secret 32 | Out-File -Encoding ascii "$secretDir\h2-password.txt"
+New-Secret 12 | Out-File -Encoding ascii "$secretDir\admin-password.txt"
+New-Secret 12 | Out-File -Encoding ascii "$secretDir\principal-password.txt"
+
+# 3. 创建启动脚本
+$startScript = @'
+$env:JWT_SECRET = Get-Content -Raw "C:\secrets\bible\jwt-secret.txt"
+$env:H2_PASSWORD = Get-Content -Raw "C:\secrets\bible\h2-password.txt"
+$env:ADMIN_PASSWORD = Get-Content -Raw "C:\secrets\bible\admin-password.txt"
+$env:PRINCIPAL_PASSWORD = Get-Content -Raw "C:\secrets\bible\principal-password.txt"
+
+Set-Location "D:\bible"
+java -Dfile.encoding=UTF-8 -Xms128m -Xmx1g `
+  -jar bible-monolith.jar `
+  --spring.profiles.active=prod
+'@
+$startScript | Out-File -Encoding utf8 "D:\bible\start-prod.ps1"
+
+# 4. 启动
+.\start-prod.ps1
+```
+
+**方式二：PowerShell 临时变量（调试用）**
+
+```powershell
+$env:JWT_SECRET = [Convert]::ToBase64String(
+    [Security.Cryptography.RandomNumberGenerator]::GetBytes(64)
+)
+$env:H2_PASSWORD = [Convert]::ToBase64String(
+    [Security.Cryptography.RandomNumberGenerator]::GetBytes(32)
+)
+$env:ADMIN_PASSWORD = [Convert]::ToBase64String(
+    [Security.Cryptography.RandomNumberGenerator]::GetBytes(12)
+)
+$env:PRINCIPAL_PASSWORD = [Convert]::ToBase64String(
+    [Security.Cryptography.RandomNumberGenerator]::GetBytes(12)
+)
+
+java -jar bible-monolith.jar --spring.profiles.active=prod
+```
+
+**方式三：系统环境变量（永久）**
+
+```powershell
+# 需要管理员权限
+[Environment]::SetEnvironmentVariable("JWT_SECRET", "你的密钥", "Machine")
+[Environment]::SetEnvironmentVariable("H2_PASSWORD", "你的密码", "Machine")
+[Environment]::SetEnvironmentVariable("ADMIN_PASSWORD", "你的密码", "Machine")
+[Environment]::SetEnvironmentVariable("PRINCIPAL_PASSWORD", "你的密码", "Machine")
+
+# 重启 PowerShell 后生效
+java -jar bible-monolith.jar --spring.profiles.active=prod
+```
+
+### 4.4 验证环境变量
+
+```bash
+# Linux
+echo "JWT_SECRET set: ${JWT_SECRET:+yes}"
+echo "H2_PASSWORD set: ${H2_PASSWORD:+yes}"
+echo "ADMIN_PASSWORD set: ${ADMIN_PASSWORD:+yes}"
+echo "PRINCIPAL_PASSWORD set: ${PRINCIPAL_PASSWORD:+yes}"
+```
+
+```powershell
+# Windows
+"JWT_SECRET set: $(if($env:JWT_SECRET){'yes'}else{'NO'})"
+"H2_PASSWORD set: $(if($env:H2_PASSWORD){'yes'}else{'NO'})"
+"ADMIN_PASSWORD set: $(if($env:ADMIN_PASSWORD){'yes'}else{'NO'})"
+"PRINCIPAL_PASSWORD set: $(if($env:PRINCIPAL_PASSWORD){'yes'}else{'NO'})"
+```
 
 ---
 
-## 3. 部署架构
+## 5. 安装与部署
 
-### 3.1 本地开发环境
-
-```
-D:\dev\github\bible-microservices\
-├── bible-monolith/          # 后端项目
-│   ├── src/main/kotlin/     # 源码
-│   ├── src/main/resources/  # 配置文件
-│   ├── build/libs/          # JAR 产物
-│   └── data/                 # H2 数据库
-├── frontend/                # 前端项目
-│   ├── index.html           # 桌面版
-│   ├── m/                   # 手机版
-│   ├── js/                  # JavaScript
-│   ├── css/                 # 样式
-│   ├── library-data/        # 图书馆数据
-│   ├── plugins/             # 插件（知识库等）
-│   └── server.js            # Node.js 服务
-├── data/sword-mods/         # SWORD 模块
-└── docs/                    # 文档
-```
-
-### 3.2 服务器环境
-
-```
-/opt/bible-microservices/
-├── bible-monolith.jar       # 后端 JAR
-├── frontend/                # 前端文件
-├── data/
-│   ├── text-db.mv.db        # H2 数据库
-│   └── sword-mods/          # SWORD 模块
-└── logs/                    # 日志目录
-```
-
----
-
-## 4. 安装与初始化
-
-### 4.1 首次安装
+### 5.1 本地开发
 
 ```bash
 # 1. 克隆代码
@@ -161,11 +333,10 @@ cd bible-microservices
 cd bible-monolith
 ./gradlew bootJar -x test
 
-# 3. 启动后端（注意 CWD 必须在项目根目录）
+# 3. 启动后端（dev 模式，CWD 必须在项目根目录）
 cd ..
-java -Dfile.encoding=UTF-8 -Xms48m -Xmx2g \
-  -jar bible-monolith/build/libs/bible-monolith.jar \
-  --sword.modules-path=data/sword-mods
+java -Dfile.encoding=UTF-8 -Xms128m -Xmx1g \
+  -jar bible-monolith/build/libs/bible-monolith.jar
 
 # 4. 启动前端
 cd frontend
@@ -176,41 +347,53 @@ curl http://localhost:8080/api/v1/bible/translations
 curl http://localhost:3000/
 ```
 
-### 4.2 服务器部署
+### 5.2 服务器部署
 
 ```bash
-# 在服务器上
-mkdir -p /opt/bible-microservices
+# 1. 创建目录
+mkdir -p /opt/bible-microservices/logs
+
+# 2. 上传文件
+#   - bible-monolith.jar
+#   - application-uat.yml 或 application-prod.yml（放置在 JAR 同目录）
+#   - frontend/ 目录
+#   - data/sword-mods/ 目录
+
+# 3. 生成密钥（参见环境变量设置章节）
+
+# 4. 启动后端
 cd /opt/bible-microservices
-
-# 上传文件（FTP 或 SCP）
-# - bible-monolith.jar
-# - frontend/ 目录
-# - data/ 目录（仅 sword-mods，不覆盖 H2）
-
-# 启动后端
-nohup java -Dfile.encoding=UTF-8 -Xms48m -Xmx2g \
+nohup java -Dfile.encoding=UTF-8 -Xms128m -Xmx1g \
   -jar bible-monolith.jar \
-  --sword.modules-path=data/sword-mods \
+  --spring.profiles.active=prod \
   > logs/monolith.log 2>&1 &
 
-# 启动前端
+# 5. 启动前端
 cd frontend
 nohup node server.js > ../logs/frontend.log 2>&1 &
+
+# 6. 验证
+curl http://localhost:8080/actuator/health
+curl http://localhost:3000/
 ```
 
 ---
 
-## 5. 服务管理
+## 6. 服务管理
 
-### 5.1 启动服务
+### 6.1 启动
 
 ```bash
-# 后端
+# 后端（prod）
 cd /opt/bible-microservices
-nohup java -Dfile.encoding=UTF-8 -Xms48m -Xmx2g \
+export JWT_SECRET=$(cat /etc/bible/secrets/jwt-secret.txt)
+export H2_PASSWORD=$(cat /etc/bible/secrets/h2-password.txt)
+export ADMIN_PASSWORD=$(cat /etc/bible/secrets/admin-password.txt)
+export PRINCIPAL_PASSWORD=$(cat /etc/bible/secrets/principal-password.txt)
+
+nohup java -Dfile.encoding=UTF-8 -Xms128m -Xmx1g \
   -jar bible-monolith.jar \
-  --sword.modules-path=data/sword-mods \
+  --spring.profiles.active=prod \
   > logs/monolith.log 2>&1 &
 
 # 前端
@@ -218,192 +401,103 @@ cd /opt/bible-microservices/frontend
 nohup node server.js > ../logs/frontend.log 2>&1 &
 
 # nginx
-nginx -t && systemctl start nginx
+sudo nginx -t && sudo systemctl start nginx
 ```
 
-### 5.2 停止服务
+### 6.2 停止
 
 ```bash
-# 查找进程
-tasklist | findstr java     # Windows
-ps aux | grep java          # Linux
+# Linux
+kill $(pgrep -f bible-monolith)
+kill $(pgrep -f "node server.js")
+sudo nginx -s stop
 
-# 停止后端
-kill -9 <java_pid>          # Linux
-taskkill /F /PID <pid>     # Windows
-
-# 停止前端
-kill -9 <node_pid>
-
-# 停止 nginx
-nginx -s stop
-# 或
-systemctl stop nginx
+# Windows
+taskkill /F /PID <java_pid>
+taskkill /F /PID <node_pid>
 ```
 
-### 5.3 重启服务
-
-```bash
-# 后端重启
-kill -9 $(pgrep -f bible-monolith)
-cd /opt/bible-microservices
-nohup java -Dfile.encoding=UTF-8 -Xms48m -Xmx2g \
-  -jar bible-monolith.jar \
-  --sword.modules-path=data/sword-mods \
-  > logs/monolith.log 2>&1 &
-
-# 前端重启
-kill -9 $(pgrep -f "node server.js")
-cd /opt/bible-microservices/frontend
-nohup node server.js > ../logs/frontend.log 2>&1 &
-
-# nginx 重载
-nginx -t && systemctl reload nginx
-```
-
-### 5.4 健康检查
+### 6.3 重启
 
 ```bash
 # 后端
+kill $(pgrep -f bible-monolith); sleep 2
+cd /opt/bible-microservices
+# 重新执行启动命令
+
+# nginx 重载配置
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+### 6.4 健康检查
+
+```bash
 curl -s http://localhost:8080/actuator/health
-
-# 前端
-curl -s http://localhost:3000/
-
-# API
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/
 curl -s http://localhost:8080/api/v1/bible/translations | head -c 200
-
-# SWORD 模块
-curl -s http://localhost:8080/api/v1/sword/modules | head -c 200
-
-# Zvec 状态
 curl -s http://localhost:3000/zvec/status
 ```
 
 ---
 
-## 6. 数据库管理
+## 7. 数据库管理
 
-### 6.1 H2 数据库
+### 7.1 H2 数据库
 
-- **类型**：H2 文件模式
-- **路径**：`data/text-db.mv.db` (231MB)
+- **路径**：`data/text-db.mv.db`
 - **连接串**：`jdbc:h2:file:./data/text-db;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL`
-- **用户名**：sa（无密码）
 
 > ⚠️ **CWD 陷阱**：H2 相对路径从 JVM 启动时的 CWD 解析。必须确保 CWD 是项目根目录（包含 `data/` 目录），否则会创建空库。
 
-### 6.2 H2 控制台
+### 7.2 H2 文件锁
 
-- 访问：`http://localhost:8080/h2-console`
-- JDBC URL：`jdbc:h2:file:./data/text-db`
-- 用户名：`sa`
-- 密码：空
-
-### 6.3 备份
-
-```bash
-# 备份 H2 数据库
-cp data/text-db.mv.db data/text-db.backup.$(date +%Y%m%d).mv.db
-
-# 备份 SWORD 模块（增量）
-rsync -av data/sword-mods/ backup/sword-mods/
-
-# 备份前端配置
-cp -r frontend/data/ backup/frontend-data/
-
-# 备份 KB BIN 向量
-cp frontend/data/*.bin backup/
-```
-
-### 6.4 恢复
-
-```bash
-# 停止后端
-kill -9 $(pgrep -f bible-monolith)
-
-# 恢复 H2
-cp data/text-db.backup.20260720.mv.db data/text-db.mv.db
-
-# 重启后端
-cd /opt/bible-microservices
-nohup java -Dfile.encoding=UTF-8 -Xms48m -Xmx2g \
-  -jar bible-monolith.jar \
-  --sword.modules-path=data/sword-mods \
-  > logs/monolith.log 2>&1 &
-```
-
-### 6.5 H2 文件锁
-
-如果后端启动失败报 "Database may be already in use"，原因可能是：
-- 旧 Java 进程未正确关闭
-- H2 锁文件残留
+启动失败报 "Database may be already in use" 时：
 
 ```bash
 # 查找残留 Java 进程
-ps aux | grep java
+ps aux | grep java    # Linux
+tasklist | findstr java  # Windows
 
 # 强制杀掉
-kill -9 <pid>
+kill -9 <pid>         # Linux
+taskkill /F /PID <pid>  # Windows
 
 # 删除锁文件
 rm -f data/text-db.mv.db.lock.db
 rm -f data/text-db.mv.db.trace.db
-
-# 重启
 ```
+
+### 7.3 H2 控制台
+
+| 环境 | 可用 | 路径 |
+|------|------|------|
+| dev | ✅ | `http://localhost:8080/h2-console` |
+| uat/prod | ❌ 关闭 | — |
 
 ---
 
-## 7. SWORD 模块管理
+## 8. SWORD 模块管理
 
-### 7.1 查看已安装模块
+### 8.1 查看已安装模块
 
 ```bash
 curl http://localhost:8080/api/v1/sword/modules | python3 -m json.tool | head -50
 ```
 
-或通过前端：`http://localhost:3000/modules.html`
-
-### 7.2 安装模块
+### 8.2 安装模块
 
 ```bash
-# API 安装
 curl -X POST http://localhost:8080/api/v1/sword/install \
   -H "Content-Type: application/json" \
   -d '{"initials": "KJV"}'
 
-# 安装后需重新加载
+# 安装后重新加载
 curl -X POST http://localhost:8080/api/v1/sword/reload
 ```
 
-### 7.3 批量安装
+### 8.3 Linux 大小写问题
 
-```bash
-# 查看可用模块
-curl http://localhost:8080/api/v1/sword/install/available | python3 -m json.tool | head -50
-
-# 批量安装（示例）
-for module in KJV BSB ChiUns OSHB LXX; do
-  curl -X POST http://localhost:8080/api/v1/sword/install \
-    -H "Content-Type: application/json" \
-    -d "{\"initials\": \"$module\"}"
-  sleep 2
-done
-
-# 重新加载
-curl -X POST http://localhost:8080/api/v1/sword/reload
-```
-
-### 7.4 删除模块
-
-```bash
-curl -X DELETE http://localhost:8080/api/v1/sword/modules/KJV
-```
-
-### 7.5 Linux 大小写问题
-
-> ⚠️ JSword 在 Linux 上区分大小写。如果地图/通用书模块返回空数据，可能需要创建符号链接：
+JSword 在 Linux 上区分大小写。如果地图/通用书模块返回空数据：
 
 ```bash
 cd data/sword-mods
@@ -413,91 +507,67 @@ ln -s BibleMap biblemap
 
 ---
 
-## 8. 知识库索引管理
+## 9. 知识库索引管理
 
-### 8.1 查看索引状态
+### 9.1 查看状态
 
 ```bash
-# KB Stats
 curl http://localhost:8080/api/v1/kb/stats
-
-# Zvec 状态
 curl http://localhost:3000/zvec/status
 ```
 
-### 8.2 重建索引
+### 9.2 重建索引
 
 ```bash
-# 清除所有 KB 数据
+# 清除
 curl -X POST http://localhost:8080/api/v1/kb/clear-all
 
-# 全量索引（中文 only）
-curl -X POST http://localhost:8080/api/v1/kb/index/build-all?zhOnly=true
+# 全量索引（中文）
+curl -X POST "http://localhost:8080/api/v1/kb/index/build-all?zhOnly=true"
 
-# 单模型索引
+# 单模型
 curl -X POST http://localhost:8080/api/v1/kb/index/build/tfidf_256
 curl -X POST http://localhost:8080/api/v1/kb/index/build/bgesmall_512
-curl -X POST http://localhost:8080/api/v1/kb/index/build/bgebase_768
 ```
 
-### 8.3 索引数据量
+> ⚠️ 全量索引需 2GB 堆内存（`-Xmx2g`）
 
-| 集合 | 模型 | 条数 |
-|------|------|------|
-| bible | tfidf_256 | 6,705 |
-| bible | bgesmall_512 | 6,705 |
-| library | tfidf_256 | 28,478 |
-| library | bgesmall_512 | 28,478 |
-| dictionary | tfidf_256 | 103,730 |
-
-### 8.4 Zvec BIN 文件
-
-| 文件 | 大小 | 说明 |
-|------|------|------|
-| bible_tfidf_256.bin | ~2 MB | 圣经 TF-IDF |
-| bible_bgesmall_512.bin | ~14 MB | 圣经 BGE-small |
-| library_tfidf_256.bin | ~8 MB | 图书馆 TF-IDF |
-| library_bgesmall_512.bin | ~56 MB | 图书馆 BGE-small |
-| dictionary_tfidf_256.bin | ~28 MB | 词典 TF-IDF |
-
-> ⚠️ BGE-base 索引需 2GB 堆内存，否则可能 OOM
-
-### 8.5 Zvec 集合管理
+### 9.3 Zvec 集合管理
 
 ```bash
-# 查看所有集合
+# 查看集合
 curl http://localhost:3000/zvec/collections
 
-# 删除单个集合
+# 删除集合
 curl -X DELETE http://localhost:3000/zvec/drop/tfidf_256_bible
 
 # 加载模型
-curl -X POST http://localhost:3000/zvec/load-model -H "Content-Type: application/json" -d '{"modelId":"bgesmall_512"}'
+curl -X POST http://localhost:3000/zvec/load-model \
+  -H "Content-Type: application/json" \
+  -d '{"modelId":"bgesmall_512"}'
 ```
 
 ---
 
-## 9. nginx 配置
-
-### 9.1 配置文件
-
-路径：`/etc/nginx/sites-enabled/default`（或 `/etc/nginx/conf.d/bible.conf`）
-
-### 9.2 配置内容
+## 10. nginx 配置
 
 ```nginx
 server {
     listen 80;
     server_name _;
 
-    # 前端桌面版
+    # 安全头
+    server_tokens off;
+    client_max_body_size 10M;
+
+    # 前端
     location /bible/ {
         alias /opt/bible-microservices/frontend/;
         index index.html;
         try_files $uri $uri/ /bible/index.html;
     }
 
-    # 前端手机版
+    # 手机版
     location /bible/m/ {
         alias /opt/bible-microservices/frontend/m/;
         index index.html;
@@ -512,7 +582,11 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # 旧站共存
+    # 安全拦截
+    location /h2-console { deny all; return 403; }
+    location /actuator { deny all; return 403; }
+
+    # 根路径
     location / {
         root /var/www/html/;
         index index.html;
@@ -520,41 +594,21 @@ server {
 }
 ```
 
-### 9.3 测试和重载
-
 ```bash
-nginx -t          # 测试配置
-systemctl reload nginx  # 重载
+# 测试和重载
+sudo nginx -t
+sudo systemctl reload nginx
 ```
-
-### 9.4 常见 nginx 问题
-
-| 问题 | 原因 | 解决 |
-|------|------|------|
-| `duplicate default_server` | sites-enabled/ 下有 .bak 文件被 include | 将 .bak 移出 sites-enabled/ |
-| 静态文件 404 | alias 路径错误或权限不足 | 检查路径和 `chown -R www-data:www-data` |
-| 502 Bad Gateway | 后端未运行 | 检查后端进程和端口 |
 
 ---
 
-## 10. 备份与恢复
+## 11. 备份与恢复
 
-### 10.1 备份策略
-
-| 数据 | 频率 | 方式 |
-|------|------|------|
-| H2 数据库 | 每日 | cp 文件 |
-| SWORD 模块 | 每月 | rsync 增量 |
-| KB BIN 向量 | 每次索引重建后 | cp 文件 |
-| 前端代码 | 每次部署 | Git commit |
-| 配置文件 | 每次修改 | Git 版本控制 |
-
-### 10.2 自动备份脚本
+### 11.1 备份
 
 ```bash
 #!/bin/bash
 # /opt/bible-microservices/backup.sh
-
 BACKUP_DIR="/opt/bible-microservices/backup"
 DATE=$(date +%Y%m%d_%H%M%S)
 mkdir -p $BACKUP_DIR
@@ -569,98 +623,78 @@ echo "Backup completed: $DATE"
 ```
 
 ```bash
-# crontab
+# crontab 每日 2:00 备份
 0 2 * * * /opt/bible-microservices/backup.sh
 ```
 
----
-
-## 11. 监控与告警
-
-### 11.1 监控指标
-
-| 指标 | 正常范围 | 告警阈值 |
-|------|----------|----------|
-| 后端内存 | < 500MB | > 800MB |
-| 前端内存 | < 500MB | > 1GB |
-| H2 文件大小 | ~231MB | < 1KB（空库） |
-| 磁盘可用 | > 5GB | < 1GB |
-| API 响应 | < 500ms | > 5s |
-| Zvec 向量数 | 433K+ | < 100K |
-
-### 11.2 监控命令
+### 11.2 恢复
 
 ```bash
-# 进程状态
+# 停止后端
+kill $(pgrep -f bible-monolith)
+
+# 恢复
+cp /opt/bible-microservices/backup/text-db.20260720.mv.db \
+   /opt/bible-microservices/data/text-db.mv.db
+
+# 重启
+cd /opt/bible-microservices
+# 执行启动命令
+```
+
+---
+
+## 12. 监控与告警
+
+### 12.1 监控指标
+
+| 指标 | 正常 | 告警 |
+|------|------|------|
+| 后端内存 | < 500MB | > 800MB |
+| 前端内存 | < 500MB | > 1GB |
+| API 响应 | < 500ms | > 5s |
+| 磁盘可用 | > 5GB | < 1GB |
+
+### 12.2 监控命令
+
+```bash
+# 进程
 ps aux | grep -E "java|node"
 
-# 内存使用
+# 内存
 free -h
 
-# 磁盘空间
+# 磁盘
 df -h
 
-# API 健康检查
+# API 健康
 curl -s -o /dev/null -w "%{http_code} %{time_total}s" http://localhost:8080/actuator/health
 
 # Zvec 向量数
-curl -s http://localhost:3000/zvec/status | grep vectors
-```
-
-### 11.3 告警脚本
-
-```bash
-#!/bin/bash
-# 简单告警脚本
-ALERT_EMAIL="admin@example.com"
-
-# 检查后端
-if ! curl -s http://localhost:8080/actuator/health > /dev/null; then
-    echo "ALERT: Backend is down!" | mail -s "Bible Backend Down" $ALERT_EMAIL
-fi
-
-# 检查前端
-if ! curl -s http://localhost:3000/ > /dev/null; then
-    echo "ALERT: Frontend is down!" | mail -s "Bible Frontend Down" $ALERT_EMAIL
-fi
-
-# 检查磁盘
-DISK=$(df / | tail -1 | awk '{print $5}' | tr -d '%')
-if [ $DISK -gt 90 ]; then
-    echo "ALERT: Disk usage ${DISK}%" | mail -s "Disk Space Warning" $ALERT_EMAIL
-fi
+curl -s http://localhost:3000/zvec/status
 ```
 
 ---
 
-## 12. 日志管理
+## 13. 日志管理
 
-### 12.1 日志文件
+### 13.1 日志路径
 
-| 日志 | 路径 | 说明 |
-|------|------|------|
-| 后端日志 | `logs/monolith.log` | Spring Boot 输出 |
-| 前端日志 | `logs/frontend.log` | Node.js 输出 |
-| nginx 访问日志 | `/var/log/nginx/access.log` | HTTP 请求 |
-| nginx 错误日志 | `/var/log/nginx/error.log` | nginx 错误 |
+| 日志 | 路径 |
+|------|------|
+| 后端 | `logs/monolith.log` |
+| 前端 | `logs/frontend.log` |
+| nginx 访问 | `/var/log/nginx/access.log` |
+| nginx 错误 | `/var/log/nginx/error.log` |
 
-### 12.2 查看日志
+### 13.2 查看日志
 
 ```bash
-# 后端实时日志
 tail -f /opt/bible-microservices/logs/monolith.log
-
-# 前端实时日志
-tail -f /opt/bible-microservices/logs/frontend.log
-
-# nginx 错误
-tail -f /var/log/nginx/error.log
-
-# 搜索特定错误
-grep -i "error\|exception\|failed" logs/monolith.log | tail -20
+grep -i "error\|exception" logs/monolith.log | tail -20
 ```
 
-### 12.3 日志轮转
+### 13.3 日志轮转
 
 ```bash
 # /etc/logrotate.d/bible-monolith
@@ -676,232 +710,116 @@ grep -i "error\|exception\|failed" logs/monolith.log | tail -20
 
 ---
 
-## 13. 故障排查
+## 14. 故障排查
 
-### 13.1 后端启动失败
+### 14.1 后端启动失败
 
-| 症状 | 可能原因 | 解决方案 |
-|------|----------|----------|
-| H2 文件锁 | 旧进程未关闭 | `kill -9 $(pgrep java)` |
+| 症状 | 原因 | 解决 |
+|------|------|------|
+| H2 文件锁 | 旧进程未关闭 | 杀进程 + 删锁文件 |
 | 空库（0 条译本） | CWD 不对 | 确保从项目根目录启动 |
-| 端口被占 | 8080 已用 | `lsof -i:8080` 找到并杀掉 |
-| OutOfMemoryError | 堆内存不足 | 增大 -Xmx |
-| ClassNotFoundException | JAR 损坏 | 重新编译 |
+| 端口被占 | 8080 已用 | `lsof -i:8080`（Linux）/ `netstat -ano | findstr 8080`（Windows） |
+| OutOfMemoryError | 堆内存不足 | 增大 `-Xmx` |
+| 环境变量缺失 | uat/prod 未设置变量 | 参见第 4 章设置环境变量 |
 
-### 13.2 前端启动失败
+### 14.2 前端启动失败
 
-| 症状 | 可能原因 | 解决方案 |
-|------|----------|----------|
-| 端口 3000 被占 | 其他进程占用 | `lsof -i:3000` |
+| 症状 | 原因 | 解决 |
+|------|------|------|
+| 端口 3000 被占 | 其他进程占用 | `lsof -i:3000` / `netstat -ano | findstr 3000` |
 | Zvec 加载崩溃 | BIN 文件损坏 | 重新索引生成 BIN |
-| 静态文件 404 | 路径不对 | 检查 server.js 的工作目录 |
 
-### 13.3 API 返回 500
+### 14.3 API 500 错误
 
 ```bash
-# 查看后端日志最后 50 行
 tail -50 logs/monolith.log | grep -A5 "Exception"
-
-# 常见原因：
-# 1. H2 重复数据 → findBy 改为 findFirstBy
-# 2. SWORD 模块路径错误 → 检查 --sword.modules-path
-# 3. 内存不足 → 增大 -Xmx
-```
-
-### 13.4 知识库搜索超时
-
-```bash
-# BGE 嵌入通过 HTTP 调用前端 Zvec bridge，太慢
-# 解决方案：确保前端 Zvec 已加载模型
-
-# 检查模型加载
-curl http://localhost:3000/zvec/status
-
-# 手动加载模型
-curl -X POST http://localhost:3000/zvec/load-model \
-  -H "Content-Type: application/json" \
-  -d '{"modelId":"bgesmall_512"}'
-```
-
-### 13.5 Git Push 被 GFW 阻断
-
-```bash
-# 尝试 SSH
-git remote set-url origin git@github.com:EnochEnglish/bible-microservices.git
-
-# 或配置代理
-git config --global http.proxy http://127.0.0.1:7890
-git config --global https.proxy http://127.0.0.1:7890
-
-# 或使用 Gitee 镜像
-git remote add gitee https://gitee.com/EnochEnglish/bible-microservices.git
-git push gitee monolith-clean
+# 常见原因：H2 重复数据、SWORD 模块路径错误、内存不足
 ```
 
 ---
 
-## 14. 常见运维任务
+## 15. 常见运维任务
 
-### 14.1 更新后端
+### 15.1 更新后端
 
 ```bash
 # 1. 编译新 JAR
-cd D:\dev\github\bible-microservices\bible-monolith
-./gradlew bootJar -x test
+cd bible-monolith && ./gradlew bootJar -x test
 
-# 2. 上传到服务器（FTP 或 SCP）
-# 3. 停止旧后端
-kill -9 $(pgrep -f bible-monolith)
+# 2. 停止旧后端
+kill $(pgrep -f bible-monolith)
 
-# 4. 替换 JAR
+# 3. 替换 JAR
 cp bible-monolith/build/libs/bible-monolith.jar /opt/bible-microservices/
 
-# 5. 启动新后端
-cd /opt/bible-microservices
-nohup java -Dfile.encoding=UTF-8 -Xms48m -Xmx2g \
-  -jar bible-monolith.jar \
-  --sword.modules-path=data/sword-mods \
-  > logs/monolith.log 2>&1 &
-
-# 6. 验证
+# 4. 启动（使用对应环境的启动命令）
+# 5. 验证
 curl http://localhost:8080/actuator/health
 ```
 
-### 14.2 更新前端
+### 15.2 更新前端
 
 ```bash
-# 1. 上传前端文件到服务器
-# 2. 重启前端
-kill -9 $(pgrep -f "node server.js")
+# 上传前端文件 → 重启前端
+kill $(pgrep -f "node server.js")
 cd /opt/bible-microservices/frontend
 nohup node server.js > ../logs/frontend.log 2>&1 &
-
-# 3. 浏览器 Ctrl+F5 硬刷新
 ```
 
-### 14.3 前端版本号更新
+### 15.3 前端版本号
 
-每次修改前端 JS/CSS 后，必须更新版本号以避免缓存：
-
-**需要更新的文件**：
-- `index.html`（桌面版 script src 版本号）
-- `m/index.html`（手机版 script src 版本号）
-
-**格式**：`v=YYYYMMDDx`（x 为当天序号 a/b/c...）
-
-### 14.4 添加新 SWORD 模块
-
-```bash
-# 通过 API 安装
-curl -X POST http://localhost:8080/api/v1/sword/install \
-  -H "Content-Type: application/json" \
-  -d '{"initials": "NewModule"}'
-
-# 重新加载
-curl -X POST http://localhost:8080/api/v1/sword/reload
-
-# 验证
-curl http://localhost:8080/api/v1/sword/modules | grep NewModule
-```
-
-### 14.5 重建知识库索引
-
-```bash
-# 全量重建（需 2GB 堆内存）
-curl -X POST http://localhost:8080/api/v1/kb/clear-all
-curl -X POST "http://localhost:8080/api/v1/kb/index/build-all?zhOnly=true"
-
-# 监控进度
-tail -f logs/monolith.log | grep "Processing\|Indexing\|Completed"
-```
+每次修改前端 JS/CSS 后必须更新版本号避免缓存：
+- 格式：`v=YYYYMMDDx`（x 为当天序号 a/b/c...）
+- 需更新：`index.html`、`m/index.html` 中的 script/link 标签
 
 ---
 
-## 15. 安全注意事项
+## 16. 部署清单
 
-### 15.1 默认密码
-
-- **管理员**：admin / admin123
-- **H2 数据库**：sa / （空密码）
-- **JWT secret**：预置在 application.yml
-
-> ⚠️ 生产环境必须修改以上默认值
-
-### 15.2 JWT 配置
-
-```yaml
-jwt:
-  secret: <your-strong-secret>  # 修改为随机字符串
-  expiration-ms: 86400000      # 24 小时
-```
-
-### 15.3 网络安全
-
-- H2 控制台不应暴露到公网
-- 管理后台建议加 IP 白名单
-- 生产环境启用 HTTPS
-- 定期备份数据
-
-### 15.4 文件权限
-
-```bash
-chown -R www-data:www-data /opt/bible-microservices/frontend/
-chmod 644 /opt/bible-microservices/frontend/*.html
-chmod 755 /opt/bible-microservices/frontend/js/
-```
-
----
-
-## 16. 服务器部署清单
-
-### 16.1 部署前检查
+### 部署前
 
 - [ ] JDK 17 已安装
 - [ ] Node.js 16+ 已安装
 - [ ] nginx 已安装
 - [ ] 磁盘空间 > 5GB
 - [ ] 内存 > 1GB
-- [ ] 防火墙开放 80/443 端口
 
-### 16.2 部署步骤
+### 配置文件
 
-- [ ] 上传 bible-monolith.jar
-- [ ] 上传 frontend/ 目录
-- [ ] 上传 data/sword-mods/ 目录
-- [ ] 创建 data/ 目录（H2 数据库存放）
-- [ ] 配置 nginx
-- [ ] 启动后端
-- [ ] 启动前端
-- [ 验证 API
-- [ ] 验证前端
-- [ ] 修改管理员密码
-- [ ] 配置 HTTPS（可选）
+- [ ] `application-uat.yml` 或 `application-prod.yml` 已放置到 JAR 同目录
+- [ ] 该文件不在代码库中（.gitignore 已排除）
 
-### 16.3 部署后验证
+### 环境变量
+
+- [ ] `JWT_SECRET` 已生成并设置
+- [ ] `H2_PASSWORD` 已生成并设置
+- [ ] `ADMIN_PASSWORD` 已生成并设置
+- [ ] `PRINCIPAL_PASSWORD` 已生成并设置
+- [ ] 密钥文件权限 600
+- [ ] 密钥已保存到密码管理器
+
+### 文件上传
+
+- [ ] `bible-monolith.jar` 已上传
+- [ ] `frontend/` 目录已上传
+- [ ] `data/sword-mods/` 已上传
+- [ ] `data/` 目录已创建（H2 数据库存放位置）
+
+### 网络安全
+
+- [ ] nginx 配置完成
+- [ ] H2 控制台拦截已配置
+- [ ] Actuator 拦截已配置
+- [ ] HTTPS 证书已配置（可选）
+
+### 验证
 
 ```bash
-# API
-curl http://localhost:8080/api/v1/bible/translations
-curl http://localhost:8080/api/v1/sword/modules
 curl http://localhost:8080/actuator/health
-
-# 前端
+curl http://localhost:8080/api/v1/bible/translations
 curl http://localhost:3000/
 curl http://localhost:3000/m/
-
-# nginx
-curl http://localhost/bible/
-curl http://localhost/api/v1/bible/translations
 ```
-
-### 16.4 服务器信息
-
-| 项目 | 值 |
-|------|-----|
-| ECS IP | 8.222.165.245 |
-| SSH 用户 | ccscw |
-| 部署路径 | /opt/bible-microservices/ |
-| nginx 配置 | /etc/nginx/sites-enabled/default |
 
 ---
 

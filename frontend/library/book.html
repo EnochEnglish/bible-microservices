@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图书馆阅读器 / Library Reader</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: #0f1117; color: #e4e6f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex; flex-direction: column;
+    }
+    .reader-toolbar {
+      display: flex; align-items: center; gap: 12px; padding: 10px 16px;
+      background: #1a1d29; border-bottom: 1px solid #333;
+      flex-shrink: 0; flex-wrap: wrap;
+    }
+    .reader-toolbar a { color: #6b8afd; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .reader-toolbar h2 { font-size: 1rem; flex: 1; min-width: 200px; }
+    .reader-toolbar select { 
+      padding: 4px 8px; font-size: 0.85rem;
+      background: #252836; color: #e4e6f0; border: 1px solid #444; border-radius: 4px;
+    }
+    .reader-toolbar button {
+      padding: 4px 12px; font-size: 0.85rem; cursor: pointer;
+      background: #6b8afd; color: #fff; border: none; border-radius: 4px;
+    }
+    .reader-content {
+      flex: 1; overflow-y: auto; padding: 20px 24px;
+      line-height: 2; font-size: 1.05rem; max-width: 800px; margin: 0 auto; width: 100%;
+    }
+    .reader-content h3 { color: #6b8afd; margin: 24px 0 12px; font-size: 1.2rem; }
+    .reader-content p { margin: 8px 0; }
+    .reader-content table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    .reader-content td { padding: 6px 10px; border: 1px solid #333; vertical-align: top; }
+    .reader-content b, .reader-content strong { color: #ffd700; }
+    .reader-content u { text-decoration: none; color: #8aa6ff; }
+    .reader-content a { color: #6b8afd; }
+    .reader-content sup { font-size: 0.75rem; color: #888; }
+    .reader-loading { text-align: center; padding: 60px; color: #888; }
+    .reader-error { text-align: center; padding: 60px; color: #f56565; }
+    .reader-nav { 
+      display: flex; justify-content: space-between; padding: 0 24px 20px;
+      max-width: 800px; margin: 0 auto; width: 100%;
+    }
+    .reader-nav button {
+      padding: 8px 16px; cursor: pointer; font-size: 0.9rem;
+      background: #252836; color: #e4e6f0; border: 1px solid #444; border-radius: 6px;
+    }
+    .reader-nav button:hover { background: #333; }
+    .reader-nav button:disabled { opacity: 0.3; cursor: default; }
+  </style>
+</head>
+<body>
+  <div class="reader-toolbar">
+    <a href="/">&larr; 返回</a>
+    <h2 id="readerTitle">加载中...</h2>
+    <label>章节: <select id="chapterSelect"></select></label>
+    <button onclick="jumpToChapter()">跳转</button>
+  </div>
+  <div class="reader-content" id="readerContent">
+    <div class="reader-loading">加载中...</div>
+  </div>
+  <div class="reader-nav">
+    <button id="btnPrev" onclick="prevChapter()">◀ 上一章</button>
+    <button id="btnNext" onclick="nextChapter()">下一章 ▶</button>
+  </div>
+
+  <script>
+    var bookId = '';
+    var chapterNum = 0;
+    var totalChapters = 0;
+    var meta = null;
+
+    function parseUrl() {
+      // /library/book/{bookId}/{chapterNum}
+      var path = location.pathname;
+      var parts = path.replace(/^\/library\/book\/?/, '').split('/').filter(Boolean);
+      bookId = parts[0] || '';
+      chapterNum = parseInt(parts[1]) || 1;
+      return !!bookId;
+    }
+
+    function loadMeta() {
+      var url = '/library-data/' + bookId + '/meta.json';
+      return fetch(url).then(function(r) {
+        if (!r.ok) throw new Error('图书不存在: ' + bookId);
+        return r.json();
+      }).then(function(m) {
+        meta = m;
+        totalChapters = m.totalChapters || 0;
+        document.getElementById('readerTitle').textContent = (m.title || bookId);
+        document.title = (m.title || bookId) + ' - 图书馆阅读器';
+
+        // Build chapter select
+        var sel = document.getElementById('chapterSelect');
+        sel.innerHTML = '';
+        for (var i = 1; i <= totalChapters; i++) {
+          var opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = '第 ' + i + ' 章';
+          if (i === chapterNum) opt.selected = true;
+          sel.appendChild(opt);
+        }
+      });
+    }
+
+    function loadChapter(num) {
+      chapterNum = num;
+      var contentEl = document.getElementById('readerContent');
+      contentEl.innerHTML = '<div class="reader-loading">加载中...</div>';
+
+      // Fetch raw JSON chapter
+      var chStr = String(num).padStart(3, '0');
+      fetch('/library-data/' + bookId + '/' + chStr + '.json')
+        .then(function(r) { if (!r.ok) throw new Error('章节加载失败'); return r.json(); })
+        .then(function(data) {
+          var html = '<h3>' + escHtml(data.title || '第 ' + num + ' 章') + '</h3>';
+          html += data.content || '<p>(无内容)</p>';
+          contentEl.innerHTML = html;
+          updateNav();
+          document.getElementById('chapterSelect').value = num;
+        })
+        .catch(function(e) {
+          contentEl.innerHTML = '<div class="reader-error">加载失败: ' + escHtml(e.message) + '</div>';
+        });
+    }
+
+    function updateNav() {
+      document.getElementById('btnPrev').disabled = (chapterNum <= 1);
+      document.getElementById('btnNext').disabled = (chapterNum >= totalChapters);
+    }
+
+    function prevChapter() { if (chapterNum > 1) loadChapter(chapterNum - 1); }
+    function nextChapter() { if (chapterNum < totalChapters) loadChapter(chapterNum + 1); }
+    function jumpToChapter() {
+      var n = parseInt(document.getElementById('chapterSelect').value);
+      if (n >= 1 && n <= totalChapters) loadChapter(n);
+    }
+
+    function escHtml(s) {
+      if (!s) return '';
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Init
+    if (parseUrl()) {
+      loadMeta().then(function() { loadChapter(chapterNum); })
+        .catch(function(e) {
+          document.getElementById('readerContent').innerHTML = '<div class="reader-error">' + escHtml(e.message) + '</div>';
+        });
+    } else {
+      document.getElementById('readerContent').innerHTML = '<div class="reader-error">未指定图书</div>';
+    }
+  </script>
+</body>
+</html>

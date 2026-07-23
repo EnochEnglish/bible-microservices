@@ -1,7 +1,16 @@
 # ============================================================
-# bible-monolith - Unified Configuration
-# Single JVM application on port 8080 with all services merged
-# JVM: -Xms48m -Xmx160m (1 GiB server)
+# bible-monolith - 开发环境配置 (dev)
+#
+# 启动: java -jar bible-monolith.jar
+#   → 默认 profile = dev
+#
+# 特点: 明文密码、H2 控制台开、DEBUG 日志、JWT 24h
+#
+# UAT 环境: java -jar bible-monolith.jar --spring.profiles.active=uat
+#   → 加载 application-uat.yml（不提交代码库，部署时单独放置）
+#
+# 生产环境: java -jar bible-monolith.jar --spring.profiles.active=prod
+#   → 加载 application-prod.yml（不提交代码库，部署时单独放置）
 # ============================================================
 
 server:
@@ -10,17 +19,20 @@ server:
 spring:
   application:
     name: bible-monolith
+  profiles:
+    active: dev
 
   jackson:
     default-property-inclusion: non_null
 
-  # --- Primary H2 DataSource (text-service entities) ---
+  # --- H2 DataSource ---
   datasource:
     url: jdbc:h2:file:./data/text-db;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL;TRACE_LEVEL_FILE=0
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
+  # H2 控制台（dev 开启）
   h2:
     console:
       enabled: true
@@ -48,15 +60,19 @@ spring:
 # ===== JWT =====
 jwt:
   secret: bWljcm9zZXJ2aWNlcy1iaWJsZS1hdXRoLWp3dC1zZWNyZXQta2V5LTIwMjYtMDYtMTQ=
-  expiration-ms: 86400000  # 24 hours
+  expiration-ms: 86400000  # 24h
 
-# ===== Pre-seeded Admin =====
+# ===== Admin 预置账户 =====
 app:
   admin:
     username: admin
-    password: admin123  # Should be changed on first login
+    password: admin123
+  principal:
+    username: principal
+    password: principal123
+  bcrypt-enabled: false  # dev: 明文密码
 
-# ===== Bible Text Service Config =====
+# ===== Bible Text Service =====
 bible:
   text:
     default-translation: web
@@ -69,10 +85,18 @@ bible:
   data:
     sources-url: https://raw.githubusercontent.com/seven1m/open-bibles/main/
 
-# ===== SWORD Configuration =====
+# ===== SWORD =====
 sword:
-  modules-path: ${SWORD_MODULES_PATH:data/sword-mods}
-  data-path: ${SWORD_DATA_PATH:data/sword-mods}
+  modules-path: data/sword-mods
+  data-path: data/sword-mods
+
+# ===== Knowledge Base =====
+kb:
+  node-service-url: http://localhost:3000
+  library-path: frontend/library-data
+  sources:
+    bible:
+      translations: cuv_gb
 
 # ===== Actuator =====
 management:

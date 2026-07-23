@@ -6,6 +6,7 @@ import com.bible.monolith.model.Role
 import com.bible.monolith.model.User
 import com.bible.monolith.repository.UserRepository
 import com.bible.monolith.security.JwtUtil
+import com.bible.monolith.security.PasswordService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,7 +16,8 @@ import java.time.Instant
 class AuthService(
     private val userRepository: UserRepository,
     private val jwtUtil: JwtUtil,
-    private val captchaController: CaptchaController
+    private val captchaController: CaptchaController,
+    private val passwordService: PasswordService
 ) {
     private val log = LoggerFactory.getLogger(AuthService::class.java)
 
@@ -40,7 +42,6 @@ class AuthService(
 
     @Transactional
     fun register(username: String, password: String, captchaToken: String?, captchaAnswer: Int): AuthResponse {
-        // Validate captcha
         if (captchaToken.isNullOrBlank() || !captchaController.verifyCaptcha(captchaToken, captchaAnswer)) {
             return AuthResponse(success = false, message = "验证码错误或已过期，请刷新后重试")
         }
@@ -49,7 +50,7 @@ class AuthService(
         }
         val user = userRepository.save(User(
             username = username,
-            passwordHash = password,
+            passwordHash = passwordService.hash(password),
             role = Role.USER
         ))
         val token = jwtUtil.generateToken(user.id, user.username, user.role.name)
@@ -62,8 +63,13 @@ class AuthService(
         if (!user.enabled) {
             return AuthResponse(success = false, message = "账户已被禁用，请联系管理员")
         }
-        if (user.passwordHash != password) {
+        if (!passwordService.matches(password, user.passwordHash)) {
             return AuthResponse(success = false, message = "用户名或密码错误")
+        }
+        // 自动升级明文密码 → BCrypt
+        if (passwordService.needsUpgrade(user.passwordHash)) {
+            userRepository.save(user.copy(passwordHash = passwordService.hash(password), updatedAt = Instant.now()))
+            log.info("Auto-upgraded password to BCrypt for user {}", user.username)
         }
         val token = jwtUtil.generateToken(user.id, user.username, user.role.name)
         return AuthResponse(success = true, token = token, user = user.toInfo())
@@ -105,13 +111,13 @@ class AuthService(
     fun changePassword(userId: Long, oldPassword: String, newPassword: String): AuthResponse {
         val user = userRepository.findById(userId).orElse(null)
             ?: return AuthResponse(success = false, message = "用户不存在")
-        if (user.passwordHash != oldPassword) {
+        if (!passwordService.matches(oldPassword, user.passwordHash)) {
             return AuthResponse(success = false, message = "原密码错误")
         }
         if (newPassword.length < 3) {
             return AuthResponse(success = false, message = "新密码至少3个字符")
         }
-        userRepository.save(user.copy(passwordHash = newPassword, updatedAt = Instant.now()))
+        userRepository.save(user.copy(passwordHash = passwordService.hash(newPassword), updatedAt = Instant.now()))
         log.info("User {} changed password", user.username)
         return AuthResponse(success = true, message = "密码已更新")
     }
@@ -127,8 +133,6 @@ class AuthService(
                 message = "该账户未设置邮箱，无法自助找回密码。请联系管理员重置密码。"
             )
         }
-        // In a production system, this would send an email with a reset link.
-        // For now, we instruct the user to contact admin.
         log.info("Password reset requested for {} (email: {})", user.username, user.email)
         return AuthResponse(
             success = true,
@@ -161,7 +165,7 @@ class AuthService(
         } else Role.USER
         val user = userRepository.save(User(
             username = req.username,
-            passwordHash = req.password,
+            passwordHash = passwordService.hash(req.password),
             role = role
         ))
         log.info("Admin {} created user {} with role {}", admin.username, req.username, role)
@@ -198,7 +202,7 @@ class AuthService(
         if (newPassword.length < 3) {
             return AuthResponse(success = false, message = "新密码至少3个字符")
         }
-        userRepository.save(user.copy(passwordHash = newPassword, updatedAt = Instant.now()))
+        userRepository.save(user.copy(passwordHash = passwordService.hash(newPassword), updatedAt = Instant.now()))
         log.info("Admin {} reset password for {}", admin.username, user.username)
         return AuthResponse(success = true, message = "密码已重置")
     }

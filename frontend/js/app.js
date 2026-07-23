@@ -190,6 +190,7 @@ var I18N = {
     strongsHebrew: "Hebrew",
     strongsGreek: "Greek",
     chapterNum: "Ch.",
+    chapterUnit: "",
     searchEmpty: "Enter a keyword to search",
     dictTitle: "Bible Dictionary",
     dictSearch: "Select a dictionary and search for a term",
@@ -255,6 +256,7 @@ var I18N = {
     strongsHebrew: "希伯来文",
     strongsGreek: "希腊文",
     chapterNum: "第",
+    chapterUnit: "章",
     searchEmpty: "输入关键词搜索经文",
     dictTitle: "圣经词典",
     dictSearch: "选择词典并搜索词条",
@@ -314,8 +316,9 @@ function t(key) {
 }
 
 function bookLabel(b) {
-  if (state.lang === "zh") return b.nameZh || b.name;
-  if (state.lang === "bilingual") return b.nameZh + " / " + (b.name || "");
+  var zh = b.nameZh || b.name || "";
+  if (state.lang === "zh") return zh;
+  if (state.lang === "bilingual") return zh + " / " + (b.name || "");
   return b.name;
 }
 
@@ -536,7 +539,10 @@ function loadBooks() {
   }
   return apiGet("/bible/" + state.currentTranslation + "/books").then(function(data) {
     if (data.books) state.books = data.books.map(function(b) {
-      b.id = b.book_id; b.chapters = b.chapter_count; return b;
+      b.id = b.book_id; b.chapters = b.chapter_count;
+      var bo = BOOK_ORDER.find(function(x) { return x.id === b.id.toUpperCase(); });
+      if (bo) { b.nameZh = bo.nameZh; b.name = b.name || bo.name; }
+      return b;
     });
     renderBookList();
   }).catch(function() { renderBookList(); });
@@ -1121,7 +1127,7 @@ function renderChapterHeader() {
     ? '<button id="btnInterlinear" class="il-btn' + (state.interlinear ? ' active' : '') + '" title="' + t("interlinearTip") + '">' + t("interlinearBtn") + '</button>'
     : '';
   hdrEl.innerHTML = '<span class="book-name">' + label + '</span>' +
-    '<span class="chapter-num">' + t("chapterNum") + ' ' + state.currentChapter + ' 章</span>' + ilBtn;
+    '<span class="chapter-num">' + t("chapterNum") + ' ' + state.currentChapter + ' ' + (I18N[state.lang] ? I18N[state.lang].chapterUnit || "" : (I18N.zh.chapterUnit || "")) + '</span>' + ilBtn;
   if (isIL) {
     setTimeout(function() {
       var btn = document.getElementById("btnInterlinear");
@@ -2025,6 +2031,14 @@ function closeMorphHelp() {
 // ═══════════════════════════════════════════
 document.addEventListener("DOMContentLoaded", function() {
   console.log('[DEBUG] DOMContentLoaded fired');
+
+  // ── URL params for deep-linking (from KB search, cross-reference etc.) ──
+  var urlParams = new URLSearchParams(location.search);
+  var presetTranslation = urlParams.get('translation');
+  var presetBook = urlParams.get('book');
+  var presetChapter = urlParams.get('chapter');
+  if (presetTranslation) state.currentTranslation = presetTranslation;
+
   setupLanguage();
   refreshLabels();
   setupDictPopup();
@@ -2036,6 +2050,21 @@ document.addEventListener("DOMContentLoaded", function() {
     return loadBooks();
   }).then(function() {
     console.log('[DEBUG] loadBooks OK');
+
+    // Apply preset book/chapter from URL (books loaded, so IDs valid)
+    if (presetBook) {
+      var bookId = presetBook.toLowerCase();
+      var foundBook = state.books.find(function(b) { return b.id === bookId; });
+      if (foundBook) {
+        state.currentBook = foundBook;
+        if (presetChapter) {
+          var ch = parseInt(presetChapter);
+          if (ch >= 1 && ch <= foundBook.chapters) state.currentChapter = ch;
+        }
+        console.log('[DEBUG] URL preset: book=' + foundBook.id + ' chapter=' + state.currentChapter);
+      }
+    }
+
     renderBookList();
     renderChapterGrid();
     renderCommentaryTabs();

@@ -100,6 +100,16 @@ h.createServer(function(rq, rs) {
     proxy(MONOLITH, rq, rs); return;
   }
 
+  // /library/book/ → library reader (SPA route)
+  if (url.startsWith('/library/book/')) {
+    try {
+      var bookHtml = fs.readFileSync(p.join(dir, 'library', 'book.html'));
+      rs.writeHead(200, {'Content-Type':'text/html;charset=utf-8','Cache-Control':'no-cache, no-store, must-revalidate'});
+      rs.end(bookHtml);
+    } catch(e) { rs.writeHead(404); rs.end('Library reader not found'); }
+    return;
+  }
+
   // Static files
   var f = url;
   // Root or directory-ending-with-/ → serve index.html

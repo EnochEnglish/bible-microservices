@@ -20,6 +20,9 @@ interface EmbeddingProvider {
     /** Whether the model is ready for use */
     fun isReady(): Boolean
 
+    /** Whether the model is available right now (ready + service reachable) */
+    fun isAvailable(): Boolean
+
     /** Embed a single text into a vector */
     fun embed(text: String): FloatArray
 

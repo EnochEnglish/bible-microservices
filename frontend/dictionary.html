@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bible Dictionary / 圣经词典</title>
+<link rel="stylesheet" href="css/dictionary.css?v=20260722c">
+</head>
+<body>
+  <div id="app">
+    <header id="topbar">
+      <a href="/" class="home-link" title="Back to Bible Reader / 返回圣经阅读器">&#128214; <span data-zh="圣经阅读器" data-en="Bible Reader">圣经阅读器</span></a>
+      <div id="dictSelectorWrap">
+        <select id="dictSelector"></select>
+        <span id="dictInfo" class="dict-info"></span>
+      </div>
+      <select id="langToggle">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+        <option value="bilingual">中文 / English</option>
+      </select>
+    </header>
+
+    <main>
+      <div id="searchBar">
+        <input type="text" id="searchInput" placeholder="Search dictionary entries... / 搜索词典条目..." autocomplete="off">
+        <button id="searchBtn">&#128269; <span data-zh="搜索" data-en="Search">搜索</span></button>
+        <button id="browseBtn"><span data-zh="浏览全部" data-en="Browse All">浏览全部</span></button>
+      </div>
+
+      <div id="contentArea">
+        <div id="entryList" class="entry-list"></div>
+        <div id="entryDetail" class="entry-detail" style="display:none">
+          <div id="detailHeader">
+            <button id="backBtn">&#8592; <span data-zh="返回" data-en="Back">返回</span></button>
+            <span id="detailTitle"></span>
+          </div>
+          <div id="detailContent"></div>
+        </div>
+      </div>
+
+      <div id="noResult" style="display:none;text-align:center;padding:40px;color:var(--muted,#888)">
+        <span data-zh="未找到匹配的条目" data-en="No matching entries found">未找到匹配的条目</span>
+      </div>
+
+      <div id="loading" style="display:none;text-align:center;padding:40px;color:var(--muted,#888)">
+        <span data-zh="加载中..." data-en="Loading...">加载中...</span>
+      </div>
+    </main>
+  </div>
+  <script src="js/dictionary.js?v=20260722c"></script>
+</body>
+</html>

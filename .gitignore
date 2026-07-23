@@ -23,6 +23,12 @@ data/
 # Deploy artifacts
 deploy-package/
 cloud-deploy-v2/
+deploy-secure/
+secrets/
+
+# Environment-specific configs (only dev is committed)
+bible-monolith/src/main/resources/application-uat.yml
+bible-monolith/src/main/resources/application-prod.yml
 bfg-*.jar
 scripts/h2-*.jar
 

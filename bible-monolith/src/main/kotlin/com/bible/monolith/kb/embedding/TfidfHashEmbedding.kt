@@ -50,6 +50,7 @@ class TfidfHashEmbedding(
     )
 
     override fun isReady() = true
+    override fun isAvailable() = true
 
     override fun embed(text: String): FloatArray {
         val expanded = expandQuery(text)

@@ -46,6 +46,7 @@ class RemoteSemanticEmbedding(
         override val requiresNodeService: Boolean
     ) : EmbeddingProvider {
         override fun isReady() = false
+        override fun isAvailable() = false
         override fun embed(text: String) = FloatArray(0)
         override fun embedBatch(texts: List<String>) = emptyList<FloatArray>()
     }
@@ -78,6 +79,8 @@ class RemoteSemanticEmbedding(
             false
         }
     }
+
+    override fun isAvailable(): Boolean = isReady()
 
     override fun embed(text: String): FloatArray = embedBatch(listOf(text))[0]
 
